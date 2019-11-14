@@ -383,7 +383,7 @@ $("#vedo").mouseup(function (e) {
 
                         }
 
-                        let tipologia_nodo_target = "azione";
+                        tipologia_nodo_target = "azione";
                         x = target2.attr("x");
                         y = target2.attr("y");
                         if (tipologia_nodo_source === "azione") {
@@ -423,9 +423,14 @@ $("#vedo").mouseup(function (e) {
 
                         let pos_ini_y = linea.getAttribute("y1");
                         let pos_ini_x = linea.getAttribute("x1");
-                        let pos_fin_y = y;
-                        let pos_fin_x = x;
+                        let pos_fin_y = parseInt(y);
+                        let pos_fin_x = parseInt(x);
+                        let azione = false;
+                        if(tipologia_nodo_target === "azione"){
 
+                             azione = true;
+
+                        }
 
                         if(tipologia_nodo_source === "ingrediente"){
                             if (pos_ini_y === pos_fin_y && pos_ini_x > pos_fin_x) {
@@ -433,8 +438,7 @@ $("#vedo").mouseup(function (e) {
                             }else if (pos_ini_y === pos_fin_y && pos_ini_x < pos_fin_x) {
                                 pos_fin_x = (pos_fin_x - 65);
                             }else if (pos_ini_y < pos_fin_y && pos_ini_x < pos_fin_x) {
-                                pos_fin_x = (pos_fin_x - 45);
-                                pos_fin_y = (pos_fin_y - 35);
+                                pos_fin_x = (pos_fin_x - 35);
                             }else if (pos_ini_y < pos_fin_y && pos_ini_x === pos_fin_x) {
                                 pos_fin_y = (pos_fin_x - 65);
                             }else if (pos_ini_y < pos_fin_y && pos_ini_x > pos_fin_x) {
@@ -450,43 +454,37 @@ $("#vedo").mouseup(function (e) {
                                 pos_fin_y = (pos_fin_y + 35);
                             }
                         }else{
-                            if (pos_ini_y === pos_fin_y && pos_ini_x > pos_fin_x) {
+                            if (pos_ini_y === pos_fin_y && pos_ini_x > pos_fin_x && !azione) {
                                 pos_fin_x = (pos_fin_x - 75);                                
-                            }else if (pos_ini_y === pos_fin_y && pos_ini_x > pos_fin_x) {
+                            }else if (pos_ini_y === pos_fin_y && pos_ini_x > pos_fin_x && azione) {
                                 pos_fin_x = (pos_fin_x + 25);
                                 pos_fin_y = (pos_fin_y - 45);
-                            }else if (pos_ini_y === pos_fin_y && pos_ini_x < pos_fin_x) {
+                            }else if (pos_ini_y === pos_fin_y && pos_ini_x < pos_fin_x && azione) {
                                 pos_fin_x = (pos_fin_x - 65);                               
-                            }else if (pos_ini_y === pos_fin_y && pos_ini_x < pos_fin_x) {
+                            }else if (pos_ini_y === pos_fin_y && pos_ini_x < pos_fin_x && !azione) {
                                 pos_fin_x = (pos_fin_x - 65);
                                 pos_fin_y = (pos_fin_y - 35);
                             }else if (pos_ini_y < pos_fin_y && pos_ini_x < pos_fin_x) {
                                 pos_fin_x = (pos_fin_x - 45);
                                 pos_fin_y = (pos_fin_y - 35);
-                                
                             }else if (pos_ini_y < pos_fin_y && pos_ini_x === pos_fin_x) {
-                            
                                 pos_fin_y = (pos_fin_y - 65);
-                                
                             }else if (pos_ini_y < pos_fin_y && pos_ini_x > pos_fin_x) {
                                 pos_fin_x = (pos_fin_x + 45);
                                 pos_fin_y = (pos_fin_y - 35);
-                                
                             }else if (pos_ini_y > pos_fin_y && pos_ini_x < pos_fin_x) {
                                 pos_fin_x = (pos_fin_x - 45);
                                 pos_fin_y = (pos_fin_y + 35);
-                                
                             }else if (pos_ini_y > pos_fin_y && pos_ini_x === pos_fin_x) {
                                 pos_fin_x = (pos_fin_x - 45);
                                 pos_fin_y = (pos_fin_y + 65);
-                                
                             }else if (pos_ini_y > pos_fin_y && pos_ini_x > pos_fin_x) {
                                 pos_fin_x = (pos_fin_x + 55);
                                 pos_fin_y = (pos_fin_y + 35);
-                                
                             }
-
                         }
+
+                        console.log(pos_fin_x, pos_fin_y);
 
                         linea.setAttribute("x2", pos_fin_x);
                         linea.setAttribute("y2", pos_fin_y);
