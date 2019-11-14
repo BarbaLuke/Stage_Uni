@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="IT">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Importa File Ricetta</title>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400|Work+Sans:300,400,700" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <script type="text/javascript" src="scripts/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="scripts/global_list.js"></script>
+
+</head>
+
+<body>
+
+    <div class="jumbotron d-flex">
+
+        <div class="container text-center">
+
+            <form action="upload.php" method="post" enctype="multipart/form-data">
+                <input type="file" name="xml" id="uploadInput">
+                <h3>Trascina il file o clicca sull'area</h3>
+                <button type="submit"
+                    onclick='sessione(document.getElementById("uploadInput").files[0].name)'>Prosegui</button>
+                <button style="margin-top:15px;" type="button" class="btn-info" id="precedenti">Precedenti</button>
+            </form>
+        </div>
+
+        <div class="rectangle-1"></div>
+        <div class="rectangle-2"></div>
+
+        <div class="rectangle-transparent-1"></div>
+        <div class="rectangle-transparent-2"></div>
+
+        <div class="circle-1">
+            <img src="image/frusta.png" alt="">
+        </div>
+        <div class="circle-2">
+            <img src="image/cucchiaio.png" alt="">
+        </div>
+        <div class="circle-3">
+            <img src="image/paletta.png" alt="">
+        </div>
+        <div class="triangle triangle-1">
+            <img src="image/paletta2.png" alt="">
+        </div>
+        <div class="triangle triangle-2">
+            <img src="image/paletta2.png" alt="">
+        </div>
+        <div class="triangle triangle-3">
+            <img src="image/cappello.png" alt="">
+        </div>
+        <div class="triangle triangle-4">
+            <img src="image/cappello.png" alt="">
+        </div>
+    </div>
+
+    <div class="modal fade" id="processate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="ingre_mod" class="modal-title">Ricette processate precedentemente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul id="tab_file">
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/bootstrap.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('form input').change(function () {
+                $('form h3').text(this.files[0].name);
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        function sessione(nome) {
+            // Check browser support
+            if (typeof (Storage) !== "undefined") {
+                // Store
+                sessionStorage.setItem("nome_file", nome);
+            } else {
+                alert("Sorry, your browser does not support Web Storage...");
+            }
+        }
+        $('#precedenti').click(function () {
+            var files = [];
+            $.ajax({
+                url: 'ricette_prev.php',
+                type: 'POST',
+                success: function (msg) {
+                    files = msg;
+                    var testo = "";
+                    for (l = 2; l < files.length; l++) {
+                        let edi = '"' + files[l] + '"';
+                        testo += "<li><a class='passato' id=' " +
+                            files[l] + "' href='javascript:passa(" + edi + ")'>";
+                        testo += files[l] + "</a></li>";
+                    }
+                    var nuovo = document.getElementById("tab_file");
+                    nuovo.innerHTML = testo;
+                    $('#processate').modal({
+                        show: true
+                    });
+                },
+                error: function () {
+                    alert("qualcosa è andato storto");
+                },
+                dataType: "json"
+            });
+
+        });
+        function passa(nuovo) {
+            sessionStorage.setItem("nome_file", nuovo);
+            var url = "grafico.html";
+            window.location.href = url;
+        }
+        console.log(JSON.parse(sessionStorage.getItem("ingredienti_global")));
+
+    </script>
+</body>
+
+</html>
