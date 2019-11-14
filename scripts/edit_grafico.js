@@ -64,6 +64,48 @@ function cerca_ultimo_id_azioni() {
     return (massimo + 1) + "a";
 }
 
+function cerca_ed_elimina(id_da_eliminare){
+    console.log(id_da_eliminare);
+    for(a = 0; a < ingredienti_totali.length; a++){
+        if(id_da_eliminare === ingredienti_totali[a].id){
+
+            ingredienti_totali.splice(a, 1);
+            return;
+
+        }
+    }
+    for(a = 0; a < azioni.length; a++){
+
+        if(id_da_eliminare === azioni[a].id){
+
+            azioni.splice(a, 1);
+            return;
+
+        }
+
+    }
+    for(a = 0; a < link.length; a++){
+
+        if(id_da_eliminare.split("_")[0] === link[a].source && id_da_eliminare.split("_")[1] === link[a].target){
+
+            link.splice(a, 1);
+            return;
+
+        }
+
+    }
+    for(a = 0; a < lista_inseriti.length; a++){
+
+        if(id_da_eliminare === lista_inseriti[a].id){
+
+            lista_inseriti.splice(a, 1);
+            return;
+
+        }
+
+    }
+}
+
 // questa funzione servrà per restituirmi il punto del mio SVG 
 // in cui il mio mouse è puntato
 function svgPoint(element, x, y) {
@@ -98,6 +140,8 @@ $("#vedo").click(function (evt) {
             $("#elimina_inserimento").click(function (ev) {
                 ev.preventDefault();
                 if (cance === true) {
+                    cerca_ed_elimina(target.attr("id"));
+
                     if (target.is("circle")) {
 
                         let target_del = cerca_link_target(target.attr("id"));
@@ -151,9 +195,6 @@ $("#vedo").click(function (evt) {
                         let splitto = target.attr("id").split("_");
                         let id1 = splitto[0];
                         let id2 = splitto[1];
-                        let idddi = document.getElementById("ingre_elim");
-                        idddi.innerHTML = "Elimina link da " + id1 + " a " + id2;
-
 
                         if (id1.includes("a", 1) && id2.includes("a", 1)) {
                             let dati = { ricetta: sessionStorage.getItem("nome_file"), source: id1, target: id2 };
