@@ -1,26 +1,44 @@
 function crea_oggetto(idd, posizione_x, posizione_y) {
 
-    for (b = 0; b < ingredienti_totali.length; b++) {
-        if (idd === ingredienti_totali[b].id) {
-            varae = '<circle id="' + idd + '" cx=' + posizione_x + ' cy=' + posizione_y + ' r=35 fill="#22324A" class="oggetto" data-toggle="popover" data-trigger="hover" title="Id : <strong>' + ingredienti_totali[b].id + '</strong>" data-placement="top" data-html="true" data-content="Nome : <strong>' + ingredienti_totali[b].nome + '</strong> <br> Quantità : <strong>' + ingredienti_totali[b].quantita + '</strong>"/>';
-            document.getElementById("vedo2").innerHTML += varae;
-        }
-    }
+    if (idd.includes("i")) {
 
-    for (c = 0; c < azioni.length; c++) {
-        if (idd === azioni[c].id) {
-            if(azioni[c].condizione !== ""){
+        for (b = 0; b < ingredienti_totali.length; b++) {
+            if (idd === ingredienti_totali[b].id) {
+                if (ingredienti_totali[b].immagine !== "") {
 
-                varae = '<rect id="' + azioni[c].id + '" x=' + (posizione_x - 25) + ' y=' + (posizione_y - 25) + ' width="50"; height="50"; class="oggetto"; fill="#972323"; data-toggle="popover"; data-trigget="hover"; title="Id : <strong>' + azioni[c].id + '</strong>" data-placement="top"; data-html="true" data-content="Nome : <strong>' + azioni[c].nome + '</strong> <br> Durata : <strong>' + azioni[c].durata +'</strong> <br> Condzione : <strong>' + azioni[c].condizione + '</strong>"/>';
-            document.getElementById("vedo2").innerHTML += varae;
+                    immagine = '<pattern id="' + idd + '_imm" x="' + posizione_x + '" y="' + posizione_y + '" height="100%" width="100%" viewBox="0 0 70 70"> <image x="0%" y="0%" width="70" height="70" xlink:href="' + ingredienti_totali[b].immagine + '"> </image> </pattern>';
+                    document.getElementById("definizioni").innerHTML += immagine;
+                    varae = '<circle id="' + idd + '" cx=' + posizione_x + ' cy=' + posizione_y + ' r=35 fill="url(#' + idd + '_imm)" stroke-width="5" stroke="black" class="oggetto" data-toggle="popover" data-trigger="hover" title="Id : <strong>' + ingredienti_totali[b].id + '</strong>" data-placement="top" data-html="true" data-content="Nome : <strong>' + ingredienti_totali[b].nome + '</strong> <br> Quantità : <strong>' + ingredienti_totali[b].quantita + '</strong>"/>';
+                    document.getElementById("vedo2").innerHTML += varae;
 
-            }else{
+                } else {
 
-                varae = '<rect id="' + azioni[c].id + '" x=' + (posizione_x - 25) + ' y=' + (posizione_y - 25) + ' width="50"; height="50"; class="oggetto"; fill="#972323"; data-toggle="popover"; data-trigget="hover"; title="Id : <strong>' + azioni[c].id + '</strong>" data-placement="top"; data-html="true" data-content="Nome : <strong>' + azioni[c].nome + '</strong> <br> Durata : <strong>' + azioni[c].durata +'</strong>"/>';
-            document.getElementById("vedo2").innerHTML += varae;
+                    varae = '<circle id="' + idd + '" cx=' + posizione_x + ' cy=' + posizione_y + ' r=35 fill="#22324A" class="oggetto" data-toggle="popover" data-trigger="hover" title="Id : <strong>' + ingredienti_totali[b].id + '</strong>" data-placement="top" data-html="true" data-content="Nome : <strong>' + ingredienti_totali[b].nome + '</strong> <br> Quantità : <strong>' + ingredienti_totali[b].quantita + '</strong>"/>';
+                    document.getElementById("vedo2").innerHTML += varae;
+
+                }
 
             }
         }
+
+    } else {
+
+        for (c = 0; c < azioni.length; c++) {
+            if (idd === azioni[c].id) {
+                if (azioni[c].condizione !== "") {
+
+                    varae = '<rect id="' + azioni[c].id + '" x=' + (posizione_x - 25) + ' y=' + (posizione_y - 25) + ' width="50"; height="50"; class="oggetto"; fill="#972323"; data-toggle="popover"; data-trigget="hover"; title="Id : <strong>' + azioni[c].id + '</strong>" data-placement="top"; data-html="true" data-content="Nome : <strong>' + azioni[c].nome + '</strong> <br> Durata : <strong>' + azioni[c].durata + '</strong> <br> Condzione : <strong>' + azioni[c].condizione + '</strong>"/>';
+                    document.getElementById("vedo2").innerHTML += varae;
+
+                } else {
+
+                    varae = '<rect id="' + azioni[c].id + '" x=' + (posizione_x - 25) + ' y=' + (posizione_y - 25) + ' width="50"; height="50"; class="oggetto"; fill="#972323"; data-toggle="popover"; data-trigget="hover"; title="Id : <strong>' + azioni[c].id + '</strong>" data-placement="top"; data-html="true" data-content="Nome : <strong>' + azioni[c].nome + '</strong> <br> Durata : <strong>' + azioni[c].durata + '</strong>"/>';
+                    document.getElementById("vedo2").innerHTML += varae;
+
+                }
+            }
+        }
+
     }
 }
 
@@ -110,15 +128,15 @@ function creazione_collegamenti() {
 
         }
         let colore;
-        if(ing_ini){
+        if (ing_ini) {
 
             colore = "#E94F37";
 
-        }else if(ing_fin){
+        } else if (ing_fin) {
 
             colore = "#5C415D";
 
-        }else{
+        } else {
 
             colore = "#076B26";
 
@@ -152,23 +170,23 @@ function creazione_collegamenti() {
         } else {
             if (pos_ini_y === pos_fin_y && pos_ini_x > pos_fin_x && ing_fin) {
                 frecc = '<line id="' + id_ini + '_' + id_fin + '" x1="' + (pos_ini_x * 300 + 25) + '" y1="' + ((pos_ini_y) * 150 + 150 * (pos_ini_y - 1)) + '" x2="' + (pos_fin_x * 300 - 75) + '" y2="' + ((pos_fin_y) * 150 + 150 * (pos_fin_y - 1)) + '" stroke="' + colore + '" stroke-width="15"  marker-end="url(#arrow)" />';
-            }else if (pos_ini_y === pos_fin_y && pos_ini_x > pos_fin_x && !ing_fin) {
+            } else if (pos_ini_y === pos_fin_y && pos_ini_x > pos_fin_x && !ing_fin) {
                 frecc = '<line id="' + id_ini + '_' + id_fin + '" x1="' + (pos_ini_x * 300 + 25) + '" y1="' + ((pos_ini_y) * 150 + 150 * (pos_ini_y - 1)) + '" x2="' + (pos_fin_x * 300 + 25) + '" y2="' + ((pos_fin_y) * 150 + 150 * (pos_fin_y - 1) - 45) + '" stroke="' + colore + '" stroke-width="15"  marker-end="url(#arrow)" />';
-            }else if (pos_ini_y === pos_fin_y && pos_ini_x < pos_fin_x && !ing_fin) {
+            } else if (pos_ini_y === pos_fin_y && pos_ini_x < pos_fin_x && !ing_fin) {
                 frecc = '<line id="' + id_ini + '_' + id_fin + '" x1="' + (pos_ini_x * 300 + 25) + '" y1="' + ((pos_ini_y) * 150 + 150 * (pos_ini_y - 1)) + '" x2="' + (pos_fin_x * 300 - 65) + '" y2="' + ((pos_fin_y) * 150 + 150 * (pos_fin_y - 1)) + '" stroke="' + colore + '" stroke-width="15"  marker-end="url(#arrow)" />';
-            }else if (pos_ini_y === pos_fin_y && pos_ini_x < pos_fin_x && ing_fin) {
+            } else if (pos_ini_y === pos_fin_y && pos_ini_x < pos_fin_x && ing_fin) {
                 frecc = '<line id="' + id_ini + '_' + id_fin + '" x1="' + (pos_ini_x * 300 + 25) + '" y1="' + ((pos_ini_y) * 150 + 150 * (pos_ini_y - 1)) + '" x2="' + (pos_fin_x * 300 - 65) + '" y2="' + ((pos_fin_y) * 150 + 150 * (pos_fin_y - 1)) + '" stroke="' + colore + '" stroke-width="15"  marker-end="url(#arrow)" />';
-            }else if (pos_ini_y < pos_fin_y && pos_ini_x < pos_fin_x) {
+            } else if (pos_ini_y < pos_fin_y && pos_ini_x < pos_fin_x) {
                 frecc = '<line id="' + id_ini + '_' + id_fin + '" x1="' + (pos_ini_x * 300) + '" y1="' + ((pos_ini_y) * 150 + 150 * (pos_ini_y - 1)) + '" x2="' + (pos_fin_x * 300 - 45) + '" y2="' + ((pos_fin_y) * 150 + 150 * (pos_fin_y - 1) - 35) + '" stroke="' + colore + '" stroke-width="15"  marker-end="url(#arrow)" />';
-            }else if (pos_ini_y < pos_fin_y && pos_ini_x === pos_fin_x) {
+            } else if (pos_ini_y < pos_fin_y && pos_ini_x === pos_fin_x) {
                 frecc = '<line id="' + id_ini + '_' + id_fin + '" x1="' + (pos_ini_x * 300) + '" y1="' + ((pos_ini_y) * 150 + 150 * (pos_ini_y - 1)) + '" x2="' + (pos_fin_x * 300) + '" y2="' + ((pos_fin_y) * 150 + 150 * (pos_fin_y - 1) - 65) + '" stroke="' + colore + '" stroke-width="15"  marker-end="url(#arrow)" />';
-            }else if (pos_ini_y < pos_fin_y && pos_ini_x > pos_fin_x) {
+            } else if (pos_ini_y < pos_fin_y && pos_ini_x > pos_fin_x) {
                 frecc = '<line id="' + id_ini + '_' + id_fin + '" x1="' + (pos_ini_x * 300) + '" y1="' + ((pos_ini_y) * 150 + 150 * (pos_ini_y - 1)) + '" x2="' + (pos_fin_x * 300 + 45) + '" y2="' + ((pos_fin_y) * 150 + 150 * (pos_fin_y - 1) - 35) + '" stroke="' + colore + '" stroke-width="15"  marker-end="url(#arrow)" />';
-            }else if (pos_ini_y > pos_fin_y && pos_ini_x < pos_fin_x) {
+            } else if (pos_ini_y > pos_fin_y && pos_ini_x < pos_fin_x) {
                 frecc = '<line id="' + id_ini + '_' + id_fin + '" x1="' + (pos_ini_x * 300) + '" y1="' + ((pos_ini_y) * 150 + 150 * (pos_ini_y - 1)) + '" x2="' + (pos_fin_x * 300 - 45) + '" y2="' + ((pos_fin_y) * 150 + 150 * (pos_fin_y - 1) + 35) + '" stroke="' + colore + '" stroke-width="15"  marker-end="url(#arrow)" />';
-            }else if (pos_ini_y > pos_fin_y && pos_ini_x === pos_fin_x) {
+            } else if (pos_ini_y > pos_fin_y && pos_ini_x === pos_fin_x) {
                 frecc = '<line id="' + id_ini + '_' + id_fin + '" x1="' + (pos_ini_x * 300) + '" y1="' + ((pos_ini_y) * 150 + 150 * (pos_ini_y - 1)) + '" x2="' + (pos_fin_x * 300) + '" y2="' + ((pos_fin_y) * 150 + 150 * (pos_fin_y - 1) + 65) + '" stroke="' + colore + '" stroke-width="15"  marker-end="url(#arrow)" />';
-            }else if (pos_ini_y > pos_fin_y && pos_ini_x > pos_fin_x) {
+            } else if (pos_ini_y > pos_fin_y && pos_ini_x > pos_fin_x) {
                 frecc = '<line id="' + id_ini + '_' + id_fin + '" x1="' + (pos_ini_x * 300) + '" y1="' + ((pos_ini_y) * 150 + 150 * (pos_ini_y - 1)) + '" x2="' + (pos_fin_x * 300 + 55) + '" y2="' + ((pos_fin_y) * 150 + 150 * (pos_fin_y - 1) + 35) + '" stroke="' + colore + '" stroke-width="15"  marker-end="url(#arrow)" />';
             }
         }
@@ -203,7 +221,7 @@ function creazione_collegamenti() {
             }
         }
         if (pos_ini_y === pos_fin_y && pos_ini_x > pos_fin_x) {
-            frecc = '<path id="' + id_ini + '_' + id_fin + '" d="M' + (pos_ini_x * 300 + 25) + ',' + ((pos_ini_y) * 150 + 150 * (pos_ini_y - 1)) + ' Q' + ((pos_ini_x * 300) - 50) + ',' + ((pos_fin_y) * 150 + 150 * (pos_fin_y - 1) - 150) + ' ' + (pos_fin_x * 300 + 25) + ',' + ((pos_fin_y) * 150 + 150 * (pos_fin_y - 1)-45) + '" stroke="#FF495C" stroke-width="15" stroke-dasharray="25,25"  marker-end="url(#arrow)" fill-opacity="0" />';
+            frecc = '<path id="' + id_ini + '_' + id_fin + '" d="M' + (pos_ini_x * 300 + 25) + ',' + ((pos_ini_y) * 150 + 150 * (pos_ini_y - 1)) + ' Q' + ((pos_ini_x * 300) - 50) + ',' + ((pos_fin_y) * 150 + 150 * (pos_fin_y - 1) - 150) + ' ' + (pos_fin_x * 300 + 25) + ',' + ((pos_fin_y) * 150 + 150 * (pos_fin_y - 1) - 45) + '" stroke="#FF495C" stroke-width="15" stroke-dasharray="25,25"  marker-end="url(#arrow)" fill-opacity="0" />';
         } else if (pos_ini_y === pos_fin_y && pos_ini_x < pos_fin_x) {
             frecc = '<path id="' + id_ini + '_' + id_fin + '" d="M' + (pos_ini_x * 300 + 25) + ',' + ((pos_ini_y) * 150 + 150 * (pos_ini_y - 1)) + ' Q' + ((pos_ini_x * 300) - 50) + ',' + ((pos_fin_y) * 150 + 150 * (pos_fin_y - 1) - 150) + ' ' + (pos_fin_x * 300 - 65) + ',' + ((pos_fin_y) * 150 + 150 * (pos_fin_y - 1)) + '" stroke="#FF495C" stroke-width="15" stroke-dasharray="25,25"  marker-end="url(#arrow)" fill-opacity="0" />';
         } else if (pos_ini_y < pos_fin_y && pos_ini_x < pos_fin_x) {
@@ -230,8 +248,3 @@ function crea_link(id, x_inizio, y_inizio) {
     frecc = '<line id="' + id + '" x1="' + x_inizio + '" y1="' + y_inizio + '" x2="' + x_inizio + '" y2="' + y_inizio + '"stroke="#076B26" stroke-width="15"  marker-end="url(#arrow)" />';
     document.getElementById("vedo2").innerHTML += frecc;
 }
-
-
-
-
-
