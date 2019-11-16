@@ -17,11 +17,9 @@ function crea_oggetto(idd, posizione_x, posizione_y) {
                     document.getElementById("vedo2").innerHTML += varae;
 
                 }
-
             }
         }
-
-    } else {
+    }else {
 
         for (c = 0; c < azioni.length; c++) {
             if (idd === azioni[c].id) {
@@ -30,7 +28,7 @@ function crea_oggetto(idd, posizione_x, posizione_y) {
                     varae = '<rect id="' + azioni[c].id + '" x=' + (posizione_x - 25) + ' y=' + (posizione_y - 25) + ' width="50"; height="50"; class="oggetto"; fill="#972323"; data-toggle="popover"; data-trigget="hover"; title="Id : <strong>' + azioni[c].id + '</strong>" data-placement="top"; data-html="true" data-content="Nome : <strong>' + azioni[c].nome + '</strong> <br> Durata : <strong>' + azioni[c].durata + '</strong> <br> Condzione : <strong>' + azioni[c].condizione + '</strong>"/>';
                     document.getElementById("vedo2").innerHTML += varae;
 
-                } else {
+                }else {
 
                     varae = '<rect id="' + azioni[c].id + '" x=' + (posizione_x - 25) + ' y=' + (posizione_y - 25) + ' width="50"; height="50"; class="oggetto"; fill="#972323"; data-toggle="popover"; data-trigget="hover"; title="Id : <strong>' + azioni[c].id + '</strong>" data-placement="top"; data-html="true" data-content="Nome : <strong>' + azioni[c].nome + '</strong> <br> Durata : <strong>' + azioni[c].durata + '</strong>"/>';
                     document.getElementById("vedo2").innerHTML += varae;

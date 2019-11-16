@@ -152,7 +152,12 @@ function calcolo_nodi_e_link(xml, callback) {
 
             if(ingredienti_globali[b].nome === ingredienti_totali[d].nome){
 
-                inserisci_global = false
+                inserisci_global = false;
+                if(ingredienti_globali[b].immagine !== ""){
+
+                    ingredienti_totali[d].immagine = ingredienti_globali[b].immagine;
+
+                }
             }
         }
 
