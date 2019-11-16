@@ -8,6 +8,9 @@ var azioni = [];
 // array che contiene i link
 var link = [];
 
+var ingredienti_globali =
+    JSON.parse(sessionStorage.getItem("ingredienti_global"));
+
 // link da aggiungere dopo
 var link_dopo = [];
 
@@ -102,7 +105,8 @@ function calcolo_liste(xml) {
                 vara = {
                     id: x[i].getAttribute('IDingrediente'),
                     nome: x[i].childNodes[1].childNodes[0].nodeValue,
-                    quantita: x[i].childNodes[3].childNodes[0].nodeValue
+                    quantita: x[i].childNodes[3].childNodes[0].nodeValue,
+                    immagine: ""
                 };
 
             } else {
@@ -110,7 +114,8 @@ function calcolo_liste(xml) {
                 vara = {
                     id: x[i].getAttribute('IDingrediente'),
                     nome: x[i].childNodes[1].childNodes[0].nodeValue,
-                    quantita: ""
+                    quantita: "",
+                    immagine: ""
                 };
 
             }
@@ -194,6 +199,25 @@ function calcolo_liste(xml) {
         }
     }
 
+    // queste vanno ad aggiornare la lista delle componenti 
+    // globali in base al nome vado ad aggiornare il tutto
+    for (d = 0; d < ingredienti_totali.length; d++) {
+
+        for (b = 0; b < ingredienti_globali.length; b++) {
+
+            if (ingredienti_globali[b].nome === ingredienti_totali[d].nome) {
+
+                if (ingredienti_globali[b].immagine !== "") {
+
+                    ingredienti_totali[d].immagine = ingredienti_globali[b].immagine;
+
+                }
+            }
+        }
+    }
+
+
+
     function relazio(risorsa, puntato) {
         if (risorsa.includes("i") && puntato.includes("a")) {
             return "Pre-Condizione";
@@ -258,6 +282,14 @@ function calcolo_liste(xml) {
         text += '<th scope="row">' + ingredienti_totali[i].id + "</th>";
         text += "<td>" + ingredienti_totali[i].nome + "</td>";
         text += "<td>" + ingredienti_totali[i].quantita + "</td>";
+        if (ingredienti_totali[i].immagine !== "") {
+
+            text += "<td> <a href='" + ingredienti_totali[i].immagine + "' target='_blank'> visualizza immagine </a></td>";
+
+        } else {
+            text += "<td></td>";
+        }
+
         text += '<td><button id="' + ingredienti_totali[i].id +
             '" class="btn-warning btn btn-sm shadow-sm modifica_ingre">\n\
 <i class="fas fa-edit"></i></button> <button id="' + ingredienti_totali[i].id +
@@ -339,6 +371,14 @@ function calcolo_liste(xml) {
         }
     }
 
+    function trova_imma(idda) {
+        for (i = 0; i < ingredienti_totali.length; i++) {
+            if (ingredienti_totali[i].id === idda) {
+                return ingredienti_totali[i].immagine;
+            }
+        }
+    }
+
     function trova_durata(id_az) {
         for (i = 0; i < azioni.length; i++) {
             if (azioni[i].id === id_az) {
@@ -375,8 +415,10 @@ function calcolo_liste(xml) {
         let idi = $(this).attr("id");
         nome_ingr = trovanome($(this).attr("id"));
         quan_ingr = trova_quan($(this).attr("id"));
+        imma_ingr = trova_imma($(this).attr("id"));
         $("#nome_nodo").val(nome_ingr);
         $("#quantita_nodo").val(quan_ingr);
+        $("#immagine_nodo").val(imma_ingr);
         let idddi = document.getElementById("ingre_mod");
         idddi.innerHTML = "Modifica ingrediente " + idi;
         $("#salva_inserimento").click(function (ev) {
@@ -388,7 +430,53 @@ function calcolo_liste(xml) {
                     nome: $("#nome_nodo").val(),
                     quantita: $("#quantita_nodo").val()
                 };
+
                 if (modifica.nome !== "") {
+
+                    for (n = 0; n < ingredienti_globali.length; n++) {
+
+                        if (ingredienti_globali[n].nome === nome_ingr) {
+
+                            if (nome_ingr !== $("#nome_nodo").val()) {
+
+                                ingredienti_globali[n].nome = $("#nome_nodo").val();
+                                let modifica_nome = { nome_vecchio: nome_ingr, nome_nuovo: $("#nome_nodo").val() }
+                                $.ajax({
+                                    url: 'modifica_nome.php',
+                                    type: 'POST',
+                                    async: false,
+                                    data: modifica_nome
+                                });
+
+                                if (imma_ingr !== $("#immagine_nodo").val()) {
+                                    ingredienti_globali[n].immagine = $("#immagine_nodo").val();
+                                    let insero = { nome: $("#nome_nodo").val(), immagine: $("#immagine_nodo").val() };
+                                    $.ajax({
+                                        url: 'aggiungi_modifica_immagine.php',
+                                        type: 'POST',
+                                        async: false,
+                                        data: insero
+                                    });
+                                }
+
+
+                            } else {
+
+                                if (imma_ingr !== $("#immagine_nodo").val()) {
+                                    ingredienti_globali[n].immagine = $("#immagine_nodo").val();
+                                    let insero = { nome: nome_ingr, immagine: $("#immagine_nodo").val() };
+
+                                    $.ajax({
+                                        url: 'aggiungi_modifica_immagine.php',
+                                        type: 'POST',
+                                        data: insero
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    sessionStorage.setItem("ingredienti_global", JSON.stringify(ingredienti_globali));
+
                     $.ajax({
                         url: 'modifica_ingrediente.php',
                         type: 'POST',
@@ -468,7 +556,10 @@ function calcolo_liste(xml) {
 
                 let nome = $("#nome_nodo2").val();
                 let quant = $("#quantita_nodo2").val();
+                let imma = $("#immagine_nodo2").val();
                 if (nome !== "") {
+
+                    
                     let idi = cerca_ultimo_id_ingredienti();
                     let inse = {
                         id: idi,
@@ -513,7 +604,7 @@ function calcolo_liste(xml) {
     // Funzione modifica azione delle tabelle
     $(".modifica_azio").click(function (evt) {
         let moda = true;
-        
+
         $('#modda_azione').modal({
             show: true
         });
@@ -524,7 +615,7 @@ function calcolo_liste(xml) {
         nome_azio = trovanome($(this).attr("id"));
         dur_azio = trova_durata($(this).attr("id"));
         cond_azio = trova_condizione($(this).attr("id"));
-        
+
         $("#nome_nodo").val(nome_azio);
         $("#durata_nodo").val(dur_azio);
         $("#condizione_nodo").val(cond_azio);
