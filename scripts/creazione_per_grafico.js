@@ -72,22 +72,38 @@ $("#vedo").click(function (evt) {
         $('#insert_ingrediente').modal({
             show: true
         });
+        
         let azio = document.getElementById("azion");
+        let ing = document.getElementById("ingred");
+        var lista = document.getElementById("globali");
+
+        for (a = 0; a < ingredienti_globali.length; a++) {
+            let inni = "<option value='" + ingredienti_globali[a].nome + "'>" + ingredienti_globali[a].nome + "</option>";
+            lista.innerHTML += inni;
+        }
         if (azio.checked == true) {
-            $("#non_indispensabile").hide();
+            $(".solo_ingrediente").hide();
+        }
+        if (ing.checked == true) {
+            $(".solo_azione").hide();
         }
         $("#azion").click(function (e) {
-            $("#non_indispensabile").hide();
+            $(".solo_ingrediente").hide();
+            $(".solo_azione").show();
         });
         $("#ingred").click(function (e) {
-            $("#non_indispensabile").show();
+            $(".solo_ingrediente").show();
+            $(".solo_azione").hide();
         });
         $("#salva_inserimento").click(function (ev) {
-            ev.preventDefault();
+            
             if (scrivi === true) {
                 let nome = document.getElementById("nome_nodo");
                 let ingredi = document.getElementById("ingred");
                 let quant = document.getElementById("quantita_nodo");
+                let imma = document.getElementById("immagine_nodo");
+                let nome_azione = document.getElementById("nome_nodo2");
+                let durata = document.getElementById("durata_nodo");
                 var
                     x = evt.clientX,
                     y = evt.clientY,
@@ -96,11 +112,55 @@ $("#vedo").click(function (evt) {
                     ye = Math.round(svgP.y);
                 if (nome !== "") {
                     if (ingredi.checked == true) {
+
+                        let non = true;
+
+                        for (n = 0; n < ingredienti_globali.length; n++) {
+
+                            if (ingredienti_globali[n].nome === nome.value) {
+                                non = false;
+                                if(imma.value !== ""){
+
+                                    let insero = {nome: ingredienti_globali[n].nome, immagine: imma.value}
+                                    $.ajax({
+                                        url: 'aggiungi_modifica_immagine.php',
+                                        type: 'POST',
+                                        data: insero,
+                                        success: function () {
+                                            location.reload();
+                                        },
+                                        error: function () {
+                                            alert("qualcosa è andato storto");
+                                        }
+                                    });
+                                    ingredienti_globali[n].immagine = imma.value;
+                                    sessionStorage.setItem("ingredienti_global", JSON.stringify(ingredienti_globali));
+
+                                }else{
+                                    imma.value = ingredienti_globali[n].nome
+                                }
+                            }
+                        }
+                        if (non) {
+
+                            vara_glob = { nome: nome.value, immagine: imma.value };
+
+                            ingredienti_globali.push(vara_glob);
+
+                            sessionStorage.setItem("ingredienti_global", JSON.stringify(ingredienti_globali));
+
+                            $.ajax({
+                                url: 'aggiungi_ingrediente_globale.php',
+                                type: 'POST',
+                                data: vara_glob
+                            });
+                        }
                         let idi = cerca_ultimo_id_ingredienti();
                         let inse = {
                             id: idi,
                             nome: nome.value,
-                            quantita: quant.value
+                            quantita: quant.value,
+                            immagine: imma.value
                         };
                         ingredienti_totali.push(inse);
                         let inse2 = {
@@ -119,14 +179,16 @@ $("#vedo").click(function (evt) {
                         let idi = cerca_ultimo_id_azioni();
                         let inse = {
                             id: idi,
-                            nome: nome.value
+                            nome: nome_azione.value,
+                            durata: durata.value
                         };
                         azioni.push(inse);
 
                         let inse2 = {
                             ricetta: sessionStorage.getItem("nome_file"),
                             id: idi,
-                            nome: nome.value
+                            nome: nome_azione.value,
+                            durata: durata.value
                         };
                         crea_oggetto(idi, xe, ye);
                         $.ajax({
@@ -139,10 +201,22 @@ $("#vedo").click(function (evt) {
                 } else {
                     alert("hai dimenticato il nome");
                 }
+                
             }
+            $('circle').popover({
+                trigger: 'hover'
+              })
+            $('rect').popover({
+                trigger: 'hover'
+              })
         });
         $("#annulla_insertnodo").click(function (ev) {
             scrivi = false;
+            
+        });
+        $(".close").click(function (evw) {
+            scrivi = false;
+           
         });
     }
 });
@@ -165,7 +239,6 @@ $("#vedo").mousedown(function (evt) {
                 kids = $("#vedo2").children("rect,circle"),
                 x = 0,
                 y = 0;
-            $('[data-toggle="popover"]').popover("hide");
             $('[data-toggle="popover"]').popover("disable");
 
             muovilo = true;
@@ -202,7 +275,6 @@ $("#vedo").mousedown(function (evt) {
             coordinata_prima_y = target.attr("y2");
             console.log(nodo_source);
             var kids = $("#vedo2").children("rect,circle");
-            $('[data-toggle="popover"]').popover("hide");
             $('[data-toggle="popover"]').popover("disable");
 
             muovilo = true;
@@ -218,6 +290,7 @@ $("#vedo").mousedown(function (evt) {
 // questa funzione mi permette di muovere il link create con lp'azione precedente
 $("#vedo").mousemove(function (er) {
     if (linkabile.checked == true) {
+        $('[data-toggle="popover"]').popover("enable");
         if (muovilo) {
             var
                 x = er.clientX,
@@ -426,59 +499,59 @@ $("#vedo").mouseup(function (e) {
                         let pos_fin_y = parseInt(y);
                         let pos_fin_x = parseInt(x);
                         let azione = false;
-                        if(tipologia_nodo_target === "azione"){
+                        if (tipologia_nodo_target === "azione") {
 
-                             azione = true;
+                            azione = true;
 
                         }
 
-                        if(tipologia_nodo_source === "ingrediente"){
+                        if (tipologia_nodo_source === "ingrediente") {
                             if (pos_ini_y === pos_fin_y && pos_ini_x > pos_fin_x) {
                                 pos_fin_x = (pos_fin_x + 65);
-                            }else if (pos_ini_y === pos_fin_y && pos_ini_x < pos_fin_x) {
+                            } else if (pos_ini_y === pos_fin_y && pos_ini_x < pos_fin_x) {
                                 pos_fin_x = (pos_fin_x - 65);
-                            }else if (pos_ini_y < pos_fin_y && pos_ini_x < pos_fin_x) {
+                            } else if (pos_ini_y < pos_fin_y && pos_ini_x < pos_fin_x) {
                                 pos_fin_x = (pos_fin_x - 35);
-                            }else if (pos_ini_y < pos_fin_y && pos_ini_x === pos_fin_x) {
+                            } else if (pos_ini_y < pos_fin_y && pos_ini_x === pos_fin_x) {
                                 pos_fin_y = (pos_fin_x - 65);
-                            }else if (pos_ini_y < pos_fin_y && pos_ini_x > pos_fin_x) {
+                            } else if (pos_ini_y < pos_fin_y && pos_ini_x > pos_fin_x) {
                                 pos_fin_x = (pos_fin_x + 45);
                                 pos_fin_y = (pos_fin_y - 35);
-                            }else if (pos_ini_y > pos_fin_y && pos_ini_x < pos_fin_x) {
+                            } else if (pos_ini_y > pos_fin_y && pos_ini_x < pos_fin_x) {
                                 pos_fin_x = (pos_fin_x - 45);
                                 pos_fin_y = (pos_fin_y + 35);
-                            }else if (pos_ini_y > pos_fin_y && pos_ini_x === pos_fin_x) {
+                            } else if (pos_ini_y > pos_fin_y && pos_ini_x === pos_fin_x) {
                                 pos_fin_y = (pos_fin_y + 65);
-                            }else if (pos_ini_y > pos_fin_y && pos_ini_x > pos_fin_x) {
+                            } else if (pos_ini_y > pos_fin_y && pos_ini_x > pos_fin_x) {
                                 pos_fin_x = (pos_fin_x + 55);
                                 pos_fin_y = (pos_fin_y + 35);
                             }
-                        }else{
+                        } else {
                             if (pos_ini_y === pos_fin_y && pos_ini_x > pos_fin_x && !azione) {
-                                pos_fin_x = (pos_fin_x - 75);                                
-                            }else if (pos_ini_y === pos_fin_y && pos_ini_x > pos_fin_x && azione) {
+                                pos_fin_x = (pos_fin_x - 75);
+                            } else if (pos_ini_y === pos_fin_y && pos_ini_x > pos_fin_x && azione) {
                                 pos_fin_x = (pos_fin_x + 25);
                                 pos_fin_y = (pos_fin_y - 45);
-                            }else if (pos_ini_y === pos_fin_y && pos_ini_x < pos_fin_x && azione) {
-                                pos_fin_x = (pos_fin_x - 65);                               
-                            }else if (pos_ini_y === pos_fin_y && pos_ini_x < pos_fin_x && !azione) {
+                            } else if (pos_ini_y === pos_fin_y && pos_ini_x < pos_fin_x && azione) {
+                                pos_fin_x = (pos_fin_x - 65);
+                            } else if (pos_ini_y === pos_fin_y && pos_ini_x < pos_fin_x && !azione) {
                                 pos_fin_x = (pos_fin_x - 65);
                                 pos_fin_y = (pos_fin_y - 35);
-                            }else if (pos_ini_y < pos_fin_y && pos_ini_x < pos_fin_x) {
+                            } else if (pos_ini_y < pos_fin_y && pos_ini_x < pos_fin_x) {
                                 pos_fin_x = (pos_fin_x - 45);
                                 pos_fin_y = (pos_fin_y - 35);
-                            }else if (pos_ini_y < pos_fin_y && pos_ini_x === pos_fin_x) {
+                            } else if (pos_ini_y < pos_fin_y && pos_ini_x === pos_fin_x) {
                                 pos_fin_y = (pos_fin_y - 65);
-                            }else if (pos_ini_y < pos_fin_y && pos_ini_x > pos_fin_x) {
+                            } else if (pos_ini_y < pos_fin_y && pos_ini_x > pos_fin_x) {
                                 pos_fin_x = (pos_fin_x + 45);
                                 pos_fin_y = (pos_fin_y - 35);
-                            }else if (pos_ini_y > pos_fin_y && pos_ini_x < pos_fin_x) {
+                            } else if (pos_ini_y > pos_fin_y && pos_ini_x < pos_fin_x) {
                                 pos_fin_x = (pos_fin_x - 45);
                                 pos_fin_y = (pos_fin_y + 35);
-                            }else if (pos_ini_y > pos_fin_y && pos_ini_x === pos_fin_x) {
+                            } else if (pos_ini_y > pos_fin_y && pos_ini_x === pos_fin_x) {
                                 pos_fin_x = (pos_fin_x - 45);
                                 pos_fin_y = (pos_fin_y + 65);
-                            }else if (pos_ini_y > pos_fin_y && pos_ini_x > pos_fin_x) {
+                            } else if (pos_ini_y > pos_fin_y && pos_ini_x > pos_fin_x) {
                                 pos_fin_x = (pos_fin_x + 55);
                                 pos_fin_y = (pos_fin_y + 35);
                             }
@@ -529,5 +602,4 @@ $("#vedo").mouseup(function (e) {
             kidse.addClass("oggetto");
         }
     }
-
 });

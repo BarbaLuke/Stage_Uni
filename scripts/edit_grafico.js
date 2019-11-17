@@ -227,12 +227,13 @@ $("#vedo").click(function (evt) {
                     }
 
                 }
-
             });
             $("#annulla_eliminazione").click(function (ev) {
+                cance = false;
+            });
+            $(".close").click(function (evw) {
                 cance = false;
             });
         }
     }
 });
-

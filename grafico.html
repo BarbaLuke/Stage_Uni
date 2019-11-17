@@ -5,6 +5,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv='cache-control' content='no-cache'>
+    <meta http-equiv='expires' content='0'>
+    <meta http-equiv='pragma' content='no-cache'>
 
     <title>Grafico Ricetta</title>
 
@@ -264,28 +267,47 @@
                             <input type="radio" id="azion" name="customRadio" class="custom-control-input">
                             <label class="custom-control-label" for="azion">Azione</label>
                         </div>
-
-                        <div class="form-group">
-                            <label>Nome dell' ingrediente</label>
-                            <input type="text" class="form-control" id="nome_nodo" name='nome'
-                                placeholder="Nome ingrediente">
-                        </div>
-                        <div class="form-group" id="non_indispensabile">
-                            <label>Quantità dell'ingrediente</label>
-                            <input type="text" class="form-control" id="quantita_nodo" name='quantita'
-                                placeholder="Quantità ingrediente">
-                        </div>
-
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" id="annulla_insertnodo" class="btn btn-secondary"
-                            data-dismiss="modal">Annulla</button>
-                        <button type="submit" id="salva_inserimento" class="btn btn-primary"
-                            data-dismiss="modal">Salva</button>
+
+                    <div class="form-group solo_ingrediente">
+                        <label>Nome dell' ingrediente</label>
+                        <input list="globali" id="nome_nodo" name='nome'
+                            class="form-control custom-select custom-select-md da_nascondere"
+                            placeholder="Nome ingrediente">
+                        <datalist id="globali">
+                        </datalist>
                     </div>
+                    <div class="form-group solo_ingrediente">
+                        <label>Quantità dell'ingrediente</label>
+                        <input type="text" class="form-control" id="quantita_nodo" name='quantita'
+                            placeholder="Quantità ingrediente">
+                    </div>
+                    <div class="form-group solo_azione">
+                        <label>Nome dell'azione</label>
+                        <input type="text" class="form-control" id="nome_nodo2" name='nome2'
+                            placeholder="Nome azione">
+                    </div>
+                    <div class="form-group solo_azione">
+                        <label>Durata dell'azione</label>
+                        <input type="text" class="form-control" id="durata_nodo" name='durata'
+                            placeholder="Durata azione">
+                    </div>
+                    <div class="form-group solo_ingrediente">
+                        <label>Immagine dell'ingrediente</label>
+                        <input type="text" class="form-control" id="immagine_nodo" name='immagine'
+                            placeholder="Immagine ingrediente">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="annulla_insertnodo" class="btn btn-secondary"
+                        data-dismiss="modal">Annulla</button>
+                    <button type="submit" id="salva_inserimento" class="btn btn-primary"
+                        data-dismiss="modal">Salva</button>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <div class="modal fade" id="elimina_ingrediente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

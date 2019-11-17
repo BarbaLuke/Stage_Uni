@@ -142,41 +142,6 @@ function calcolo_nodi_e_link(xml, callback) {
         }
     }
 
-    // queste vanno ad aggiornare la lista delle componenti 
-    // globali in base al nome vado ad aggiornare il tutto
-    for(d = 0; d < ingredienti_totali.length; d++){
-
-        let inserisci_global = true;
-
-        for(b = 0; b < ingredienti_globali.length; b++){
-
-            if(ingredienti_globali[b].nome === ingredienti_totali[d].nome){
-
-                inserisci_global = false;
-                if(ingredienti_globali[b].immagine !== ""){
-
-                    ingredienti_totali[d].immagine = ingredienti_globali[b].immagine;
-
-                }
-            }
-        }
-
-        if(inserisci_global){
-
-            vara_glob = {nome: ingredienti_totali[d].nome, immagine: ingredienti_totali[d].immagine};
-            
-            ingredienti_globali.push(vara_glob);
-
-            sessionStorage.setItem("ingredienti_global", JSON.stringify(ingredienti_globali));
-
-            $.ajax({
-                url: 'aggiungi_ingrediente_globale.php',
-                type: 'POST',
-                data: vara_glob
-            });
-        }
-    }
-
     // creo una lista di adiacenza per ogni nodo per
     //  vedere quanti controlli devo fare
     var riempi = {};
@@ -392,6 +357,44 @@ function calcolo_nodi_e_link(xml, callback) {
     for (a = 0; a < lista_adj.length; a++) {
         varf = { id: lista_adj[a].id, posx: 1, posy: 1 };
         lista_inseriti.push(varf);
+    }
+
+    // queste vanno ad aggiornare la lista delle componenti 
+    // globali in base al nome vado ad aggiornare il tutto
+    for (d = 0; d < ingredienti_totali.length; d++) {
+
+        let inserisci_global = true;
+
+        ingredienti_globali = JSON.parse(sessionStorage.getItem("ingredienti_global"));
+
+        for (b = 0; b < ingredienti_globali.length; b++) {
+
+            if (ingredienti_globali[b].nome.replace(/\s+/g, '') === ingredienti_totali[d].nome.replace(/\s+/g, '')) {
+
+                inserisci_global = false;
+                if (ingredienti_globali[b].immagine !== "") {
+
+                    ingredienti_totali[d].immagine = ingredienti_globali[b].immagine;
+
+                }
+            }
+        }
+
+        if (inserisci_global) {
+
+            vara_glob = { nome: ingredienti_totali[d].nome, immagine: ingredienti_totali[d].immagine };
+
+            ingredienti_globali.push(vara_glob);
+
+            sessionStorage.setItem("ingredienti_global", JSON.stringify(ingredienti_globali));
+
+            $.ajax({
+                url: 'aggiungi_ingrediente_globale.php',
+                async: false,
+                type: 'POST',
+                data: vara_glob
+            });
+        }
     }
 
     // richiamo la funzione che mi inserisce la posizione

@@ -10,7 +10,7 @@ var appoggio2;
 
 // funzione che mi permette di tirar fuori le cose dal json
 $.getJSON("ingredienti_global.json", function (data) {
-
+console.log(data);
     // cerco per ogni elemento il valore da inserire nell'array corrispondente
     $.each(data, function (key,val) {
         nomi_ingrediente.push(val.nome);

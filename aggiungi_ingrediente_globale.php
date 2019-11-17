@@ -9,7 +9,11 @@ fclose($myfile);
 
 $ingredienti_array = json_decode($txt, true);
 
-array_push($ingredienti_array, array('nome' => $nome, 'immagine' => $immagine));
+$nuovo['nome'] = $nome;
+
+$nuovo['immagine'] = $immagine;
+
+array_push($ingredienti_array, $nuovo);
 
 $file = fopen("ingredienti_global.json","w");
 fwrite($file, json_encode($ingredienti_array));

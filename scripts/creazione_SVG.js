@@ -6,7 +6,7 @@ function crea_oggetto(idd, posizione_x, posizione_y) {
             if (idd === ingredienti_totali[b].id) {
                 if (ingredienti_totali[b].immagine !== "") {
 
-                    immagine = '<pattern id="' + idd + '_imm" x="' + posizione_x + '" y="' + posizione_y + '" height="100%" width="100%" viewBox="0 0 70 70"> <image x="0%" y="0%" width="70" height="70" xlink:href="' + ingredienti_totali[b].immagine + '"> </image> </pattern>';
+                    immagine = '<pattern patternContentUnits="objectBoundingBox" id="' + idd + '_imm" x="' + posizione_x + '" y="' + posizione_y + '" height="100%" width="100%" viewBox="0 0 70 70" preserveAspectRatio="xMidYMid slice"> <image x="0%" y="0%" height="70" width="70" preserveAspectRatio="xMidYMid slice" xlink:href="' + ingredienti_totali[b].immagine + '"> </image> </pattern>';
                     document.getElementById("definizioni").innerHTML += immagine;
                     varae = '<circle id="' + idd + '" cx=' + posizione_x + ' cy=' + posizione_y + ' r=35 fill="url(#' + idd + '_imm)" stroke-width="5" stroke="black" class="oggetto" data-toggle="popover" data-trigger="hover" title="Id : <strong>' + ingredienti_totali[b].id + '</strong>" data-placement="top" data-html="true" data-content="Nome : <strong>' + ingredienti_totali[b].nome + '</strong> <br> Quantità : <strong>' + ingredienti_totali[b].quantita + '</strong>"/>';
                     document.getElementById("vedo2").innerHTML += varae;

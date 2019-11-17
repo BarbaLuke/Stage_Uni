@@ -38,13 +38,13 @@ for (a = 0; a < ingredienti_globali.length; a++) {
         inni += "<tr> <td>" + ingredienti_globali[a].nome + "</td> <td> <a href='" + ingredienti_globali[a].immagine + "' target='_blank'> visualizza immagine </a></td> <td><button id='" + ingredienti_globali[a].nome +
             "' class='btn-warning btn btn-sm shadow-sm moda_imm'>\n\
 <i class='fas fa-edit'></i></button> <button id='" + ingredienti_globali[a].nome +
-            "in' class='btn-primary shadow-sm btn btn-sm insert_imm'>\n\
+            "_' class='btn-primary shadow-sm btn btn-sm insert_imm'>\n\
 <i class='fas fa-plus'></i></button></td></tr>";
 
     } else {
 
         inni += "<tr> <td>" + ingredienti_globali[a].nome + "</td> <td></td> <td><button id='" + ingredienti_globali[a].nome +
-            "in' class='btn-primary shadow-sm btn btn-sm insert_imm'>\n\
+            "_' class='btn-primary shadow-sm btn btn-sm insert_imm'>\n\
 <i class='fas fa-plus'></i></button></td></tr>";
 
     }
@@ -56,7 +56,7 @@ $(".insert_imm").click(function (evt) {
     $('#insert_immagine').modal({
         show: true
     });
-    var nome_glob = $(this).attr("id").split("in")[0];
+    var nome_glob = $(this).attr("id").split("_")[0];
 
     $("#salva_insert_link_imm").click(function (ev) {
         if (ins_imm === true) {
@@ -81,11 +81,17 @@ $(".insert_imm").click(function (evt) {
                 }
             });
             ins_imm = false;
+            $("#link_immagine").val("");
         }
     });
 
     $("#annulla_insert_link_imm").click(function (ev) {
         ins_imm = false;
+        $("#link_immagine").val("");
+    });
+    $(".close").click(function (evw) {
+        ins_imm = false;
+        $("#link_immagine").val("");
     });
 });
 
@@ -130,10 +136,16 @@ $(".moda_imm").click(function (evt) {
                 }
             });
             ins_imm = false;
+            $("#link_immagine_mod").val("");
         }
     });
 
     $("#annulla_moda_link_imm").click(function (ev) {
         ins_imm = false;
+        $("#link_immagine_mod").val("");
+    });
+    $(".close").click(function (evw) {
+        ins_imm = false;
+        $("#link_immagine_mod").val("");
     });
 });

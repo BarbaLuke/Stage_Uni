@@ -1,9 +1,11 @@
 <?php
 $ricetta = $_POST['ricetta'];
-// questo è il nome in input dall'utente
+// questo è l'id nuovo da inserire
 $id = $_POST['id'];
 // questo è il nome in input dall'utente
 $nome = $_POST['nome'];
+// questa è la durata
+$durata = $_POST['durata'];
 // creo l'oggetto simplexml che mi permette di manipolare l'XML più facilmente
 $xmldata = simplexml_load_file("ricette/".$ricetta) or die("Failed to load");
 
@@ -22,7 +24,7 @@ function simplexml_insert_after(SimpleXMLElement $insert, SimpleXMLElement $targ
 
 // l'elemento che devo inserire, in questo caso è solo l'ingrediente, varia in base
 // ai parametri passati in input dall'utente
-    $insert = new SimpleXMLElement('<AZIONE IDazione="'.$id.'"><NOMEA> '.$nome.' </NOMEA></AZIONE>');
+    $insert = new SimpleXMLElement('<AZIONE IDazione="'.$id.'"><NOMEA> '.$nome.' </NOMEA><DUREVOLE>'.$durata.'</DUREVOLE></AZIONE>');
 
 // l'elemento che funge da appendino, in questo caso dovendo aggiungere solo 
 // un ingrediente quindi mi basta trovare l'ultimo elemento degli ingredienti

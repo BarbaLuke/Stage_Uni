@@ -205,7 +205,7 @@ function calcolo_liste(xml) {
 
         for (b = 0; b < ingredienti_globali.length; b++) {
 
-            if (ingredienti_globali[b].nome === ingredienti_totali[d].nome) {
+            if (ingredienti_globali[b].nome.replace(/\s+/g, '') === ingredienti_totali[d].nome.replace(/\s+/g, '')) {
 
                 if (ingredienti_globali[b].immagine !== "") {
 
@@ -459,7 +459,6 @@ function calcolo_liste(xml) {
                                     });
                                 }
 
-
                             } else {
 
                                 if (imma_ingr !== $("#immagine_nodo").val()) {
@@ -498,6 +497,9 @@ function calcolo_liste(xml) {
 
             modda = false;
 
+        });
+        $(".close").click(function (evw) {
+            modda = false;
         });
     });
 
@@ -543,28 +545,82 @@ function calcolo_liste(xml) {
             canc = false;
 
         });
+
+        $(".close").click(function (evw) {
+            canc = false;
+        });
     });
 
     // funzione inserimento ingrediente nelle tabelle
     $("#inserisci_ingrediente").click(function (evt) {
         let inn = true;
+
         $('#insert_ingrediente').modal({
             show: true
         });
+
         $("#salva_inserimento2").click(function (ev) {
             if (inn === true) {
 
                 let nome = $("#nome_nodo2").val();
+
+
                 let quant = $("#quantita_nodo2").val();
                 let imma = $("#immagine_nodo2").val();
                 if (nome !== "") {
 
-                    
+                    let non = true;
+
+                    for (n = 0; n < ingredienti_globali.length; n++) {
+
+                        if (ingredienti_globali[n].nome === nome) {
+                            non = false;
+
+                            if(imma.value !== ""){
+
+                                let insero = {nome: ingredienti_globali[n].nome, immagine: imma}
+                                $.ajax({
+                                    url: 'aggiungi_modifica_immagine.php',
+                                    type: 'POST',
+                                    data: insero,
+                                    success: function () {
+                                        location.reload();
+                                    },
+                                    error: function () {
+                                        alert("qualcosa è andato storto");
+                                    }
+                                });
+                                ingredienti_globali[n].immagine = imma;
+                                sessionStorage.setItem("ingredienti_global", JSON.stringify(ingredienti_globali));
+
+                            }else{
+                                imma = ingredienti_globali[n].nome
+                            }
+                        }
+                    }
+                    if (non) {
+
+
+                        vara_glob = { nome: $("#nome_nodo2").val(), immagine: imma };
+
+                        ingredienti_globali.push(vara_glob);
+
+                        sessionStorage.setItem("ingredienti_global", JSON.stringify(ingredienti_globali));
+
+                        $.ajax({
+                            url: 'aggiungi_ingrediente_globale.php',
+                            type: 'POST',
+                            data: vara_glob
+                        });
+
+                    }
+
                     let idi = cerca_ultimo_id_ingredienti();
                     let inse = {
                         id: idi,
                         nome: nome,
-                        quantita: quant
+                        quantita: quant,
+                        immagine: imma
                     };
                     ingredienti_totali.push(inse);
                     let inse2 = {
@@ -598,6 +654,9 @@ function calcolo_liste(xml) {
 
             inn = false;
 
+        });
+        $(".close").click(function (evw) {
+            inn = false;
         });
     });
 
@@ -662,8 +721,18 @@ function calcolo_liste(xml) {
             moda = false;
 
         });
+        $(".close").click(function (evw) {
+            moda = false;
+        });
 
     });
+
+    var lista = document.getElementById("globali");
+
+    for (a = 0; a < ingredienti_globali.length; a++) {
+        let inni = "<option value='" + ingredienti_globali[a].nome + "'>" + ingredienti_globali[a].nome + "</option>";
+        lista.innerHTML += inni;
+    }
 }
 
 
