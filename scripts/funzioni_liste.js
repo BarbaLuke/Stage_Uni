@@ -37,9 +37,7 @@ for (a = 0; a < ingredienti_globali.length; a++) {
 
         inni += "<tr> <td>" + ingredienti_globali[a].nome + "</td> <td> <a href='" + ingredienti_globali[a].immagine + "' target='_blank'> visualizza immagine </a></td> <td><button id='" + ingredienti_globali[a].nome +
             "' class='btn-warning btn btn-sm shadow-sm moda_imm'>\n\
-<i class='fas fa-edit'></i></button> <button id='" + ingredienti_globali[a].nome +
-            "_' class='btn-primary shadow-sm btn btn-sm insert_imm'>\n\
-<i class='fas fa-plus'></i></button></td></tr>";
+<i class='fas fa-edit'></i></button></td></tr>";
 
     } else {
 

@@ -205,10 +205,10 @@ $("#vedo").click(function (evt) {
             }
             $('circle').popover({
                 trigger: 'hover'
-              })
+              });
             $('rect').popover({
                 trigger: 'hover'
-              })
+              });
         });
         $("#annulla_insertnodo").click(function (ev) {
             scrivi = false;
@@ -239,8 +239,8 @@ $("#vedo").mousedown(function (evt) {
                 kids = $("#vedo2").children("rect,circle"),
                 x = 0,
                 y = 0;
-            $('[data-toggle="popover"]').popover("disable");
-
+            $(evt.target).popover("hide");
+            
             muovilo = true;
             crealo = true;
 
@@ -275,7 +275,7 @@ $("#vedo").mousedown(function (evt) {
             coordinata_prima_y = target.attr("y2");
             console.log(nodo_source);
             var kids = $("#vedo2").children("rect,circle");
-            $('[data-toggle="popover"]').popover("disable");
+            //$('[data-toggle="popover"]').popover("disable");
 
             muovilo = true;
             crealo = false;
@@ -290,7 +290,6 @@ $("#vedo").mousedown(function (evt) {
 // questa funzione mi permette di muovere il link create con lp'azione precedente
 $("#vedo").mousemove(function (er) {
     if (linkabile.checked == true) {
-        $('[data-toggle="popover"]').popover("enable");
         if (muovilo) {
             var
                 x = er.clientX,
@@ -340,10 +339,14 @@ $("#vedo").mousemove(function (er) {
 // questa azione invece mi permette di stabilire quale sia il target del mio link
 $("#vedo").mouseup(function (e) {
     grafico.enablePan();
+    $('rect').popover({
+        trigger: 'hover'
+      });
+    $('[data-toggle="popover"]').popover("enable");
     if (linkabile.checked == true) {
         if (muovilo) {
             var ingre_ingre = false;
-            $('[data-toggle="popover"]').popover("enable");
+            
             var
                 kidse = $("#vedo2").children("rect,circle"),
                 target2 = $(e.target);
