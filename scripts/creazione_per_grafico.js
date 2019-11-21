@@ -117,7 +117,7 @@ $("#vedo").click(function (evt) {
 
                         for (n = 0; n < ingredienti_globali.length; n++) {
 
-                            if (ingredienti_globali[n].nome === nome.value) {
+                            if (ingredienti_globali[n].nome.replace(/\s+/g, '') === nome.value.replace(/\s+/g, '')) {
                                 non = false;
                                 if(imma.value !== ""){
 

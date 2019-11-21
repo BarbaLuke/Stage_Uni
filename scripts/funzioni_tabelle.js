@@ -435,7 +435,7 @@ function calcolo_liste(xml) {
 
                     for (n = 0; n < ingredienti_globali.length; n++) {
 
-                        if (ingredienti_globali[n].nome === nome_ingr) {
+                        if (ingredienti_globali[n].nome.replace(/\s+/g, '') === nome_ingr.replace(/\s+/g, '')) {
 
                             if (nome_ingr !== $("#nome_nodo").val()) {
 
@@ -573,7 +573,7 @@ function calcolo_liste(xml) {
 
                     for (n = 0; n < ingredienti_globali.length; n++) {
 
-                        if (ingredienti_globali[n].nome === nome) {
+                        if (ingredienti_globali[n].nome.replace(/\s+/g, '') === nome.replace(/\s+/g, '')) {
                             non = false;
 
                             if(imma.value !== ""){
@@ -712,7 +712,6 @@ function calcolo_liste(xml) {
                 moda = false;
 
             }
-
 
         });
 
