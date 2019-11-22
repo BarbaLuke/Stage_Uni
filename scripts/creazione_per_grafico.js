@@ -386,7 +386,6 @@ $("#vedo").mouseup(function (e) {
                                         data: dati
                                     });
 
-
                                 } else if (id1.includes("a", 1) && id2.includes("i", 1)) {
                                     let dati = { ricetta: sessionStorage.getItem("nome_file"), source: id2, target: id1 };
                                     $.ajax({
@@ -395,7 +394,6 @@ $("#vedo").mouseup(function (e) {
                                         data: dati
                                     });
 
-
                                 } else if (id1.includes("i", 1) && id2.includes("a", 1)) {
                                     let dati = { ricetta: sessionStorage.getItem("nome_file"), source: id1, target: id2 };
                                     $.ajax({
@@ -403,7 +401,6 @@ $("#vedo").mouseup(function (e) {
                                         type: 'POST',
                                         data: dati
                                     });
-
                                 }
 
                             }
@@ -568,6 +565,8 @@ $("#vedo").mouseup(function (e) {
                         linea.setAttribute("id", nodo_source + "_" + nodo_target);
                         let inse = { source: nodo_source, target: nodo_target };
                         link.push(inse);
+                        cerca_ed_elimina(da_muovere);
+
                     }
 
                 } else {
