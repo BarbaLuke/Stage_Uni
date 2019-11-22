@@ -34,6 +34,7 @@ function cerca_ultimo_id_azioni() {
     return (massimo + 1) + "a";
 }
 
+// funzione che mi restituisce true se un link già esiste
 function esiste(idsource, idtarget) {
     let bool = false;
     for (i = 0; i < link.length; i++) {
@@ -44,6 +45,7 @@ function esiste(idsource, idtarget) {
     return bool;
 }
 
+// funzione che mi restituisce un json-format delle info riguardanti l'id dell'ingrediente inserito
 function info_ingrediente(idingrediente) {
     for (i = 0; i < ingredienti_totali.length; i++) {
         if (ingredienti_totali[i].id === idingrediente) {
@@ -57,36 +59,54 @@ function info_ingrediente(idingrediente) {
 // in cui il mio mouse è puntato
 function svgPoint(element, x, y) {
     var
-        pt = element.createSVGPoint();
+    pt = element.createSVGPoint();
     pt.x = x;
     pt.y = y;
     return pt.matrixTransform(g.getScreenCTM().inverse());
 }
 
-//questa funzione mi permette di creare oggetti cioè cerchi o rettangoli
+// questa funzione mi permette di creare oggetti cioè cerchi o rettangoli
 // cioè ingredienti o azioni nel mio grafico SVG
 $("#vedo").click(function (evt) {
+
+    // questa variabile mi permette di non avere problemi quando non arrivo a terminare la sequenza di inserimento
     let scrivi = true;
+
+    // questa variabile mi permette di identificare il target dell'evento
     var target = $(evt.target);
+
+    // devo controllare il check è true per l'inserimento e
+    // che io non abbia cliccato per sbaglio su di un link, ingrediente o azione esistente
     if (inserimento_nodi.checked == true && !(target.is("circle")) && !(target.is("rect")) && !(target.is("line"))) {
+
+        //attivo il modal che conterrà il form con le info per inserire l'ingrediente
         $('#insert_ingrediente').modal({
             show: true
         });
-        
+
+        // queste variabili servono per identificare le classi degli elementi del form
+        // permettendomi all'occasione di poterli nascondere in base alle esigenze
         let azio = document.getElementById("azion");
         let ing = document.getElementById("ingred");
         var lista = document.getElementById("globali");
 
+        // questo ciclo serve ad inserire le opzioni per l'inserimento del nome dell'ingrediente
         for (a = 0; a < ingredienti_globali.length; a++) {
             let inni = "<option value='" + ingredienti_globali[a].nome + "'>" + ingredienti_globali[a].nome + "</option>";
             lista.innerHTML += inni;
         }
+
+        // quando devo inserire un azione allora nascondo le parti del form per l'ingrediente
         if (azio.checked == true) {
             $(".solo_ingrediente").hide();
         }
+
+        // quando devo inserire un ingrediente allora nascondo le parti del form per l'azione
         if (ing.checked == true) {
             $(".solo_azione").hide();
         }
+
+        // se cambio idea allora devo catturare l'evento al click del check e nascondere l'opposto
         $("#azion").click(function (e) {
             $(".solo_ingrediente").hide();
             $(".solo_azione").show();
@@ -95,32 +115,54 @@ $("#vedo").click(function (evt) {
             $(".solo_ingrediente").show();
             $(".solo_azione").hide();
         });
+
+        // questo evento mi cattura il clik sul bottone per l'inserimento
         $("#salva_inserimento").click(function (ev) {
             
+            // richiamo la variabile iniziale per essere sicuro di essere sempre durante la cattura dello stesso evento
             if (scrivi === true) {
+
+                // questa serie  di variabili mi identificano gli elementi del form
                 let nome = document.getElementById("nome_nodo");
                 let ingredi = document.getElementById("ingred");
                 let quant = document.getElementById("quantita_nodo");
                 let imma = document.getElementById("immagine_nodo");
                 let nome_azione = document.getElementById("nome_nodo2");
                 let durata = document.getElementById("durata_nodo");
-                var
-                    x = evt.clientX,
-                    y = evt.clientY,
-                    svgP = svgPoint(svg, x, y),
-                    xe = Math.round(svgP.x),
-                    ye = Math.round(svgP.y);
-                if (nome !== "") {
-                    if (ingredi.checked == true) {
 
+                // questa e varibili mi servono per identificare il punto cliccato, 
+                // così da poter trovare il punto esatto dove inserire la figura
+                var
+                x = evt.clientX,
+                y = evt.clientY,
+                svgP = svgPoint(svg, x, y),
+                xe = Math.round(svgP.x),
+                ye = Math.round(svgP.y);
+                
+                // faccio un controllo sull'unico elemento indispensabile per l'inserimento, cioè il nome    
+                if (nome !== "") {
+
+                    // nel caso l'utente abbia inserito le info per l'ingrediente
+                    if (ingredi.checked == true) {
+                        
+                        // questa varibile mi serve per capire se ho già questo ingredinte tra quelli globali
                         let non = true;
 
+                        // con questo ciclo controllo tra gli ingredienti globali se l'ingrediente è già inserito o meno
                         for (n = 0; n < ingredienti_globali.length; n++) {
 
+                            // in caso il nome dell'ingrediente locale da inserire sia uguale(senza spazi superflui) 
+                            // ad un ingrediente già inserito nella lista globale
                             if (ingredienti_globali[n].nome.replace(/\s+/g, '') === nome.value.replace(/\s+/g, '')) {
+
+                                // la variabile per l'inserimento la setto a false
                                 non = false;
+
+                                // tengo però presente il fatto di poter modificare l'immagine all'ingrediente globale
+                                // anche nel caso in cui l'immagine sia già presente
                                 if(imma.value !== ""){
 
+                                    // questa è la chiamata per la modifica
                                     let insero = {nome: ingredienti_globali[n].nome, immagine: imma.value}
                                     $.ajax({
                                         url: 'aggiungi_modifica_immagine.php',
@@ -133,76 +175,118 @@ $("#vedo").click(function (evt) {
                                             alert("qualcosa è andato storto");
                                         }
                                     });
+
+                                    // aggiorno quindi anche la lista degli ingredienti globali nel caso in cui abbia cambiato l'immagine
                                     ingredienti_globali[n].immagine = imma.value;
                                     sessionStorage.setItem("ingredienti_global", JSON.stringify(ingredienti_globali));
 
                                 }else{
+
+                                    // nel caso in cui invece io non abbia inserito l'immagine allora prendo quella dalla lista globale
                                     imma.value = ingredienti_globali[n].nome
                                 }
                             }
                         }
+
+                        // nel caso in cui invece l'ingrediente locale inserito non sia presente nella lista globale allora devo inserirlo
                         if (non) {
 
+                            // mi serve il solito json-format dell'ingrediente globale da inserire
                             vara_glob = { nome: nome.value, immagine: imma.value };
 
+                            //lo inserisco dentro la lista globale
                             ingredienti_globali.push(vara_glob);
 
+                            // infine aggiorno anche la variabile nella cache che è quella che mi interessa veramente
                             sessionStorage.setItem("ingredienti_global", JSON.stringify(ingredienti_globali));
 
+                            // chiamata per l'inserimento nel file json
                             $.ajax({
                                 url: 'aggiungi_ingrediente_globale.php',
                                 type: 'POST',
                                 data: vara_glob
                             });
                         }
+
+                        // finito di gestire la lista globale rispetto alla locale inizio con l'inserimento nel file xml
+                        // la prima variabile da cercare è l'id nuovo che sarà di un punto superiore all'id più grande
                         let idi = cerca_ultimo_id_ingredienti();
+
+                        // questo json-format mi serve per inserire l'ingrediente nella lista degli ingredienti locali
                         let inse = {
                             id: idi,
                             nome: nome.value,
                             quantita: quant.value,
                             immagine: imma.value
                         };
+
+                        // inserisco infine nella lista
                         ingredienti_totali.push(inse);
+                        
+                        // questo json-format mi serve per inserire l'ingrediente nel file xml
                         let inse2 = {
                             ricetta: sessionStorage.getItem("nome_file"),
                             id: idi,
                             nome: nome.value,
                             quantita: quant.value
                         };
+
+                        // creo l'oggetto da inserire nel grafico
                         crea_oggetto(idi, xe, ye);
+
+                        // eseguo la chiamata per inserire l'ingrediente nel file xml
                         $.ajax({
                             url: 'inserimento_ingrediente.php',
                             type: 'POST',
                             data: inse2
                         });
                     } else if (azio.checked == true) {
+                        // prendo in esame infine il caso dell'inserimento dell'azione
+                        // come prime devo cercare l'id più uno rispetto all'ultimo id delle azioni
                         let idi = cerca_ultimo_id_azioni();
+
+                        // questo json-format mi serve per inserire l'azione nella lista locale
                         let inse = {
                             id: idi,
                             nome: nome_azione.value,
                             durata: durata.value
                         };
+
+                        // inserisco infine nella lista
                         azioni.push(inse);
 
+                        // questo json- format mi serve per inserire l'azione nel fil xml
                         let inse2 = {
                             ricetta: sessionStorage.getItem("nome_file"),
                             id: idi,
                             nome: nome_azione.value,
                             durata: durata.value
                         };
+
+                        // creo l'oggetto da inserire nel grafico
                         crea_oggetto(idi, xe, ye);
+
+                        // eseguo la chiamata per l'inserimento dell'azione nel file xml
                         $.ajax({
                             url: 'inserimento_azione.php',
                             type: 'POST',
                             data: inse2
                         });
                     }
+
+                    // alla fine dell'inserimento chiudo l'evento mettendo scrivi a false e impedendo la scrittura futura
+                    // ho il problema che non inserendo questa variabile mi esegua una scrittuare nel caso in cui non concluda la procedura
                     scrivi = false;
                 } else {
+
+                    // nel caso in cui l'utente non abbia inserito il nome dell'azione o dell'ingrediente
                     alert("hai dimenticato il nome");
+                    scrivi = false;
                 }
                 
             }
+
+            // questo mi serve perchè andava in conflitto il popover di bootstrap
             $('circle').popover({
                 trigger: 'hover'
               });
@@ -210,10 +294,14 @@ $("#vedo").click(function (evt) {
                 trigger: 'hover'
               });
         });
+
+        // se annullo l'inserimento devo settare la variabile dell'evento a false
         $("#annulla_insertnodo").click(function (ev) {
             scrivi = false;
             
         });
+
+        // stessa cosa di prima
         $(".close").click(function (evw) {
             scrivi = false;
            
@@ -222,10 +310,10 @@ $("#vedo").click(function (evt) {
 });
 
 var
-    nodo_source = "",
-    tipologia_nodo_source = "",
-    tipologia_nodo_target = "",
-    nodo_target = "";
+nodo_source = "",
+tipologia_nodo_source = "",
+tipologia_nodo_target = "",
+nodo_target = "";
 
 // questa funzione mi permette di creare link
 $("#vedo").mousedown(function (evt) {
