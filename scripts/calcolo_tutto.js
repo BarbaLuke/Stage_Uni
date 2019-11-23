@@ -96,10 +96,20 @@ function calcolo_nodi_e_link(xml, callback) {
                     || y[j].nodeName === "PRE")) {
 
                     z = y[j].childNodes;
+                    
 
                     // trovati i PRE e i POST vado a cercare di capire com'è 
                     // strutturato il link
                     for (k = 0; k < z.length; k++) {
+
+                        if (z[k].nodeType == 1
+                            && z[k].nodeName === "QUANTUSATA") {
+                                let idingr = z[k].getAttribute('IDingrediente');
+                                let quant = z[k].childNodes[0].nodeValue;
+                                let percosa = x[i].getAttribute('IDazione');
+                                inno = {ingrediente: idingr, quanto: quant, azione: percosa};
+                                quantcosa.push(inno);
+                            }
 
                         if (z[k].nodeType == 1
                             && z[k].nodeName === "INGREDIENTE") {

@@ -132,7 +132,8 @@
                                 <th scope="col">Source</th>
                                 <th scope="col">Target</th>
                                 <th scope="col">Tipologia Link</th>
-                                <th scope="col">Modifica / Elimina</th>
+                                <th scope="col">Quantità usata</th>
+                                <th scope="col">Modifica</th>
                             </tr>
                         </thead>
                         <tbody id="link">
@@ -162,7 +163,7 @@
     <script src="js/sb-admin-2.min.js"></script>
 
 
-    <div class="modal fade" id="insert_ingrediente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="mod_quant" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -173,37 +174,23 @@
                     </button>
                 </div>
                 <div class="modal-body">
+
                     <div class="form-group">
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="ingred" name="customRadio" class="custom-control-input" checked>
-                            <label class="custom-control-label" for="ingred">Ingrediente</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="azion" name="customRadio" class="custom-control-input">
-                            <label class="custom-control-label" for="azion">Azione</label>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Nome dell' ingrediente</label>
-                            <input type="text" class="form-control" id="nome_nodo" name='nome'
-                                placeholder="Nome ingrediente">
-                        </div>
-                        <div class="form-group" id="non_indispensabile">
-                            <label>Quantità dell'ingrediente</label>
-                            <input type="text" class="form-control" id="quantita_nodo" name='quantita'
-                                placeholder="Quantità ingrediente">
-                        </div>
-
+                        <label>Quantità usata dell'ingrediente</label>
+                        <input type="text" class="form-control" id="quantita_usata_nodo" name='quantita_usata'
+                            placeholder="Quantità usata ingrediente">
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" id="annulla_insertnodo" class="btn btn-secondary"
-                            data-dismiss="modal">Annulla</button>
-                        <button type="submit" id="salva_inserimento" class="btn btn-primary"
-                            data-dismiss="modal">Salva</button>
-                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="annulla_mod_quant" class="btn btn-secondary"
+                        data-dismiss="modal">Annulla</button>
+                    <button type="submit" id="salva_mod_quant" class="btn btn-primary"
+                        data-dismiss="modal">Salva</button>
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <script>
         var titolo = document.getElementById("titolo");

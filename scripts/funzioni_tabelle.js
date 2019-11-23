@@ -8,6 +8,9 @@ var azioni = [];
 // array che contiene i link
 var link = [];
 
+// array che contiene i le quantità usate
+var quantcosa = [];
+
 var ingredienti_globali =
     JSON.parse(sessionStorage.getItem("ingredienti_global"));
 
@@ -18,7 +21,7 @@ var link_dopo = [];
 var lista_adj = [];
 
 // variabili di supporto
-var x, i, y, z, j, k, vara, vara2;
+var x, i, y, z, j, k, vara, vara2, inno;
 
 
 //creo questa lista sdoppiata per far sdoppiare i nodi con più di un
@@ -157,6 +160,15 @@ function calcolo_liste(xml) {
                     // trovati i PRE e i POST vado a cercare di capire com'è 
                     // strutturato il link
                     for (k = 0; k < z.length; k++) {
+
+                        if (z[k].nodeType == 1
+                            && z[k].nodeName === "QUANTUSATA") {
+                            let idingr = z[k].getAttribute('IDingrediente');
+                            let quant = z[k].childNodes[0].nodeValue;
+                            let percosa = x[i].getAttribute('IDazione');
+                            inno = { ingrediente: idingr, quanto: quant, azione: percosa };
+                            quantcosa.push(inno);
+                        }
 
                         if (z[k].nodeType == 1
                             && z[k].nodeName === "INGREDIENTE") {
@@ -344,22 +356,33 @@ function calcolo_liste(xml) {
         let tipo_rel = relazio(link[i].source, link[i].target);
         let nome_source = trovanome(link[i].source);
         let nome_target = trovanome(link[i].target);
-        text2 = "<tr>";
-        text2 += '<td>' + link[i].source + ". <strong>" + nome_source +
-            "</strong></td>";
-        text2 += "<td>" + link[i].target + ". <strong>" + nome_target +
-            "</strong></td>";
-        text2 += "<td>" + tipo_rel + "</td>";
-        text2 += '<td><button id="' + link[i].source + "_" + link[i].target +
-            '" class="btn-warning btn btn-sm shadow-sm modifica_link">\n\
-<i class="fas fa-edit"></i></button> <button id="' + link[i].source + "_" +
-            link[i].target + "del" +
-            '" class="btn-danger shadow-sm btn btn-sm cancella_link">\n\
-<i class="fas fa-trash"></i></button></td>';
-        text2 += "</tr>";
-        let li = document.getElementById("link");
-        if (li !== null) {
-            li.innerHTML += text2;
+        let quant = "";
+        if (tipo_rel === "Pre-Condizione" || tipo_rel === "Post-Condizione") {
+
+            for (y = 0; y < quantcosa.length; y++) {
+
+                if ((quantcosa[y].ingrediente === link[i].source && quantcosa[y].azione === link[i].target) ||
+                    ((quantcosa[y].ingrediente === link[i].target && quantcosa[y].azione === link[i].source))) {
+
+                    quant = quantcosa[y].quanto;
+                }
+            }
+
+            text2 = "<tr>";
+            text2 += '<td>' + link[i].source + ". <strong>" + nome_source +
+                "</strong></td>";
+            text2 += "<td>" + link[i].target + ". <strong>" + nome_target +
+                "</strong></td>";
+            text2 += "<td>" + tipo_rel + "</td>";
+            text2 += "<td>" + quant + "</td>";
+            text2 += '<td><button id="' + link[i].source + "_" + link[i].target +
+                '" class="btn-warning btn btn-sm shadow-sm modifica_link">\n\
+<i class="fas fa-edit"></i></button></td>';
+            text2 += "</tr>";
+            let li = document.getElementById("link");
+            if (li !== null) {
+                li.innerHTML += text2;
+            }
         }
     }
 
@@ -744,6 +767,93 @@ function calcolo_liste(xml) {
             moda = false;
         });
 
+    });
+
+    // Funzione modifica quantità usata da un ingrediente
+    $(".modifica_link").click(function (evt) {
+        let mod_quant = true;
+
+        $('#mod_quant').modal({
+            show: true
+        });
+
+        let id1 = $(this).attr("id").split("_")[0];
+        let id2 = $(this).attr("id").split("_")[1];
+        let id_ingrediente;
+        let id_azione;
+        if (id1.includes("i")) {
+
+            id_ingrediente = id1;
+            id_azione = id2;
+
+        } else {
+
+            id_ingrediente = id2;
+            id_azione = id1;
+
+        }
+        let quantita_usata = "";
+        for (q = 0; q < quantcosa.length; q++) {
+
+            if (id_ingrediente === quantcosa[q].ingrediente && id_azione === quantcosa[q].azione) {
+
+                quantita_usata = quantcosa[q].quanto;
+            }
+        }
+
+        $("#quantita_usata_nodo").val(quantita_usata);
+
+        $("#salva_mod_quant").click(function (ev) {
+            if (mod_quant === true) {
+
+                let modifica_quant_usata = {
+                    ricetta: sessionStorage.getItem("nome_file"),
+                    id_in: id_ingrediente,
+                    id_az: id_azione,
+                    quantita: $("#quantita_usata_nodo").val()
+                };
+
+                if (modifica_quant_usata.quantita !== "") {
+                    $.ajax({
+                        url: 'modifica_quant_usata.php',
+                        type: 'POST',
+                        data: modifica_quant_usata,
+                        success: function () {
+                            location.reload();
+                        },
+                        error: function () {
+                            alert("qualcosa è andato storto");
+                        }
+                    });
+                } else {
+                    let delete_quant_usata = {
+                        ricetta: sessionStorage.getItem("nome_file"),
+                        id_in: id_ingrediente,
+                        id_az: id_azione
+                    };
+                    $.ajax({
+                        url: 'delete_quant_usata.php',
+                        type: 'POST',
+                        data: delete_quant_usata,
+                        success: function () {
+                            //location.reload();
+                        },
+                        error: function () {
+                            alert("qualcosa è andato storto");
+                        }
+                    });
+                }
+                mod_quant = false;
+            }
+        });
+
+        $("#annulla_mod_quant").click(function () {
+
+            mod_quant = false;
+        });
+        $(".close").click(function (evw) {
+            mod_quant = false;
+        });
     });
 
     var lista = document.getElementById("globali");

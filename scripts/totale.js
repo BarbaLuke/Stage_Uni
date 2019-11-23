@@ -13,6 +13,9 @@ JSON.parse(sessionStorage.getItem("ingredienti_global"));
 // arrai che conterrà le azioni
 var azioni = [];
 
+// quantità usate di cosa in quale azione
+var quantcosa = [];
+
 var azioni_gloali = 
 JSON.parse(sessionStorage.getItem("azioni_global"));;
 
@@ -26,7 +29,7 @@ var link_dopo = [];
 var lista_adj = [];
 
 // variabili di supporto
-var x, i, y, z, j, k, vara, vara2;
+var x, i, y, z, j, k, vara, vara2, inno;
 
 
 //creo questa lista sdoppiata per far sdoppiare i nodi con più di un
