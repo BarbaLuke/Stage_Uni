@@ -183,7 +183,7 @@ $("#vedo").click(function (evt) {
                                 }else{
 
                                     // nel caso in cui invece io non abbia inserito l'immagine allora prendo quella dalla lista globale
-                                    imma.value = ingredienti_globali[n].nome
+                                    imma.value = ingredienti_globali[n].immagine
                                 }
                             }
                         }

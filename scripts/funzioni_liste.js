@@ -35,15 +35,17 @@ for (a = 0; a < ingredienti_globali.length; a++) {
     let inni = "";
     if (ingredienti_globali[a].immagine !== "") {
 
-        inni += '<tr> <td>' + ingredienti_globali[a].nome + '</td> <td> <a href="' + ingredienti_globali[a].immagine + '" target="_blank"> visualizza immagine </a></td> <td><button id="' + ingredienti_globali[a].nome +
-            '" class="btn-warning btn btn-sm shadow-sm moda_imm">\n\
-<i class="fas fa-edit"></i></button></td></tr>';
+        inni += '<tr> <td>' + ingredienti_globali[a].nome + '</td> <td><div class="text-center"> <a href="' + ingredienti_globali[a].immagine + '" target="_blank"> visualizza immagine </a></div></td> <td><div class="text-center"><button id="' + ingredienti_globali[a].nome +
+            '" class="btn-outline-warning btn btn-sm shadow-sm moda_imm mr-3">\n\
+<i class="fas fa-edit"></i></button> <button id="' + ingredienti_globali[a].nome + '_DEL" class="btn-danger shadow-sm btn btn-sm delet_ing">\n\
+<i class="fas fa-trash"></i></button></div></td></tr>';
 
     } else {
 
-        inni += '<tr> <td>' + ingredienti_globali[a].nome + '</td> <td></td> <td><button id="' + ingredienti_globali[a].nome +
-            '_" class="btn-primary shadow-sm btn btn-sm insert_imm">\n\
-<i class="fas fa-plus"></i></button></td></tr>';
+        inni += '<tr> <td>' + ingredienti_globali[a].nome + '</td> <td></td> <td><div class="text-center"><button id="' + ingredienti_globali[a].nome +
+            '_" class="btn-outline-primary shadow-sm btn btn-sm insert_imm mr-3">\n\
+<i class="fas fa-plus"></i></button><button id="' + ingredienti_globali[a].nome + '_DEL" class="btn-danger shadow-sm btn btn-sm delet_ing"><i class="fas fa-trash">\n\
+</i></button></div></td></tr>';
 
     }
     lista.innerHTML += inni;
@@ -145,5 +147,41 @@ $(".moda_imm").click(function (evt) {
     $(".close").click(function (evw) {
         ins_imm = false;
         $("#link_immagine_mod").val("");
+    });
+});
+
+$(".delet_ing").click(function (evt) {
+    let del_imm = true;
+    $('#del_element').modal({
+        show: true
+    });
+    var nome_glob = $(this).attr("id").split("_")[0];
+
+    $("#salva_del_element").click(function (ev) {
+        if (del_imm === true) {
+            for (d = 0; d < ingredienti_globali.length; d++) {
+
+                if (nome_glob.replace(/\s+/g, '') === ingredienti_globali[d].nome.replace(/\s+/g, '')) {
+
+                    let elimin_ing = { ing_da_eliminar: ingredienti_globali[d].nome, imma_da_eliminar: ingredienti_globali[d].immagine };
+                    $.ajax({
+                        url: 'elimina_ingrediente_globale.php',
+                        type: 'POST',
+                        async: false,
+                        data: elimin_ing
+                    });
+                    ingredienti_globali.splice(d, 1);
+                }
+            }
+            sessionStorage.setItem("ingredienti_global", JSON.stringify(ingredienti_globali));
+            del_imm = false;
+        }
+    });
+
+    $("#annulla_del_element").click(function (ev) {
+        del_imm = false;
+    });
+    $(".close").click(function (evw) {
+        del_imm = false;
     });
 });

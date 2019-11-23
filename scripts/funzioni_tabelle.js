@@ -437,16 +437,36 @@ function calcolo_liste(xml) {
 
                         if (ingredienti_globali[n].nome.replace(/\s+/g, '') === nome_ingr.replace(/\s+/g, '')) {
 
+                            var non_esis = true;
+                            for (u = 0; u < ingredienti_globali.length; u++) {
+
+                                if ($("#nome_nodo").val().replace(/\s+/g, '') === ingredienti_globali[u].nome.replace(/\s+/g, '')) {
+                                    non_esis = false;
+                                    let eliminazione_ing = { ing_da_eliminar: ingredienti_globali[n].nome, imma_da_eliminar: ingredienti_globali[n].immagine };
+                                    $.ajax({
+                                        url: 'elimina_ingrediente_globale.php',
+                                        type: 'POST',
+                                        async: false,
+                                        data: eliminazione_ing
+                                    });
+                                    ingredienti_globali.splice(n, 1);
+                                }
+                            }
+
                             if (nome_ingr !== $("#nome_nodo").val()) {
 
-                                ingredienti_globali[n].nome = $("#nome_nodo").val();
-                                let modifica_nome = { nome_vecchio: nome_ingr, nome_nuovo: $("#nome_nodo").val() }
-                                $.ajax({
-                                    url: 'modifica_nome.php',
-                                    type: 'POST',
-                                    async: false,
-                                    data: modifica_nome
-                                });
+                                if (non_esis) {
+
+                                    ingredienti_globali[n].nome = $("#nome_nodo").val();
+                                    let modifica_nome = { nome_vecchio: nome_ingr, nome_nuovo: $("#nome_nodo").val() }
+                                    $.ajax({
+                                        url: 'modifica_nome.php',
+                                        type: 'POST',
+                                        async: false,
+                                        data: modifica_nome
+                                    });
+                                }
+
 
                                 if (imma_ingr !== $("#immagine_nodo").val()) {
                                     ingredienti_globali[n].immagine = $("#immagine_nodo").val();
@@ -481,7 +501,7 @@ function calcolo_liste(xml) {
                         type: 'POST',
                         data: modifica,
                         success: function () {
-                            location.reload();
+                            //location.reload();
                         },
                         error: function () {
                             alert("qualcosa è andato storto");
@@ -576,9 +596,9 @@ function calcolo_liste(xml) {
                         if (ingredienti_globali[n].nome.replace(/\s+/g, '') === nome.replace(/\s+/g, '')) {
                             non = false;
 
-                            if(imma.value !== ""){
+                            if (imma.value !== "") {
 
-                                let insero = {nome: ingredienti_globali[n].nome, immagine: imma}
+                                let insero = { nome: ingredienti_globali[n].nome, immagine: imma }
                                 $.ajax({
                                     url: 'aggiungi_modifica_immagine.php',
                                     type: 'POST',
@@ -593,7 +613,7 @@ function calcolo_liste(xml) {
                                 ingredienti_globali[n].immagine = imma;
                                 sessionStorage.setItem("ingredienti_global", JSON.stringify(ingredienti_globali));
 
-                            }else{
+                            } else {
                                 imma = ingredienti_globali[n].nome
                             }
                         }
