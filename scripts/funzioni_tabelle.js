@@ -463,7 +463,7 @@ function calcolo_liste(xml) {
                             var non_esis = true;
                             for (u = 0; u < ingredienti_globali.length; u++) {
 
-                                if ($("#nome_nodo").val().replace(/\s+/g, '') === ingredienti_globali[u].nome.replace(/\s+/g, '')) {
+                                if ($("#nome_nodo").val().replace(/\s+/g, '') === ingredienti_globali[u].nome.replace(/\s+/g, '') && ingredienti_globali[u].nome.replace(/\s+/g, '')!==ingredienti_globali[n].nome.replace(/\s+/g, '')) {
                                     non_esis = false;
                                     let eliminazione_ing = { ing_da_eliminar: ingredienti_globali[n].nome, imma_da_eliminar: ingredienti_globali[n].immagine };
                                     $.ajax({
@@ -524,7 +524,7 @@ function calcolo_liste(xml) {
                         type: 'POST',
                         data: modifica,
                         success: function () {
-                            //location.reload();
+                            location.reload();
                         },
                         error: function () {
                             alert("qualcosa è andato storto");
@@ -554,14 +554,30 @@ function calcolo_liste(xml) {
         });
         let idi = $(this).attr("id").split("del")[0];
         let idddi = document.getElementById("ingre_elim");
-        idddi.innerHTML = "Elimina ingrediente " + idi;
+        let nome_ingr_del = trovanome(idi);
+        idddi.innerHTML = "Elimina " + nome_ingr_del;
         let testo = document.getElementById("testo_dentro");
-        let nome_ingr = trovanome($(this).attr("id").split("del")[0]);
-        testo.innerHTML = "Vuoi eliminare " + nome_ingr + " ?";
+        testo.innerHTML = "Vuoi eliminare " + nome_ingr_del + " ?";
         $("#elimina_inserimento").click(function (ev) {
             if (canc === true) {
 
-                let modifica = {
+                for(h = 0; h < ingredienti_globali.length; h++){
+
+                    if(ingredienti_globali[h].nome === nome_ingr_del){
+
+                        let elimin_ing = { ing_da_eliminar: ingredienti_globali[h].nome, imma_da_eliminar: ingredienti_globali[h].immagine };
+                    $.ajax({
+                        url: 'elimina_ingrediente_globale.php',
+                        type: 'POST',
+                        async: false,
+                        data: elimin_ing
+                    });
+                    ingredienti_globali.splice(h, 1);
+                }
+            }
+            sessionStorage.setItem("ingredienti_global", JSON.stringify(ingredienti_globali));
+
+                let cancell = {
                     ricetta: sessionStorage.getItem("nome_file"),
                     id2: idi
                 };
@@ -569,7 +585,7 @@ function calcolo_liste(xml) {
                 $.ajax({
                     url: 'cancella_ingrediente.php',
                     type: 'POST',
-                    data: modifica,
+                    data: cancell,
                     success: function () {
                         location.reload();
                     },
@@ -607,10 +623,19 @@ function calcolo_liste(xml) {
 
                 let nome = $("#nome_nodo2").val();
 
+                let non_esiste = true;
+
+                for(y = 0; y < ingredienti_totali.length; y++){
+                    if(non_esiste && nome === ingredienti_totali[y].nome){
+
+                        non_esiste = false;
+
+                    }
+                }
 
                 let quant = $("#quantita_nodo2").val();
                 let imma = $("#immagine_nodo2").val();
-                if (nome !== "") {
+                if (nome !== "" && non_esiste) {
 
                     let non = true;
 
@@ -684,13 +709,11 @@ function calcolo_liste(xml) {
                         }
                     });
                 } else {
-                    alert("hai dimenticato il nome");
+                    alert("hai dimenticato il nome oppure già esiste");
                 }
 
                 inn = false
-
             }
-
         });
 
         $("#annulla_insertnodo2").click(function () {
@@ -859,8 +882,21 @@ function calcolo_liste(xml) {
     var lista = document.getElementById("globali");
 
     for (a = 0; a < ingredienti_globali.length; a++) {
-        let inni = "<option value='" + ingredienti_globali[a].nome + "'>" + ingredienti_globali[a].nome + "</option>";
-        lista.innerHTML += inni;
+        let puoi = true;
+        for(x = 0; x < ingredienti_totali.length; x++){
+
+            if(puoi && ingredienti_globali[a].nome === ingredienti_totali[x].nome){
+
+                puoi = false;
+
+            }
+        }
+        if(puoi){
+
+            let inni = "<option value='" + ingredienti_globali[a].nome + "'>" + ingredienti_globali[a].nome + "</option>";
+            lista.innerHTML += inni;
+
+        }
     }
 }
 

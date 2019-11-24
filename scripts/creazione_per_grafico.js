@@ -92,8 +92,21 @@ $("#vedo").click(function (evt) {
 
         // questo ciclo serve ad inserire le opzioni per l'inserimento del nome dell'ingrediente
         for (a = 0; a < ingredienti_globali.length; a++) {
-            let inni = "<option value='" + ingredienti_globali[a].nome + "'>" + ingredienti_globali[a].nome + "</option>";
-            lista.innerHTML += inni;
+            let puoi = true;
+            for(x = 0; x < ingredienti_totali.length; x++){
+    
+                if(puoi && ingredienti_globali[a].nome === ingredienti_totali[x].nome){
+    
+                    puoi = false;
+    
+                }
+            }
+            if(puoi){
+    
+                let inni = "<option value='" + ingredienti_globali[a].nome + "'>" + ingredienti_globali[a].nome + "</option>";
+                lista.innerHTML += inni;
+    
+            }
         }
 
         // quando devo inserire un azione allora nascondo le parti del form per l'ingrediente
