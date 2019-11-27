@@ -64,19 +64,19 @@ function cerca_ultimo_id_azioni() {
     return (massimo + 1) + "a";
 }
 
-function cerca_ed_elimina(id_da_eliminare){
+function cerca_ed_elimina(id_da_eliminare) {
     console.log(id_da_eliminare);
-    for(a = 0; a < ingredienti_totali.length; a++){
-        if(id_da_eliminare === ingredienti_totali[a].id){
+    for (a = 0; a < ingredienti_totali.length; a++) {
+        if (id_da_eliminare === ingredienti_totali[a].id) {
 
             ingredienti_totali.splice(a, 1);
             return;
 
         }
     }
-    for(a = 0; a < azioni.length; a++){
+    for (a = 0; a < azioni.length; a++) {
 
-        if(id_da_eliminare === azioni[a].id){
+        if (id_da_eliminare === azioni[a].id) {
 
             azioni.splice(a, 1);
             return;
@@ -84,9 +84,9 @@ function cerca_ed_elimina(id_da_eliminare){
         }
 
     }
-    for(a = 0; a < link.length; a++){
+    for (a = 0; a < link.length; a++) {
 
-        if(id_da_eliminare.split("_")[0] === link[a].source && id_da_eliminare.split("_")[1] === link[a].target){
+        if (id_da_eliminare.split("_")[0] === link[a].source && id_da_eliminare.split("_")[1] === link[a].target) {
 
             link.splice(a, 1);
             return;
@@ -94,9 +94,9 @@ function cerca_ed_elimina(id_da_eliminare){
         }
 
     }
-    for(a = 0; a < lista_inseriti.length; a++){
+    for (a = 0; a < lista_inseriti.length; a++) {
 
-        if(id_da_eliminare === lista_inseriti[a].id){
+        if (id_da_eliminare === lista_inseriti[a].id) {
 
             lista_inseriti.splice(a, 1);
             return;
@@ -237,3 +237,85 @@ $("#vedo").click(function (evt) {
         }
     }
 });
+
+$("#vedo2").mouseenter(function (evt) {
+    var target = $(evt.target);
+    var dentro = true;
+    
+    var igi = target.attr("id");
+    if (dentro === true) {
+        for (c = 0; c < link.length; c++) {
+
+            if (link[c].source === igi) {
+
+                let da_alzare = link[c].source + "_" + link[c].target;
+
+                $("#" + da_alzare).insertAfter('line:last')
+
+                $("#" + da_alzare).animate({
+                    strokeWidth: 30
+
+                }, 200, function () {});
+            }
+        }
+        if (target.is("circle")) {
+
+            target.animate({
+                r: 50
+            }, 200, function () {});
+
+        }
+        if(target.is("rect")){
+
+            target.animate({
+                width: 100,
+                height: 100,
+                x: "-=25",
+                y: "-=25"
+            }, 200, function () {});
+
+        }
+
+        target.mouseleave(function (evt) {
+            if (dentro === true) {
+        
+                for (s = 0; s < link.length; s++) {
+        
+                    if (link[s].source === igi) {
+        
+                        let da_alzare2 = link[s].source + "_" + link[s].target;
+        
+                        $("#" + da_alzare2).insertAfter('line:last')
+        
+                        $("#" + da_alzare2).animate({
+                            strokeWidth: 15
+                            
+                        }, 200, function () { });
+                    }
+                }
+
+                if (target.is("circle")) {
+
+                    target.animate({
+                        r: 35
+                    }, 200, function () { });
+        
+                }
+                if(target.is("rect")){
+        
+                    target.animate({
+                        width: 50,
+                        height: 50,
+                        x: "+=25",
+                        y: "+=25"
+                    }, 200, function () {});
+        
+                }
+            }
+            dentro = false;
+        });
+
+    }
+});
+
+
