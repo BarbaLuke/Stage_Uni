@@ -239,82 +239,156 @@ $("#vedo").click(function (evt) {
 });
 
 $("#vedo2").mouseenter(function (evt) {
-    var target = $(evt.target);
-    var dentro = true;
-    
-    var igi = target.attr("id");
-    if (dentro === true) {
-        for (c = 0; c < link.length; c++) {
+    if (zoommabile.checked == true) {
+        var target = $(evt.target);
+        var dentro = true;
 
-            if (link[c].source === igi) {
+        var igi = target.attr("id");
+        if (dentro === true) {
+            for (c = 0; c < link.length; c++) {
 
-                let da_alzare = link[c].source + "_" + link[c].target;
+                if (link[c].source === igi) {
 
-                $("#" + da_alzare).insertAfter('line:last')
+                    let da_alzare = link[c].source + "_" + link[c].target;
 
-                $("#" + da_alzare).animate({
+                    $("#" + da_alzare).insertAfter('line:last')
+
+                    $("#" + da_alzare).animate({
+                        strokeWidth: 30
+
+                    }, 200, function () { });
+                }
+            }
+            if (target.is("circle")) {
+
+                target.animate({
+                    r: 50
+                }, 200, function () { });
+
+            }
+            if (target.is("rect")) {
+
+                target.animate({
+                    width: 100,
+                    height: 100,
+                    x: "-=25",
+                    y: "-=25"
+                }, 200, function () { });
+
+            }
+            if (target.is("line")) {
+
+                var id_source = igi.split("_")[0];
+
+                target.animate({
                     strokeWidth: 30
 
-                }, 200, function () {});
+                }, 200, function () { });
+
+                if (id_source.includes("i")) {
+                    console.log(id_source);
+
+                    $("#" + id_source).animate({
+                        r: 50
+                    }, 200, function () { });
+
+                }
+                else {
+
+                    $("#" + id_source).animate({
+                        width: 100,
+                        height: 100,
+                        x: "-=25",
+                        y: "-=25"
+                    }, 200, function () { });
+
+                }
             }
-        }
-        if (target.is("circle")) {
 
-            target.animate({
-                r: 50
-            }, 200, function () {});
+            target.mouseleave(function (evt) {
+                if (dentro === true) {
 
-        }
-        if(target.is("rect")){
+                    if (target.is("circle")) {
 
-            target.animate({
-                width: 100,
-                height: 100,
-                x: "-=25",
-                y: "-=25"
-            }, 200, function () {});
+                        for (s = 0; s < link.length; s++) {
 
-        }
+                            if (link[s].source === igi) {
 
-        target.mouseleave(function (evt) {
-            if (dentro === true) {
-        
-                for (s = 0; s < link.length; s++) {
-        
-                    if (link[s].source === igi) {
-        
-                        let da_alzare2 = link[s].source + "_" + link[s].target;
-        
-                        $("#" + da_alzare2).insertAfter('line:last')
-        
-                        $("#" + da_alzare2).animate({
-                            strokeWidth: 15
-                            
+                                let da_alzare2 = link[s].source + "_" + link[s].target;
+
+                                $("#" + da_alzare2).insertAfter('line:last')
+
+                                $("#" + da_alzare2).animate({
+                                    strokeWidth: 15
+
+                                }, 200, function () { });
+                            }
+                        }
+
+                        target.animate({
+                            r: 35
                         }, 200, function () { });
+
+                    }
+                    if (target.is("rect")) {
+
+                        for (s = 0; s < link.length; s++) {
+
+                            if (link[s].source === igi) {
+
+                                let da_alzare2 = link[s].source + "_" + link[s].target;
+                                let da_abbassare = link[s - 1].source + "_" + link[s - 1].target;
+
+                                $("#" + da_alzare2).insertAfter($("#" + da_abbassare))
+
+                                $("#" + da_alzare2).animate({
+                                    strokeWidth: 15
+
+                                }, 200, function () { });
+                            }
+                        }
+
+                        target.animate({
+                            width: 50,
+                            height: 50,
+                            x: "+=25",
+                            y: "+=25"
+                        }, 200, function () { });
+
+                    }
+
+                    if (target.is("line")) {
+
+                        var id_source = igi.split("_")[0];
+                        console.log(id_source);
+
+                        target.animate({
+                            strokeWidth: 15
+
+                        }, 200, function () { });
+
+                        if (id_source.includes("i")) {
+
+                            $("#" + id_source).animate({
+                                r: 35
+                            }, 200, function () { });
+
+                        }
+                        else {
+
+                            $("#" + id_source).animate({
+                                width: 50,
+                                height: 50,
+                                x: "+=25",
+                                y: "+=25"
+                            }, 200, function () { });
+
+                        }
                     }
                 }
-
-                if (target.is("circle")) {
-
-                    target.animate({
-                        r: 35
-                    }, 200, function () { });
-        
-                }
-                if(target.is("rect")){
-        
-                    target.animate({
-                        width: 50,
-                        height: 50,
-                        x: "+=25",
-                        y: "+=25"
-                    }, 200, function () {});
-        
-                }
-            }
-            dentro = false;
-        });
-
+                dentro = false;
+            });
+        }
     }
 });
 

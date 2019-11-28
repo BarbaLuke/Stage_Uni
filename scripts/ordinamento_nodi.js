@@ -1,3 +1,5 @@
+var nodi_spostati = [];
+
 // inserisco la posizione di ogni nodo
 function posizionamento_nodi_iniziale() {
 
@@ -57,7 +59,7 @@ function posizionamento_nodi_iniziale() {
 // primari (cioè che non sono target di nessun'altro nodo)
 // rispetto al nodo a cui sono collegati
 function disposizione_nodi_ingredienti_precondizioni_noTarget() {
-    nodi_spostati = [];
+    
     for (a = 0; a < lista_inseriti.length; a++) {
 
         // questa variabile viene inizializzata ad ogni visita ad un nodo 
@@ -567,59 +569,55 @@ function riordine_nodi() {
         }
     }
 
-    // con questa serie di funzioni controllo che non ci siano collegamenti 
-    // sovrapposti, per ora 
+    // con questa serie di funzioni controllo che non ci siano collegamenti sovrapposti
 
+    //devo controllare i nodi a due a due
     for (a = 0; a < lista_inseriti.length; a++) {
-
-        // rivediamo un po' le cose
 
         for (z = 0; z < lista_inseriti.length; z++) {
 
+            // se trovo un nodo nella stessa posizione y ma ovviamente diverso da se stesso
             if (lista_inseriti[a].posy === lista_inseriti[z].posy &&
                 lista_inseriti[a].id !== lista_inseriti[z].id) {
+                // controllo nella lista dei link i target di questi due nodi  
+                let uguale1 = [];
+                let uguale2 = [];
                 for (s = 0; s < link.length; s++) {
-                    let uguale1;
-                    let uguale2;
+
                     if (lista_inseriti[a].id === link[s].source) {
-                        uguale1 = link[s].target;
-                        for (t = 0; t < link.length; t++) {
-                            if (lista_inseriti[z].id === link[t].source) {
-                                uguale2 = link[t].target;
-                                if (uguale1 === uguale2) {
-
-                                    for (n = 0; n < lista_inseriti.length; n++) {
-                                        if (lista_inseriti[n].id === uguale1) {
-                                            if (lista_inseriti[n].posy ===
-                                                lista_inseriti[a].posy
-                                                && lista_inseriti[n].id !==
-                                                lista_inseriti[z].id
-                                                && lista_inseriti[n].id !==
-                                                lista_inseriti[a].id) {
-                                                lista_inseriti[a].posy += 1;
-                                                for (u = 0;
-                                                    u < lista_inseriti.length;
-                                                    u++) {
-                                                    if (lista_inseriti[u].posx
-                                                        ===
-                                                        lista_inseriti[a].
-                                                            posx &&
-
-                                                        lista_inseriti[a].
-                                                            posy
-                                                        <=
-                                                        lista_inseriti[u].
-                                                            posy &&
-
-
-                                                        lista_inseriti[u].id
-                                                        !==
-                                                        lista_inseriti[a].id
-                                                    ) {
-                                                        lista_inseriti[u].posy
-                                                            += 1;
-                                                    }
-                                                }
+                        // in questa variabile inserisco il target del primo nodo
+                        uguale1.push(link[s].target);
+                    } else if (lista_inseriti[z].id === link[s].source) {
+                        // in questa variabile inserisco il target del secondo nodo
+                        uguale2.push(link[s].target);
+                    }
+                }
+                // per ogni nodo target del mio nodo source
+                for (f = 0; f < uguale1.length; f++) {
+                    // stessa cosa qui
+                    for (e = 0; e < uguale2.length; e++) {
+                        // nel caso in cui i miei due nodi condividano la stessa source 
+                        if (uguale1[f] === uguale2[e]) {
+                            // essendo sulla stessa y devo spostare un nodo per evitare sovraffollamento di nodi
+                            for (n = 0; n < lista_inseriti.length; n++) {
+                                // una volta trovato il nodo target                                    
+                                if (lista_inseriti[n].id === uguale1[f]) {
+                                    // devo controlare che non sia sulla stessa posizione y
+                                    if (lista_inseriti[n].posy === lista_inseriti[a].posy
+                                        && lista_inseriti[n].id !== lista_inseriti[z].id
+                                        && lista_inseriti[n].id !== lista_inseriti[a].id) {
+                                        // in caso affermativo devo spostare un nodo di una posizione
+                                        lista_inseriti[a].posy += 1;
+                                        nodi_spostati.push(lista_inseriti[a].id);
+                                        nodi_spostati.push(lista_inseriti[z].id);
+                                        // devo stare attento al fatto che non ci siano nodi sotto
+                                        // poichè verrebbero sovrapposti malamente
+                                        for (u = 0; u < lista_inseriti.length; u++) {
+                                            if (lista_inseriti[u].posy >= lista_inseriti[a].posy
+                                                && lista_inseriti[u].posx  === lista_inseriti[a].posx
+                                                && lista_inseriti[u].id !== lista_inseriti[a].id) {
+                                                // a questo punto devo spostare ogni nodo sotto
+                                                lista_inseriti[u].posy += 1;
                                             }
                                         }
                                     }
@@ -677,7 +675,10 @@ function elimina_spazi_vuoti() {
                 // stessa posizione y allora posso aggiornarli nella lista 
                 // principale (lista_inseriti)
                 for (e = 0; e < lista_inseriti.length; e++) {
-                    if (lista_inseriti[e].id === arra[c].id) {
+                    if (lista_inseriti[e].id === arra[c].id && !(nodi_spostati.includes(lista_inseriti[e].id))) {
+                        console.log(nodi_spostati);
+                        console.log(lista_inseriti[e].id);
+                        console.log(nodi_spostati.includes(lista_inseriti[e].id));
                         lista_inseriti[e] = arra[c];
                     }
                 }
