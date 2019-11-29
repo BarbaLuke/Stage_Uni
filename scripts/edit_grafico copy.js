@@ -2,11 +2,7 @@
 var
     svg = document.getElementById('vedo'),
     g = document.getElementById("vedo2"),
-    muovilo = null,
-    zoommabile = document.getElementById("zoommaa"),
-    linkabile = document.getElementById("edita"),
-    inserimento_nodi = document.getElementById("insertnodi"),
-    eliminabile = document.getElementById("dele");
+    muovilo = null;
 
 // funzioni per cercare l'id da inserire nei nuovi ingredienti o azioni
 function cerca_ultimo_id_ingredienti() {
@@ -116,19 +112,30 @@ function svgPoint(element, x, y) {
     return pt.matrixTransform(g.getScreenCTM().inverse());
 }
 
-// funzione che mi permette di navigare e zoomare il grafico
-$("#vedo").click(function (evt) {
-    if (zoommabile.checked == true) {
-        grafico.enablePan();
-        grafico = svgPanZoom(svgElement);
+var puoi_eliminare = false;
+
+$('body').on('keydown', function (e) {
+
+
+    let tasto = e.which;
+
+    if (tasto === 68) {
+
+        puoi_eliminare = true;
+
     }
+});
+$('body').on('keyup', function (e) {
+
+    puoi_eliminare = false;
+
 });
 
 // questa funzione mi permette di eliminare un elemento del mio grafico SVG
 $("#vedo").click(function (evt) {
     let cance = true;
     grafico = svgPanZoom(svgElement);
-    if (eliminabile.checked == true) {
+    if (puoi_eliminare) {
         var target = $(evt.target);
         if (target.is("circle") || target.is("rect") || target.is("line")) {
             let idi = target.attr("id");
@@ -226,12 +233,6 @@ $("#vedo").click(function (evt) {
                         cance = false;
                     }
 
-                    if (target.is("path")) {
-                        let splitto = target.attr("id").split("_");
-                        let id1 = splitto[0];
-                        let id2 = splitto[1];
-
-                    }
                 }
             });
             $("#annulla_eliminazione").click(function (ev) {
@@ -239,152 +240,6 @@ $("#vedo").click(function (evt) {
             });
             $(".close").click(function (evw) {
                 cance = false;
-            });
-        }
-    }
-});
-
-$("#vedo2").mouseenter(function (evt) {
-    if (zoommabile.checked == true) {
-        var target = $(evt.target);
-        var dentro = true;
-
-        var igi = target.attr("id");
-        if (dentro === true) {
-            for (c = 0; c < link.length; c++) {
-
-                if (link[c].source === igi) {
-
-                    let da_alzare = link[c].source + "_" + link[c].target;
-
-                    $("#" + da_alzare).insertAfter('line:last')
-
-                    $("#" + da_alzare).animate({
-                        strokeWidth: 30
-
-                    }, 200, function () { });
-                }
-            }
-            if (target.is("circle")) {
-
-                target.animate({
-                    r: 50
-                }, 200, function () { });
-            }
-            if (target.is("rect")) {
-
-                target.animate({
-                    width: 100,
-                    height: 100,
-                    x: "-=25",
-                    y: "-=25"
-                }, 200, function () { });
-            }
-            if (target.is("line")) {
-
-                var id_source = igi.split("_")[0];
-
-                target.animate({
-                    strokeWidth: 30
-
-                }, 200, function () { });
-
-                if (id_source.includes("i")) {
-                    console.log(id_source);
-
-                    $("#" + id_source).animate({
-                        r: 50
-                    }, 200, function () { });
-                }
-                else {
-
-                    $("#" + id_source).animate({
-                        width: 100,
-                        height: 100,
-                        x: "-=25",
-                        y: "-=25"
-                    }, 200, function () { });
-                }
-            }
-
-            target.mouseleave(function (evt) {
-                if (dentro === true) {
-
-                    if (target.is("circle")) {
-
-                        for (s = 0; s < link.length; s++) {
-
-                            if (link[s].source === igi) {
-
-                                let da_alzare2 = link[s].source + "_" + link[s].target;
-
-                                $("#" + da_alzare2).insertAfter('line:last')
-
-                                $("#" + da_alzare2).animate({
-                                    strokeWidth: 15
-
-                                }, 200, function () { });
-                            }
-                        }
-
-                        target.animate({
-                            r: 35
-                        }, 200, function () { });
-                    }
-                    if (target.is("rect")) {
-
-                        for (s = 0; s < link.length; s++) {
-
-                            if (link[s].source === igi) {
-
-                                let da_alzare2 = link[s].source + "_" + link[s].target;
-                                let da_abbassare = link[s - 1].source + "_" + link[s - 1].target;
-
-                                $("#" + da_alzare2).insertAfter($("#" + da_abbassare))
-
-                                $("#" + da_alzare2).animate({
-                                    strokeWidth: 15
-
-                                }, 200, function () { });
-                            }
-                        }
-
-                        target.animate({
-                            width: 50,
-                            height: 50,
-                            x: "+=25",
-                            y: "+=25"
-                        }, 200, function () { });
-                    }
-
-                    if (target.is("line")) {
-
-                        var id_source = igi.split("_")[0];
-                        console.log(id_source);
-
-                        target.animate({
-                            strokeWidth: 15
-
-                        }, 200, function () { });
-
-                        if (id_source.includes("i")) {
-
-                            $("#" + id_source).animate({
-                                r: 35
-                            }, 200, function () { });
-                        }
-                        else {
-
-                            $("#" + id_source).animate({
-                                width: 50,
-                                height: 50,
-                                x: "+=25",
-                                y: "+=25"
-                            }, 200, function () { });
-                        }
-                    }
-                }
-                dentro = false;
             });
         }
     }

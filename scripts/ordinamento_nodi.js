@@ -676,9 +676,6 @@ function elimina_spazi_vuoti() {
                 // principale (lista_inseriti)
                 for (e = 0; e < lista_inseriti.length; e++) {
                     if (lista_inseriti[e].id === arra[c].id && !(nodi_spostati.includes(lista_inseriti[e].id))) {
-                        console.log(nodi_spostati);
-                        console.log(lista_inseriti[e].id);
-                        console.log(nodi_spostati.includes(lista_inseriti[e].id));
                         lista_inseriti[e] = arra[c];
                     }
                 }
