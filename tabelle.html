@@ -31,11 +31,11 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-                <div class="sidebar-brand-icon rotate-n-15">
+                <div class="sidebar-brand-icon">
                     <i class="fas fa-cookie-bite"></i>
                 </div>
                 <div class="sidebar-brand-text mx-3">Recipe Control Panel</div>
@@ -115,20 +115,23 @@
                 <!-- Begin Page Content -->
                 <div id="svvg" class="container">
 
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4" style="margin-top:15px;">
-                        <h1 id="titolo" class="h3 mb-0 text-gray-800">Ingredienti di </h1>
-                        <a href="" id="scarico" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-                            download><i class="fas fa-download"></i> &nbsp; Download File Updated</a>
-                        <a href="" id="leggo" class="d-none d-sm-inline-block btn btn-sm btn-light shadow-sm"
-                            target="_blank"><i class="fas fa-file-code"></i> &nbsp; XML File Updated</a>
-                    </div>
+                        <div class="row mb-4 mt-2" >
+                                <div class="col-md-7">
+                                    <h1 id="titolo" class="h3 mb-0 text-gray-800">Ingredienti di</h1>
+                                </div>
+                                <div class="col-md-3">
+                                    <a href="" id="scarico" class="btn btn-sm btn-dark shadow-sm" download><i class="fas fa-download"></i> &nbsp; Download File Updated</a>
+                                </div>
+                                <div class="col-md-2">
+                                        <a href="" id="leggo" class="btn btn-sm btn-light shadow-sm" target="_blank"><i class="fas fa-file-code"></i> &nbsp; XML File Updated</a>
+                                </div>
+                            </div>
 
                     <!-- Content Row -->
                     <button style='margin-bottom: 20px;' id='inserisci_ingrediente'
-                        class='btn-info shadow-sm btn btn-sm'><i class="fas fa-plus-square"></i> Nuovo
+                        class='btn-light shadow-sm btn btn-sm'><i class="fas fa-plus-square"></i> Nuovo
                         ingrediente</button>
-                    <table class="table">
+                    <table class="table table-hover table-striped">
                         <thead class="thead-dark">
                             <tr>
                                 <th scope="col">id</th>
