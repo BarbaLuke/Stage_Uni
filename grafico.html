@@ -284,8 +284,11 @@
                     </div>
                     <div class="form-group solo_azione">
                         <label>Nome dell'azione</label>
-                        <input type="text" class="form-control" id="nome_nodo2" name='nome2'
+                        <input list="act_globali" id="nome_nodo2" name='nome_act'
+                            class="form-control custom-select custom-select-md da_nascondere"
                             placeholder="Nome azione">
+                        <datalist id="act_globali">
+                        </datalist>
                     </div>
                     <div class="form-group solo_azione">
                         <label>Durata dell'azione</label>

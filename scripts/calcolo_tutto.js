@@ -407,6 +407,37 @@ function calcolo_nodi_e_link(xml, callback) {
         }
     }
 
+    for (d = 0; d < azioni.length; d++) {
+
+        let inserisci_global_act = true;
+
+        azioni_globali = JSON.parse(sessionStorage.getItem("azioni_global"));
+
+        for (b = 0; b < azioni_globali.length; b++) {
+
+            if (azioni_globali[b].nome.replace(/\s+/g, '') === azioni[d].nome.replace(/\s+/g, '')) {
+
+                inserisci_global_act = false;
+            }
+        }
+
+        if (inserisci_global_act) {
+
+            vara_glob_act = { nome: azioni[d].nome};
+
+            azioni_globali.push(vara_glob_act);
+
+            sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
+
+            $.ajax({
+                url: 'aggiungi_azione_globale.php',
+                async: false,
+                type: 'POST',
+                data: vara_glob_act
+            });
+        }
+    }
+
     // richiamo la funzione che mi inserisce la posizione
     //  dei nodi in base alla loro distanza dall ultimo nodo,
     //  questa posizioneverrà aggiornata con riordine_nodi()

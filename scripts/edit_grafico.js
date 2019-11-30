@@ -69,6 +69,21 @@ function cerca_ed_elimina(id_da_eliminare) {
     for (a = 0; a < ingredienti_totali.length; a++) {
         if (id_da_eliminare === ingredienti_totali[a].id) {
 
+            for (h = 0; h < ingredienti_globali.length; h++) {
+
+                if (ingredienti_globali[h].nome.replace(/\s+/g, '') === ingredienti_totali[a].nome.replace(/\s+/g, '')) {
+
+                    let elimin_ing = { ing_da_eliminar: ingredienti_globali[h].nome, imma_da_eliminar: ingredienti_globali[h].immagine };
+                    $.ajax({
+                        url: 'elimina_ingrediente_globale.php',
+                        type: 'POST',
+                        async: false,
+                        data: elimin_ing
+                    });
+                    ingredienti_globali.splice(h, 1);
+                }
+            }
+            sessionStorage.setItem("ingredienti_global", JSON.stringify(ingredienti_globali));
             ingredienti_totali.splice(a, 1);
             return;
 
@@ -77,6 +92,22 @@ function cerca_ed_elimina(id_da_eliminare) {
     for (a = 0; a < azioni.length; a++) {
 
         if (id_da_eliminare === azioni[a].id) {
+
+            for (h = 0; h < azioni_globali.length; h++) {
+
+                if (azioni_globali[h].nome.replace(/\s+/g, '') === azioni_totali[a].nome.replace(/\s+/g, '')) {
+
+                    let elimin_act = { act_da_eliminar: azioni_globali[h].nome};
+                    $.ajax({
+                        url: 'elimina_azione_globale.php',
+                        type: 'POST',
+                        async: false,
+                        data: elimin_act
+                    });
+                    azioni_globali.splice(h, 1);
+                }
+            }
+            sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
 
             azioni.splice(a, 1);
             return;

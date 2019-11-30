@@ -91,49 +91,78 @@ function disposizione_nodi_ingredienti_precondizioni_noTarget() {
             }
         }
 
+        //se ho più di tre nodi collegati al nodo che fa da target
         if (numer > 3) {
 
+            // inizializzo la variabile di decisione per lo spostamento del nodo che fa da target
             sposta = false;
-
+            
+            // vado a vedere nella lista inseriti
             for (l = 0; l < lista_inseriti.length; l++) {
 
+                // se ho un nodo che non sia un nodo di intermezzo (cioè senza source) che sta nella stessa
+                // posizione x ma con posizione y minore cioà sta sopra il nodo che vorrei spostare
                 if (lista_inseriti[l].posy < lista_inseriti[a].posy && lista_inseriti[l].posx === lista_inseriti[a].posx && !nodi_intermezzo.includes(lista_inseriti[l].id)) {
+
+                    // setto la variabile di decisione dello spostamento a true
                     sposta = true;
 
+                    // vado a vedere nella lista inseriti 
                     for (t = 0; t < lista_inseriti.length; t++) {
+
+                        // se ho dei nodi come prima che si trovano sulla stessa posizione x
+                        // ma si trovano sotto il nodo da spostare
                         if (lista_inseriti[t].posy >= lista_inseriti[a].posy && lista_inseriti[t] !== lista_inseriti[a] && lista_inseriti[t].posx === lista_inseriti[a].posx && !nodi_intermezzo.includes(lista_inseriti[t].id)) {
 
+                            // allora devo spostare anche loro
                             lista_inseriti[t].posy += parseInt(numer / 3);
                             nodi_spostati[nodi_spostati.length] = lista_inseriti[t].id;
-
                         }
                     }
                 }
             }
 
+            // se c'è da spostare il nodo
             if (sposta) {
+                // infine sposto il nodo della quantità desiderata
+                // per sempilicità ho raggruppato in tre nodi ogni piano dei nodi di intermezzo
                 lista_inseriti[a].posy += parseInt(numer / 3);
                 nodi_spostati[nodi_spostati.length] = lista_inseriti[a].id;
-
             }
-
         }
     }
+    // questa serie di funzioni mi serve per non lasciare spaz vuoti nel grafico
+    // che risulterebbe di difficile lettura
+    // devo ripetere questa serie di azioni per un numero non ben definito di volte
+    // ma io ho stabilito un tetto massimo uguale alla lunghezza della lista inseriti
     for (i = 0; i < lista_inseriti.length; i++) {
+        // per ogni nodo della lista inseriti
         for (a = 0; a < lista_inseriti.length; a++) {
+            // per ogni link 
             for (b = 0; b < link.length; b++) {
+                // controllo che il mio nodo sia una source
                 if (lista_inseriti[a].id === link[b].source) {
 
+                    // tra tutti i nodi della lista inseriti
                     for (c = 0; c < lista_inseriti.length; c++) {
+                        // se trovo il target della mia source
                         if (link[b].target === lista_inseriti[c].id) {
 
+                            // se il nodo source si trova nella posizione prima del nodo 
+                            // target rispetto a x e ad una posizione y diversa
                             if (lista_inseriti[a].posx ===
                                 (lista_inseriti[c].posx - 1) &&
                                 lista_inseriti[a].posy !==
                                 lista_inseriti[c].posy) {
 
+                                // setto la variabile che mi permette di spostare il nodo source    
                                 let posso = true;
+
+                                // controllo nella lista dei nodi inseriti 
                                 for (d = 0; d < lista_inseriti.length; d++) {
+
+                                    // a meno che non esista qualche nodo nella posizione y uguale al nodo 
+                                    // target che sarebbe quella dove devo spostare il nodo source
                                     if (lista_inseriti[a].posx ===
                                         lista_inseriti[d].posx &&
                                         lista_inseriti[a].id !==
@@ -141,13 +170,14 @@ function disposizione_nodi_ingredienti_precondizioni_noTarget() {
                                         lista_inseriti[c].posy ===
                                         lista_inseriti[d].posy &&
                                         posso) {
+                                        // se si verifica che esiste già un nodo dove voglio spostare la source
                                         posso = false;
                                     }
                                 }
+                                // nel caso in cui non vi sia nessun nodo ad ostacolare lo spostamento
                                 if (posso && !nodi_spostati.includes(lista_inseriti[a].id)) {
-                                    
-                                    lista_inseriti[a].posy =
-                                        lista_inseriti[c].posy;
+                                    // allineo i due nodi
+                                    lista_inseriti[a].posy = lista_inseriti[c].posy;
                                 }
                             }
                         }
@@ -156,6 +186,8 @@ function disposizione_nodi_ingredienti_precondizioni_noTarget() {
             }
         }
     }
+
+    // ora devo spostare i nodi di intermezzo nelle posizioni giuste
 
     for (a = 0; a < lista_inseriti.length; a++) {
 
@@ -213,15 +245,18 @@ function disposizione_nodi_ingredienti_precondizioni_noTarget() {
                                     lista_inseriti[c].posx =
                                         lista_inseriti[a].posx;
 
+                                        lista_inseriti[c].posy =
+                                    lista_inseriti[a].posy - 0.50;
+
                                 } else {
 
                                     lista_inseriti[c].posx =
                                         lista_inseriti[a].posx - 0.66 + numer / 3;
 
-                                }
-
-                                lista_inseriti[c].posy =
+                                        lista_inseriti[c].posy =
                                     lista_inseriti[a].posy - 0.35;
+
+                                }
 
                             } else {
 

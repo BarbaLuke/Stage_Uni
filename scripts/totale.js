@@ -7,6 +7,7 @@ var grafico = 0;
 //  la differenza dei primi due
 var ingredienti_totali = [];
 
+// variabile per gli ingerdienti globali
 var ingredienti_globali = 
 JSON.parse(sessionStorage.getItem("ingredienti_global"));
 
@@ -16,6 +17,7 @@ var azioni = [];
 // quantità usate di cosa in quale azione
 var quantcosa = [];
 
+// variabile per le azioni globali
 var azioni_gloali = 
 JSON.parse(sessionStorage.getItem("azioni_global"));;
 
@@ -31,7 +33,6 @@ var lista_adj = [];
 // variabili di supporto
 var x, i, y, z, j, k, vara, vara2, inno;
 
-
 //creo questa lista sdoppiata per far sdoppiare i nodi con più di un
 // collegamento lo faccio per facilitare la mia funzione ricorsiva per
 // la ricerca del cammino per ogni nodo fino alla fine
@@ -43,7 +44,6 @@ var lista_cammini = [];
 
 // questa mi serve per contenere il massimo cammino e inserislo poi nelle info    
 var max_cammino = 0;
-
 
 // creo due liste in lista_inseriti tengo tutti i nodi e le posizioni
 // in due dimensioni del mio nodo

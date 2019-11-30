@@ -14,6 +14,9 @@ var quantcosa = [];
 var ingredienti_globali =
     JSON.parse(sessionStorage.getItem("ingredienti_global"));
 
+    var azioni_globali =
+    JSON.parse(sessionStorage.getItem("azioni_global"));
+
 // link da aggiungere dopo
 var link_dopo = [];
 
@@ -429,6 +432,18 @@ function calcolo_liste(xml) {
         return (massimo + 1) + "i";
     }
 
+    function cerca_ultimo_id_azioni() {
+        let massimo = 0;
+        for (i = 0; i < azioni.length; i++) {
+            let nuovo_id = azioni[i].id;
+            let temporaneo = nuovo_id.split("a");
+            if (parseInt(temporaneo[0]) > massimo) {
+                massimo = parseInt(temporaneo[0]);
+            }
+        }
+        return (massimo + 1) + "a";
+    }
+
     // Funzione modifica ingrediente delle tabelle
     $(".modifica_ingre").click(function (evt) {
         let modda = true;
@@ -463,7 +478,7 @@ function calcolo_liste(xml) {
                             var non_esis = true;
                             for (u = 0; u < ingredienti_globali.length; u++) {
 
-                                if ($("#nome_nodo").val().replace(/\s+/g, '') === ingredienti_globali[u].nome.replace(/\s+/g, '') && ingredienti_globali[u].nome.replace(/\s+/g, '')!==ingredienti_globali[n].nome.replace(/\s+/g, '')) {
+                                if ($("#nome_nodo").val().replace(/\s+/g, '') === ingredienti_globali[u].nome.replace(/\s+/g, '') && ingredienti_globali[u].nome.replace(/\s+/g, '') !== ingredienti_globali[n].nome.replace(/\s+/g, '')) {
                                     non_esis = false;
                                     let eliminazione_ing = { ing_da_eliminar: ingredienti_globali[n].nome, imma_da_eliminar: ingredienti_globali[n].immagine };
                                     $.ajax({
@@ -561,21 +576,21 @@ function calcolo_liste(xml) {
         $("#elimina_inserimento").click(function (ev) {
             if (canc === true) {
 
-                for(h = 0; h < ingredienti_globali.length; h++){
+                for (h = 0; h < ingredienti_globali.length; h++) {
 
-                    if(ingredienti_globali[h].nome === nome_ingr_del){
+                    if (ingredienti_globali[h].nome === nome_ingr_del) {
 
                         let elimin_ing = { ing_da_eliminar: ingredienti_globali[h].nome, imma_da_eliminar: ingredienti_globali[h].immagine };
-                    $.ajax({
-                        url: 'elimina_ingrediente_globale.php',
-                        type: 'POST',
-                        async: false,
-                        data: elimin_ing
-                    });
-                    ingredienti_globali.splice(h, 1);
+                        $.ajax({
+                            url: 'elimina_ingrediente_globale.php',
+                            type: 'POST',
+                            async: false,
+                            data: elimin_ing
+                        });
+                        ingredienti_globali.splice(h, 1);
+                    }
                 }
-            }
-            sessionStorage.setItem("ingredienti_global", JSON.stringify(ingredienti_globali));
+                sessionStorage.setItem("ingredienti_global", JSON.stringify(ingredienti_globali));
 
                 let cancell = {
                     ricetta: sessionStorage.getItem("nome_file"),
@@ -625,8 +640,8 @@ function calcolo_liste(xml) {
 
                 let non_esiste = true;
 
-                for(y = 0; y < ingredienti_totali.length; y++){
-                    if(non_esiste && nome === ingredienti_totali[y].nome){
+                for (y = 0; y < ingredienti_totali.length; y++) {
+                    if (non_esiste && nome === ingredienti_totali[y].nome) {
 
                         non_esiste = false;
 
@@ -792,6 +807,166 @@ function calcolo_liste(xml) {
 
     });
 
+    // funzione cancella azione dalle tabelle e dalle liste globali
+    $(".cancella_azio").click(function (evt) {
+        let canc2 = true;
+        $('#elimina_azione').modal({
+            show: true
+        });
+        let idi = $(this).attr("id").split("del")[0];
+        let idddi = document.getElementById("azione_elim");
+        let nome_azio_del = trovanome(idi);
+        idddi.innerHTML = "Elimina " + nome_azio_del;
+        let testo = document.getElementById("testo_dentro2");
+        testo.innerHTML = "Vuoi eliminare " + nome_azio_del + " ?";
+        $("#elimina_inserimento_azione").click(function (ev) {
+            if (canc2 === true) {
+
+                for (h = 0; h < azioni_globali.length; h++) {
+
+                    if (azioni_globali[h].nome.replace(/\s+/g, '') === nome_azio_del.replace(/\s+/g, '')) {
+
+                        let elimin_act = { act_da_eliminar: azioni_globali[h].nome };
+                        $.ajax({
+                            url: 'elimina_azione_globale.php',
+                            type: 'POST',
+                            async: false,
+                            data: elimin_act
+                        });
+                        azioni_globali.splice(h, 1);
+                    }
+                }
+                sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
+
+                let cancell = {
+                    ricetta: sessionStorage.getItem("nome_file"),
+                    id2: idi
+                };
+
+                $.ajax({
+                    url: 'cancella_azione.php',
+                    type: 'POST',
+                    data: cancell,
+                    success: function () {
+                        location.reload();
+                    },
+                    error: function () {
+                        alert("qualcosa è andato storto");
+                    }
+                });
+
+                canc2 = false;
+
+            }
+
+        });
+        $("#annulla_eliminazione_azione").click(function () {
+
+            canc2 = false;
+
+        });
+
+        $(".close").click(function (evw) {
+            canc2 = false;
+        });
+    });
+
+    // funzione inserimento ingrediente nelle tabelle
+    $("#inserisci_azione").click(function (evt) {
+        let inn_act = true;
+
+        $('#insert_azione').modal({
+            show: true
+        });
+
+        $("#salva_inserimento_azione2").click(function (ev) {
+            if (inn_act === true) {
+
+                let nome = $("#nome_nodo3").val();
+
+                let non_esiste = true;
+
+                for (y = 0; y < azioni.length; y++) {
+                    if (non_esiste && nome === azioni[y].nome) {
+
+                        non_esiste = false;
+
+                    }
+                }
+
+                let dur = $("#durata_nodo2").val();
+
+                if (nome !== "" && non_esiste) {
+
+                    let non = true;
+
+                    for (n = 0; n < azioni_globali.length; n++) {
+
+                        if (azioni_globali[n].nome.replace(/\s+/g, '') === nome.replace(/\s+/g, '')) {
+
+                            non = false;
+                        }
+                    }
+                    if (non) {
+
+
+                        vara_glob = { nome: $("#nome_nodo3").val() };
+
+                        azioni_globali.push(vara_glob);
+
+                        sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
+
+                        $.ajax({
+                            url: 'aggiungi_azione_globale.php',
+                            type: 'POST',
+                            data: vara_glob
+                        });
+
+                    }
+
+                    let idi = cerca_ultimo_id_azioni();
+                    let inse = {
+                        id: idi,
+                        nome: nome,
+                        durata: dur,
+                        condizione: ""
+                    };
+                    azioni.push(inse);
+                    let inse2 = {
+                        ricetta: sessionStorage.getItem("nome_file"),
+                        id: idi,
+                        nome: nome,
+                        durata: dur
+                    };
+                    $.ajax({
+                        url: 'inserimento_azione.php',
+                        type: 'POST',
+                        data: inse2,
+                        success: function () {
+                            //location.reload();
+                        },
+                        error: function () {
+                            alert("qualcosa è andato storto");
+                        }
+                    });
+                } else {
+                    alert("hai dimenticato il nome oppure già esiste");
+                }
+
+                inn_act = false
+            }
+        });
+
+        $("#annulla_insertnodo_azione2").click(function () {
+
+            inn_act = false;
+
+        });
+        $(".close").click(function (evw) {
+            inn_act = false;
+        });
+    });
+
     // Funzione modifica quantità usata da un ingrediente
     $(".modifica_link").click(function (evt) {
         let mod_quant = true;
@@ -879,23 +1054,47 @@ function calcolo_liste(xml) {
         });
     });
 
-    var lista = document.getElementById("globali");
+    var lista = document.getElementById("globali"); globali_act
+    var lista2 = document.getElementById("globali_act");
 
-    for (a = 0; a < ingredienti_globali.length; a++) {
-        let puoi = true;
-        for(x = 0; x < ingredienti_totali.length; x++){
+    if (lista) {
+        for (a = 0; a < ingredienti_globali.length; a++) {
+            let puoi = true;
+            for (x = 0; x < ingredienti_totali.length; x++) {
 
-            if(puoi && ingredienti_globali[a].nome === ingredienti_totali[x].nome){
+                if (puoi && ingredienti_globali[a].nome === ingredienti_totali[x].nome) {
 
-                puoi = false;
+                    puoi = false;
+
+                }
+            }
+            if (puoi) {
+
+                let inni = "<option value='" + ingredienti_globali[a].nome + "'>" + ingredienti_globali[a].nome + "</option>";
+                lista.innerHTML += inni;
 
             }
         }
-        if(puoi){
+    }
 
-            let inni = "<option value='" + ingredienti_globali[a].nome + "'>" + ingredienti_globali[a].nome + "</option>";
-            lista.innerHTML += inni;
+    if (lista2) {
 
+        for (a = 0; a < azioni_globali.length; a++) {
+            let puoi2 = true;
+            for (x = 0; x < azioni.length; x++) {
+
+                if (puoi2 && azioni_globali[a].nome === azioni[x].nome) {
+
+                    puoi2 = false;
+
+                }
+            }
+            if (puoi2) {
+
+                let inni2 = "<option value='" + azioni_globali[a].nome + "'>" + azioni_globali[a].nome + "</option>";
+                lista2.innerHTML += inni2;
+
+            }
         }
     }
 }

@@ -1,12 +1,12 @@
-// array che conterranno in ordine: INGREDIENTI, POST delle AZIONI e
-//  la differenza dei primi due
+//  array ingredienti
 var ingredienti_totali = [];
 
 // arrai che conterrà le azioni
 var azioni = [];
 
-var ingredienti_globali =
-    JSON.parse(sessionStorage.getItem("ingredienti_global"));
+var ingredienti_globali = JSON.parse(sessionStorage.getItem("ingredienti_global"));
+
+var azioni_globali = JSON.parse(sessionStorage.getItem("azioni_global"));
 
 // variabili di supporto
 var x, i, y, z, j, k, vara, vara2, inno;
@@ -106,10 +106,30 @@ function calcolo_liste(xml) {
 
 function ricerca() {
     // Declare variables
-    var input, filter, ul, li, a, i, txtValue;
+    var input, filter, i, txtValue;
     input = document.getElementById('search');
     filter = input.value.toUpperCase();
     table = document.getElementById("lista-globali");
+    tr = table.getElementsByTagName('tr');
+
+    // Loop through all list items, and hide those who don't match the search query
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName('td')[0];
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+        } else {
+            tr[i].style.display = "none";
+        }
+    }
+}
+
+function ricerca_azione() {
+    // Declare variables
+    var input, filter, i, txtValue;
+    input = document.getElementById('search_act');
+    filter = input.value.toUpperCase();
+    table = document.getElementById("lista-azioni-globali");
     tr = table.getElementsByTagName('tr');
 
     // Loop through all list items, and hide those who don't match the search query
@@ -131,6 +151,10 @@ document.getElementById("leggo").href = "ricette/" +
     sessionStorage.getItem("nome_file");
 
 var lista = document.getElementById("lista-globali");
+var lista2 = document.getElementById("lista-azioni-globali");
+
+if(lista){
+
 
 for (a = 0; a < ingredienti_globali.length; a++) {
     let inni = "";
@@ -166,6 +190,29 @@ for (a = 0; a < ingredienti_globali.length; a++) {
 
         }
         lista.innerHTML += inni;
+    }
+}
+}
+
+
+for (a = 0; a < azioni_globali.length; a++) {
+    let inni2 = "";
+    let inserisco2 = true;
+
+    for (e = 0; e < azioni.length; e++) {
+
+        if (azioni_globali[a].nome.replace(/\s+/g, '') === azioni[e].nome.replace(/\s+/g, '')) {
+            console.log(azioni[e].nome.replace(/\s+/g, ''));
+
+            inserisco2 = false;
+        }
+    }
+
+    if (inserisco2) {
+
+        inni2 += '<tr> <td>' + azioni_globali[a].nome + '</td> <td><div class="text-center"></button><button id="' + azioni_globali[a].nome + '_DEL" class="btn-danger shadow-sm btn btn-sm delet_act"><i class="fas fa-trash"></i></button></div></td></tr>';
+
+        lista2.innerHTML += inni2;
     }
 }
 
@@ -286,7 +333,13 @@ $(".delet_ing").click(function (evt) {
                         url: 'elimina_ingrediente_globale.php',
                         type: 'POST',
                         async: false,
-                        data: elimin_ing
+                        data: elimin_ing,
+                        success: function () {
+                            location.reload();
+                        },
+                        error: function () {
+                            alert("qualcosa è andato storto");
+                        }
                     });
                     ingredienti_globali.splice(d, 1);
                 }
@@ -301,5 +354,47 @@ $(".delet_ing").click(function (evt) {
     });
     $(".close").click(function (evw) {
         del_imm = false;
+    });
+});
+
+$(".delet_act").click(function (evt) {
+    let del_act = true;
+    $('#del_element_act').modal({
+        show: true
+    });
+    var nome_glob = $(this).attr("id").split("_")[0];
+
+    $("#salva_del_element_act").click(function (ev) {
+        if (del_act === true) {
+            for (d = 0; d < azioni_globali.length; d++) {
+
+                if (nome_glob.replace(/\s+/g, '') === azioni_globali[d].nome.replace(/\s+/g, '')) {
+
+                    let elimin_act = { act_da_eliminar: azioni_globali[d].nome};
+                    $.ajax({
+                        url: 'elimina_azione_globale.php',
+                        type: 'POST',
+                        async: false,
+                        data: elimin_act,
+                        success: function () {
+                            location.reload();
+                        },
+                        error: function () {
+                            alert("qualcosa è andato storto");
+                        }
+                    });
+                    azioni_globali.splice(d, 1);
+                }
+            }
+            sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
+            del_act = false;
+        }
+    });
+
+    $("#annulla_del_element_act").click(function (ev) {
+        del_act = false;
+    });
+    $(".close").click(function (evw) {
+        del_act = false;
     });
 });
