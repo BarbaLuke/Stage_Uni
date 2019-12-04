@@ -306,10 +306,10 @@ function calcolo_liste(xml) {
         }
 
         text += '<td><button id="' + ingredienti_totali[i].id +
-            '" class="btn-warning btn btn-sm shadow-sm modifica_ingre">\n\
+            '" class="btn-outline-warning btn btn-sm shadow-sm modifica_ingre">\n\
 <i class="fas fa-edit"></i></button> <button id="' + ingredienti_totali[i].id +
             "del" +
-            '" class="btn-danger shadow-sm btn btn-sm cancella_ingre">\n\
+            '" class="btn-outline-danger shadow-sm btn btn-sm cancella_ingre">\n\
 <i class="fas fa-trash"></i></button></td>';
         text += "</tr>";
         let ing = document.getElementById("ingredienti");
@@ -345,9 +345,9 @@ function calcolo_liste(xml) {
             text3 += "<td></td>";
         }
         text3 += '<td><button id="' + azioni[i].id +
-            '" class="btn-warning btn btn-sm shadow-sm modifica_azio">\n\
+            '" class="btn-outline-warning btn btn-sm shadow-sm modifica_azio">\n\
 <i class="fas fa-edit"></i></button> <button id="' + azioni[i].id + "del" +
-            '" class="btn-danger shadow-sm btn btn-sm cancella_azio">\n\
+            '" class="btn-outline-danger shadow-sm btn btn-sm cancella_azio">\n\
 <i class="fas fa-trash"></i></button></td>';
         text3 += "</tr>";
         let az = document.getElementById("azioni");
@@ -379,7 +379,7 @@ function calcolo_liste(xml) {
             text2 += "<td>" + tipo_rel + "</td>";
             text2 += "<td>" + quant + "</td>";
             text2 += '<td><button id="' + link[i].source + "_" + link[i].target +
-                '" class="btn-warning btn btn-sm shadow-sm modifica_link">\n\
+                '" class="btn-outline-warning btn btn-sm shadow-sm modifica_link">\n\
 <i class="fas fa-edit"></i></button></td>';
             text2 += "</tr>";
             let li = document.getElementById("link");

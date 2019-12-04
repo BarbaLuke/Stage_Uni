@@ -178,14 +178,14 @@ for (a = 0; a < ingredienti_globali.length; a++) {
 
             inni += '<tr> <td>' + ingredienti_globali[a].nome + '</td> <td><div class="text-center"> <a href="' + ingredienti_globali[a].immagine + '" target="_blank"> visualizza immagine </a></div></td> <td><div class="text-center"><button id="' + ingredienti_globali[a].nome +
                 '" class="btn-outline-warning btn btn-sm shadow-sm moda_imm mr-3">\n\
-<i class="fas fa-edit"></i></button> <button id="' + ingredienti_globali[a].nome + '_DEL" class="btn-danger shadow-sm btn btn-sm delet_ing">\n\
+<i class="fas fa-edit"></i></button> <button id="' + ingredienti_globali[a].nome + '_DEL" class="btn-outline-danger shadow-sm btn btn-sm delet_ing">\n\
 <i class="fas fa-trash"></i></button></div></td></tr>';
 
         } else {
 
             inni += '<tr> <td>' + ingredienti_globali[a].nome + '</td> <td></td> <td><div class="text-center"><button id="' + ingredienti_globali[a].nome +
                 '_" class="btn-outline-primary shadow-sm btn btn-sm insert_imm mr-3">\n\
-<i class="fas fa-plus"></i></button><button id="' + ingredienti_globali[a].nome + '_DEL" class="btn-danger shadow-sm btn btn-sm delet_ing"><i class="fas fa-trash">\n\
+<i class="fas fa-plus"></i></button><button id="' + ingredienti_globali[a].nome + '_DEL" class="btn-outline-danger shadow-sm btn btn-sm delet_ing"><i class="fas fa-trash">\n\
 </i></button></div></td></tr>';
 
         }
@@ -210,7 +210,7 @@ for (a = 0; a < azioni_globali.length; a++) {
 
     if (inserisco2) {
 
-        inni2 += '<tr> <td>' + azioni_globali[a].nome + '</td> <td><div class="text-center"></button><button id="' + azioni_globali[a].nome + '_DEL" class="btn-danger shadow-sm btn btn-sm delet_act"><i class="fas fa-trash"></i></button></div></td></tr>';
+        inni2 += '<tr> <td>' + azioni_globali[a].nome + '</td> <td><div class="text-center"></button><button id="' + azioni_globali[a].nome + '_DEL" class="btn-outline-danger shadow-sm btn btn-sm delet_act"><i class="fas fa-trash"></i></button></div></td></tr>';
 
         lista2.innerHTML += inni2;
     }
