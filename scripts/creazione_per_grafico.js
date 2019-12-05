@@ -196,6 +196,7 @@ $("#vedo").click(function (evt) {
                                 let insero = { nome: ingredienti_globali[n].nome, immagine: imma.value }
                                 $.ajax({
                                     url: 'aggiungi_modifica_immagine.php',
+                                    async: false,
                                     type: 'POST',
                                     data: insero,
                                     success: function () {
@@ -233,6 +234,7 @@ $("#vedo").click(function (evt) {
                         // chiamata per l'inserimento nel file json
                         $.ajax({
                             url: 'aggiungi_ingrediente_globale.php',
+                            async: false,
                             type: 'POST',
                             data: vara_glob
                         });
@@ -267,6 +269,7 @@ $("#vedo").click(function (evt) {
                     // eseguo la chiamata per inserire l'ingrediente nel file xml
                     $.ajax({
                         url: 'inserimento_ingrediente.php',
+                        async: false,
                         type: 'POST',
                         data: inse2
                     });
@@ -307,6 +310,7 @@ $("#vedo").click(function (evt) {
                         // chiamata per l'inserimento nel file json
                         $.ajax({
                             url: 'aggiungi_azione_globale.php',
+                            async: false,
                             type: 'POST',
                             data: vara_glob
                         });
@@ -319,7 +323,8 @@ $("#vedo").click(function (evt) {
                     let inse = {
                         id: idi,
                         nome: nome_azione.value,
-                        durata: durata.value
+                        durata: durata.value,
+                        condizione:""
                     };
 
                     // inserisco infine nella lista
@@ -330,7 +335,8 @@ $("#vedo").click(function (evt) {
                         ricetta: sessionStorage.getItem("nome_file"),
                         id: idi,
                         nome: nome_azione.value,
-                        durata: durata.value
+                        durata: durata.value,
+                        condizione : ""
                     };
 
                     // creo l'oggetto da inserire nel grafico
@@ -339,6 +345,7 @@ $("#vedo").click(function (evt) {
                     // eseguo la chiamata per l'inserimento dell'azione nel file xml
                     $.ajax({
                         url: 'inserimento_azione.php',
+                        async: false,
                         type: 'POST',
                         data: inse2
                     });
@@ -378,90 +385,139 @@ $("#vedo").click(function (evt) {
     }
 });
 
-var
-    nodo_source = "",
-    tipologia_nodo_source = "",
-    tipologia_nodo_target = "",
-    nodo_target = "";
 
 // questa funzione mi permette di creare link
 $("#vedo").mousedown(function (evt) {
-    if (linkabile.checked == true) {
+
+    // devo controllare se il bottone in alto sia correttamente checked
+    if (linkabile.checked == true) {       
+
+        // a questo punto devo controllare quale elemento del mio grafico sia stato selezionato
         var target = $(evt.target);
 
-        if (target.attr('class') === "oggetto") {
+        // se il mio elemento è un nodo ingrediente o azione
+        if (target.attr('class') === "oggetto" && (target.is("circle") || target.is("rect"))) {
+
+            // disabilito il panneling per far muovere la freccia del link
             grafico.disablePan();
+
+            // salvo l'id del nodo che ho selezionato da cui faccio partire la freccia            
             nodo_source = target.attr("id");
+
+            // devo cambiare la classe dei miei oggetti per poter permettere di collegarli
+            kids = $("#vedo2").children("rect,circle");
+
+            // queste invece sono le mie variabili per la posizione da cui far partire la freccia
             var
-                kids = $("#vedo2").children("rect,circle"),
-                x = 0,
-                y = 0;
+            x = 0,
+            y = 0;
+
+            // nascondo le sezioni che compaiono con le info dei nodi
             $(evt.target).popover("hide");
 
+            // setto le variabili da controllare dopo per validare la creazione del link
             muovilo = true;
             crealo = true;
 
+            // se il nodo selezionato è un ingrediente (un cerchio)
             if (target.is("circle")) {
+
+                // setto la mia variabile per la tipologia del nodo di partenza del link
                 tipologia_nodo_source = "ingrediente";
+
+                // infine setto le variabili per la posizione iniziale del mio link
                 x = target.attr("cx");
                 y = target.attr("cy");
 
+                // se invece è un azione
             } else if (target.is("rect")) {
+
+                // setto la mia variabile per la tipologia del nodo di partenza del link
                 tipologia_nodo_source = "azione";
+
+                // infine setto le variabili per la posizione iniziale del mio link
                 x = target.attr("x");
                 y = target.attr("y");
             }
 
+            // alla fine cambio la classe di tutti gli oggetti per permettere
+            // successivamente di essere linkabili
             kids.removeClass("oggetto");
             kids.addClass("oggetto2");
+
+            // creo come ultimo oggetto il mio link
             crea_link((nodo_source + "_"), x, y);
         }
 
-        if (target.is("line")) {
+        // se invece il mio elemento selezionato è un link già esistente da dover modificare 
+        if (target.is("line") && target.attr('class') !== "oggetto") {
 
+            // disabilito come prima il panneling
             grafico.disablePan();
+
+            // setto la mia variabile che mi servirà per identificare il link da spostare
             da_muovere = target.attr("id");
+
+            // setto la mia variabile del nodo da cui parte il link
             nodo_source = target.attr("id").split("_")[0];
+
+            // setto la variabile che mi dice che tipo di nodo è
             if (nodo_source.includes("i")) {
                 tipologia_nodo_source = "ingrediente";
             } else {
                 tipologia_nodo_source = "azione";
             }
 
+            // salvo le variabili con le coordinate finali nel caso in cui non vada in porto la modifica
             coordinata_prima_x = target.attr("x2");
             coordinata_prima_y = target.attr("y2");
-            console.log(nodo_source);
-            var kids = $("#vedo2").children("rect,circle");
-            //$('[data-toggle="popover"]').popover("disable");
 
+            // anche qui devo rendere tutti nodi linkabili
+            kids = $("#vedo2").children("rect,circle");
+            
+            // setto le mie variabili per validare la modifica del link successivamente
             muovilo = true;
             crealo = false;
 
+            // infine cambio la classe di tutti i miei nodi per renderli linkabili
             kids.removeClass("oggetto");
             kids.addClass("oggetto2");
-
         }
     }
 });
 
-// questa funzione mi permette di muovere il link create con lp'azione precedente
+// questa funzione mi permette di muovere il link createo con l'azione precedente
 $("#vedo").mousemove(function (er) {
+
+    // controllo sempre che l'utente non abbia cambiato il checked sopra
     if (linkabile.checked == true) {
+
+        // se mi trovo nello stato in cui ho la certezza che posso procedere
         if (muovilo) {
+
+            // ad ogni movimento ricalcolo la posizione di termine del mio link
+            // settando le variabili di posizionamento finale con il posizionamento
+            // del mio mouse e infine ricalcolando il tutto rispetto alla matrice 
+            // di alterazione del mio svg
             var
-                x = er.clientX,
-                y = er.clientY,
-                svgP = svgPoint(svg, x, y);
+            x = er.clientX,
+            y = er.clientY,
+            svgP = svgPoint(svg, x, y);
+
+            //  se devo creare da zero un link allora 
             if (crealo) {
 
+                // il mio link fisico sarà quello con id nodo_source_
                 linea = document.getElementById(nodo_source + "_");
 
-            } else {
+                // se invece devo muoverne uno già esistente 
+            } else if(!crealo){
 
+                // dovrò prendere l id di quello esistente
                 linea = document.getElementById(da_muovere);
-
             }
 
+            // a questo punto definito il link fisico da muovere lo faccio muovere con le regole che seguono
             x1 = linea.getAttribute("x1");
             y1 = linea.getAttribute("y1");
             if (svgP.x - x1 > 0 && svgP.y - y1 > 0) {
@@ -494,43 +550,76 @@ $("#vedo").mousemove(function (er) {
 });
 
 // questa azione invece mi permette di stabilire quale sia il target del mio link
+// per poi validarlo e finire la transizione
 $("#vedo").mouseup(function (e) {
+
+    // una volta finito di muovere il mio link posso far tornare il panneling
     grafico.enablePan();
+
+    // posso anche far tornare le box con le info che compaiono onmousehover
     $('rect').popover({
         trigger: 'hover'
     });
     $('[data-toggle="popover"]').popover("enable");
+
+    // se sono sicuro che l'utente voglia stabilire un nuovo link
     if (linkabile.checked == true) {
+
+        // se posso validarlo
         if (muovilo) {
+
+            // questa variabile mi serve per capire se sto collegando due ingredienti
             var ingre_ingre = false;
 
+            // questa variabile mi serve per riportare la classe oggetto al posto della classe  oggetto2
             var
-                kidse = $("#vedo2").children("rect,circle"),
-                target2 = $(e.target);
+            kidse = $("#vedo2").children("rect,circle"),
 
+            // questa invece mi serve per sapere su quale oggetto mi trovo da collegare
+            target2 = $(e.target);
+
+            //  se devo creare da zero un link allora 
             if (crealo) {
 
+                // il mio link fisico sarà quello con id nodo_source_
                 linea = document.getElementById(nodo_source + "_");
 
-            } else {
+                // se invece devo muoverne uno già esistente 
+            } else if(!crealo){
 
+                // dovrò prendere l id di quello esistente
                 linea = document.getElementById(da_muovere);
-
             }
 
+            // queste due variabili conterranno la posizione finale del mio link
             x = 0,
-                y = 0;
+            y = 0;
+
+            // questa conterrà l id del mio target
             let nodo_target = target2.attr("id");
+
+            // controllo se questo link non esista già
             esiste_gia = esiste(nodo_source, nodo_target);
+
+            // a questo punto se target ha classe oggetto 2
             if (target2.attr('class') === "oggetto2") {
+                // e se il collegamento non esiste già
                 if (!esiste_gia) {
+
+                    // controllo che tipo di target sia, nel caso sia un ingrediente
                     if (target2.is("circle")) {
+
+                        // dovrò prendere come posizione finale queste due variabili
                         x = target2.attr("cx");
                         y = target2.attr("cy");
+
+                        // se il nodo da collegare all'ingrediente è un azione
                         if (tipologia_nodo_source === "azione") {
 
+                            // se è un link già esistente
                             if (!crealo) {
 
+                                // mi serve l id dei due nodi già collegati
                                 let splitto = da_muovere.split("_");
                                 let id1 = splitto[0];
                                 let id2 = splitto[1];
@@ -559,7 +648,6 @@ $("#vedo").mouseup(function (e) {
                                         data: dati
                                     });
                                 }
-
                             }
 
                             let inf = info_ingrediente(nodo_target);
@@ -575,6 +663,7 @@ $("#vedo").mouseup(function (e) {
                             linea.remove();
                             delete linea;
                         }
+                        tipologia_nodo_target = "ingrediente";
                     } else if (target2.is("rect")) {
 
                         if (!crealo) {
@@ -591,7 +680,6 @@ $("#vedo").mouseup(function (e) {
                                     data: dati
                                 });
 
-
                             } else if (id1.includes("a", 1) && id2.includes("i", 1)) {
                                 let dati = { ricetta: sessionStorage.getItem("nome_file"), source: id2, target: id1 };
                                 $.ajax({
@@ -600,7 +688,6 @@ $("#vedo").mouseup(function (e) {
                                     data: dati
                                 });
 
-
                             } else if (id1.includes("i", 1) && id2.includes("a", 1)) {
                                 let dati = { ricetta: sessionStorage.getItem("nome_file"), source: id1, target: id2 };
                                 $.ajax({
@@ -608,9 +695,7 @@ $("#vedo").mouseup(function (e) {
                                     type: 'POST',
                                     data: dati
                                 });
-
                             }
-
                         }
 
                         tipologia_nodo_target = "azione";
@@ -714,16 +799,16 @@ $("#vedo").mouseup(function (e) {
                             }
                         }
 
-                        console.log(pos_fin_x, pos_fin_y);
-
                         linea.setAttribute("x2", pos_fin_x);
                         linea.setAttribute("y2", pos_fin_y);
 
                         linea.setAttribute("id", nodo_source + "_" + nodo_target);
                         let inse = { source: nodo_source, target: nodo_target };
                         link.push(inse);
-                        cerca_ed_elimina(da_muovere);
+                        if(!crealo){
 
+                            cerca_ed_elimina(da_muovere);
+                        }
                     }
 
                 } else {
@@ -755,10 +840,12 @@ $("#vedo").mouseup(function (e) {
 
                 }
             }
+
             muovilo = false;
-            crealo = false;
-            kidse.removeClass("oggetto2");
-            kidse.addClass("oggetto");
+            crealo = true;
+        console.log(kidse);
+        kidse.removeClass("oggetto2");
+        kidse.addClass("oggetto");
         }
     }
 });

@@ -65,7 +65,6 @@ function cerca_ultimo_id_azioni() {
 }
 
 function cerca_ed_elimina(id_da_eliminare) {
-    console.log(id_da_eliminare);
     for (a = 0; a < ingredienti_totali.length; a++) {
         if (id_da_eliminare === ingredienti_totali[a].id) {
 

@@ -24,7 +24,15 @@ function simplexml_insert_after(SimpleXMLElement $insert, SimpleXMLElement $targ
 
 // l'elemento che devo inserire, in questo caso è solo l'ingrediente, varia in base
 // ai parametri passati in input dall'utente
+if($durata !== ""){
+
     $insert = new SimpleXMLElement('<AZIONE IDazione="'.$id.'"><NOMEA> '.$nome.' </NOMEA><DUREVOLE>'.$durata.'</DUREVOLE></AZIONE>');
+}else{
+
+    $insert = new SimpleXMLElement('<AZIONE IDazione="'.$id.'"><NOMEA> '.$nome.' </NOMEA></AZIONE>');
+
+}
+    
 
 // l'elemento che funge da appendino, in questo caso dovendo aggiungere solo 
 // un ingrediente quindi mi basta trovare l'ultimo elemento degli ingredienti
