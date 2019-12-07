@@ -246,3 +246,15 @@ function crea_link(id, x_inizio, y_inizio) {
     frecc = '<line id="' + id + '" x1="' + x_inizio + '" y1="' + y_inizio + '" x2="' + x_inizio + '" y2="' + y_inizio + '"stroke="#076B26" stroke-width="15"  marker-end="url(#arrow)" />';
     document.getElementById("vedo2").innerHTML += frecc;
 }
+
+function crea_condizio(id, x_inizio, y_inizio, se) {
+    if(se){
+
+        frecc = '<line id="' + id + '" x1="' + x_inizio + '" y1="' + y_inizio + '" x2="' + x_inizio + '" y2="' + y_inizio + '"stroke="#076B26" stroke-width="15"  marker-end="url(#arrow)" />';
+
+    }else{
+        frecc = '<line id="' + id + '" x1="' + x_inizio + '" y1="' + y_inizio + '" x2="' + x_inizio + '" y2="' + y_inizio + '"stroke="#FF495C" stroke-width="15" stroke-dasharray="25,25"  marker-end="url(#arrow)" />';
+    }
+    
+    document.getElementById("vedo2").innerHTML += frecc;
+}

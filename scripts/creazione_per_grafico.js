@@ -87,6 +87,7 @@ $("#vedo").click(function (evt) {
         // queste variabili servono per identificare le classi degli elementi del form
         // permettendomi all'occasione di poterli nascondere in base alle esigenze
         let azio = document.getElementById("azion");
+        let azio_cond = document.getElementById("azion_cond");
         let ing = document.getElementById("ingred");
         var lista = document.getElementById("globali");
         var lista2 = document.getElementById("act_globali");
@@ -139,14 +140,26 @@ $("#vedo").click(function (evt) {
             $(".solo_azione").hide();
         }
 
+        // quando devo inserire un azione con condizione allora nascondo le parti del form per l'ingrediente
+        if(azio_cond.checked == true){
+            $(".solo_ingrediente").hide();
+        }
+
         // se cambio idea allora devo catturare l'evento al click del check e nascondere l'opposto
         $("#azion").click(function (e) {
             $(".solo_ingrediente").hide();
             $(".solo_azione").show();
+            $(".solo_condizione").hide();
+        });
+        $("#azion_cond").click(function (e) {
+            $(".solo_ingrediente").hide();
+            $(".solo_azione").show();
+            $(".solo_condizione").show();
         });
         $("#ingred").click(function (e) {
             $(".solo_ingrediente").show();
             $(".solo_azione").hide();
+            $(".solo_condizione").hide();
         });
 
         // questo evento mi cattura il clik sul bottone per l'inserimento
@@ -162,6 +175,7 @@ $("#vedo").click(function (evt) {
                 let imma = document.getElementById("immagine_nodo");
                 let nome_azione = document.getElementById("nome_nodo2");
                 let durata = document.getElementById("durata_nodo");
+                let condizione = document.getElementById("condizione_nodo");
 
                 // questa e varibili mi servono per identificare il punto cliccato, 
                 // così da poter trovare il punto esatto dove inserire la figura
@@ -278,88 +292,174 @@ $("#vedo").click(function (evt) {
                     // ho il problema che non inserendo questa variabile mi esegua una scrittuare nel caso in cui non concluda la procedura
                     scrivi = false;
 
-                } else if (nome_azione !== "" && azio.checked == true) {
+                } else if (azio.checked == true) {
+                    if (nome_azione.value !== "") {
 
-                    // questa varibile mi serve per capire se ho già questo ingredinte tra quelli globali
-                    let non = true;
 
-                    // con questo ciclo controllo tra gli ingredienti globali se l'ingrediente è già inserito o meno
-                    for (n = 0; n < azioni_globali.length; n++) {
 
-                        // in caso il nome dell'azione locale da inserire sia uguale(senza spazi superflui) 
-                        // ad un'azione già inserita nella lista globale
-                        if (azioni_globali[n].nome.replace(/\s+/g, '') === nome_azione.value.replace(/\s+/g, '')) {
+                        // questa varibile mi serve per capire se ho già questo ingredinte tra quelli globali
+                        let non = true;
 
-                            // la variabile per l'inserimento la setto a false
-                            non = false;
+                        // con questo ciclo controllo tra gli ingredienti globali se l'ingrediente è già inserito o meno
+                        for (n = 0; n < azioni_globali.length; n++) {
+
+                            // in caso il nome dell'azione locale da inserire sia uguale(senza spazi superflui) 
+                            // ad un'azione già inserita nella lista globale
+                            if (azioni_globali[n].nome.replace(/\s+/g, '') === nome_azione.value.replace(/\s+/g, '')) {
+
+                                // la variabile per l'inserimento la setto a false
+                                non = false;
+                            }
                         }
-                    }
 
-                    // nel caso in cui invece l'azione locale inserito non sia presente nella lista globale allora devo inserirla
-                    if (non) {
+                        // nel caso in cui invece l'azione locale inserito non sia presente nella lista globale allora devo inserirla
+                        if (non) {
 
-                        // mi serve il solito json-format dell'azione globale da inserire
-                        vara_glob = { nome: nome.value };
+                            // mi serve il solito json-format dell'azione globale da inserire
+                            vara_glob = { nome: nome_azione.value };
 
-                        //lo inserisco dentro la lista globale
-                        azioni_globali.push(vara_glob);
+                            //lo inserisco dentro la lista globale
+                            azioni_globali.push(vara_glob);
 
-                        // infine aggiorno anche la variabile nella cache che è quella che mi interessa veramente
-                        sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
+                            // infine aggiorno anche la variabile nella cache che è quella che mi interessa veramente
+                            sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
 
-                        // chiamata per l'inserimento nel file json
+                            // chiamata per l'inserimento nel file json
+                            $.ajax({
+                                url: 'aggiungi_azione_globale.php',
+                                async: false,
+                                type: 'POST',
+                                data: vara_glob
+                            });
+                        }
+                        // prendo in esame infine il caso dell'inserimento dell'azione
+                        // come prime devo cercare l'id più uno rispetto all'ultimo id delle azioni
+                        let idi = cerca_ultimo_id_azioni();
+
+                        let inse = {
+                            id: idi,
+                            nome: nome_azione.value,
+                            durata: durata.value,
+                            condizione: ""
+                        };
+
+                        // inserisco infine nella lista
+                        azioni.push(inse);
+
+                        // questo json- format mi serve per inserire l'azione nel fil xml
+                        let inse2 = {
+                            ricetta: sessionStorage.getItem("nome_file"),
+                            id: idi,
+                            nome: nome_azione.value,
+                            durata: durata.value,
+                            condizione: ""
+                        };
+
+                        // creo l'oggetto da inserire nel grafico
+                        crea_oggetto(idi, xe, ye);
+
+                        // eseguo la chiamata per l'inserimento dell'azione nel file xml
                         $.ajax({
-                            url: 'aggiungi_azione_globale.php',
+                            url: 'inserimento_azione.php',
                             async: false,
                             type: 'POST',
-                            data: vara_glob
+                            data: inse2
                         });
+
+                        // alla fine dell'inserimento chiudo l'evento mettendo scrivi a false e impedendo la scrittura futura
+                        // ho il problema che non inserendo questa variabile mi esegua una scrittuare nel caso in cui non concluda la procedura
+                        scrivi = false;
+                    } else {
+
+                        // nel caso in cui l'utente non abbia inserito il nome dell'azione o dell'ingrediente
+                        alert("serve il nome");
+                        scrivi = false;
                     }
-                    // prendo in esame infine il caso dell'inserimento dell'azione
-                    // come prime devo cercare l'id più uno rispetto all'ultimo id delle azioni
-                    let idi = cerca_ultimo_id_azioni();
+                } else if(azio_cond.checked == true){
 
-                    // questo json-format mi serve per inserire l'azione nella lista locale
-                    let inse = {
-                        id: idi,
-                        nome: nome_azione.value,
-                        durata: durata.value,
-                        condizione:""
-                    };
+                    if (nome_azione.value !== "" && condizione.value !== "") {
 
-                    // inserisco infine nella lista
-                    azioni.push(inse);
 
-                    // questo json- format mi serve per inserire l'azione nel fil xml
-                    let inse2 = {
-                        ricetta: sessionStorage.getItem("nome_file"),
-                        id: idi,
-                        nome: nome_azione.value,
-                        durata: durata.value,
-                        condizione : ""
-                    };
 
-                    // creo l'oggetto da inserire nel grafico
-                    crea_oggetto(idi, xe, ye);
+                        // questa varibile mi serve per capire se ho già questo ingredinte tra quelli globali
+                        let non = true;
 
-                    // eseguo la chiamata per l'inserimento dell'azione nel file xml
-                    $.ajax({
-                        url: 'inserimento_azione.php',
-                        async: false,
-                        type: 'POST',
-                        data: inse2
-                    });
+                        // con questo ciclo controllo tra gli ingredienti globali se l'ingrediente è già inserito o meno
+                        for (n = 0; n < azioni_globali.length; n++) {
 
-                    // alla fine dell'inserimento chiudo l'evento mettendo scrivi a false e impedendo la scrittura futura
-                    // ho il problema che non inserendo questa variabile mi esegua una scrittuare nel caso in cui non concluda la procedura
-                    scrivi = false;
-                } else {
+                            // in caso il nome dell'azione locale da inserire sia uguale(senza spazi superflui) 
+                            // ad un'azione già inserita nella lista globale
+                            if (azioni_globali[n].nome.replace(/\s+/g, '') === nome_azione.value.replace(/\s+/g, '')) {
 
-                    // nel caso in cui l'utente non abbia inserito il nome dell'azione o dell'ingrediente
-                    alert("qualcosa non è andato bene");
-                    scrivi = false;
+                                // la variabile per l'inserimento la setto a false
+                                non = false;
+                            }
+                        }
+
+                        // nel caso in cui invece l'azione locale inserito non sia presente nella lista globale allora devo inserirla
+                        if (non) {
+
+                            // mi serve il solito json-format dell'azione globale da inserire
+                            vara_glob = { nome: nome_azione.value };
+
+                            //lo inserisco dentro la lista globale
+                            azioni_globali.push(vara_glob);
+
+                            // infine aggiorno anche la variabile nella cache che è quella che mi interessa veramente
+                            sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
+
+                            // chiamata per l'inserimento nel file json
+                            $.ajax({
+                                url: 'aggiungi_azione_globale.php',
+                                async: false,
+                                type: 'POST',
+                                data: vara_glob
+                            });
+                        }
+                        // prendo in esame infine il caso dell'inserimento dell'azione
+                        // come prime devo cercare l'id più uno rispetto all'ultimo id delle azioni
+                        let idi = cerca_ultimo_id_azioni();
+
+                        let inse = {
+                            id: idi,
+                            nome: nome_azione.value,
+                            durata: durata.value,
+                            condizione: condizione.value
+                        };
+
+                        // inserisco infine nella lista
+                        azioni.push(inse);
+
+                        // questo json- format mi serve per inserire l'azione nel fil xml
+                        let inse2 = {
+                            ricetta: sessionStorage.getItem("nome_file"),
+                            id: idi,
+                            nome: nome_azione.value,
+                            durata: durata.value,
+                            condizione: condizione.value
+                        };
+
+                        // creo l'oggetto da inserire nel grafico
+                        crea_oggetto(idi, xe, ye);
+
+                        // eseguo la chiamata per l'inserimento dell'azione nel file xml
+                        $.ajax({
+                            url: 'inserimento_azione_condizione.php',
+                            async: false,
+                            type: 'POST',
+                            data: inse2
+                        });
+
+                        // alla fine dell'inserimento chiudo l'evento mettendo scrivi a false e impedendo la scrittura futura
+                        // ho il problema che non inserendo questa variabile mi esegua una scrittuare nel caso in cui non concluda la procedura
+                        scrivi = false;
+                    } else {
+
+                        // nel caso in cui l'utente non abbia inserito il nome dell'azione o dell'ingrediente
+                        alert("serve il nome");
+                        scrivi = false;
+                    }
                 }
-
             }
 
             // questo mi serve perchè andava in conflitto il popover di bootstrap
@@ -708,12 +808,20 @@ $("#vedo").mouseup(function (e) {
                                 $.ajax({
                                     url: 'inserimento_relazione_simul.php',
                                     type: 'POST',
+                                    async: false,
                                     data: linki
                                 });
                                 $.ajax({
                                     url: 'cancella_relazione_ordine.php',
                                     type: 'POST',
-                                    data: linki
+                                    async: false,
+                                    data: { ricetta: sessionStorage.getItem("nome_file"), source: nodo_target, target: nodo_source },
+                                    success: function () {
+                                        location.reload();
+                                    },
+                                    error: function () {
+                                        alert("qualcosa è andato storto");
+                                    }
                                 });
                             } else {
                                 let linki = { ricetta: sessionStorage.getItem("nome_file"), source: nodo_source, target: nodo_target };
@@ -843,9 +951,8 @@ $("#vedo").mouseup(function (e) {
 
             muovilo = false;
             crealo = true;
-        console.log(kidse);
-        kidse.removeClass("oggetto2");
-        kidse.addClass("oggetto");
+            kidse.removeClass("oggetto2");
+            kidse.addClass("oggetto");
         }
     }
 });

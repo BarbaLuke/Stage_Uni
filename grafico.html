@@ -25,7 +25,6 @@
     <script type="text/javascript" src="scripts/zoom.js"></script>
     <script type="text/javascript" src='scripts/creazione_SVG.js'></script>
     <script type="text/javascript" src='scripts/ordinamento_nodi.js'></script>
-    <script type="text/javascript" src='scripts/insert_ingredienti_globali.js'></script>
     <script type="text/javascript" src='scripts/calcolo_tutto.js'></script>
 
 </head>
@@ -138,7 +137,6 @@
                     <form>
                         <div class="form-group">
                             <div class="row">
-
                                 <div class="col-xl-3 col-md-6 mb-4">
                                     <div class="card border-left-dark border-bottom-dark shadow h-100 py-2">
                                         <div class="card-body">
@@ -197,7 +195,6 @@
                                         </div>
                                     </div>
                                 </div>
-
 
                                 <div class="col-xl-3 col-md-6 mb-4">
                                     <div class="card border-left-dark border-bottom-dark shadow h-100 py-2">
@@ -280,6 +277,10 @@
                             <input type="radio" id="azion" name="customRadio" class="custom-control-input">
                             <label class="custom-control-label" for="azion">Azione</label>
                         </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="azion_cond" name="customRadio" class="custom-control-input">
+                                <label class="custom-control-label" for="azion_cond">Azione Condizione</label>
+                            </div>
                     </div>
 
                     <div class="form-group solo_ingrediente">
@@ -306,6 +307,11 @@
                         <label>Durata dell'azione</label>
                         <input type="text" class="form-control" id="durata_nodo" name='durata'
                             placeholder="Durata azione">
+                    </div>
+                    <div class="form-group solo_condizione">
+                            <label>Condizione dell'azione</label>
+                            <input type="text" class="form-control" id="condizione_nodo" name='condizione'
+                                placeholder="Condizione azione">
                     </div>
                     <div class="form-group solo_ingrediente">
                         <label>Immagine dell'ingrediente</label>

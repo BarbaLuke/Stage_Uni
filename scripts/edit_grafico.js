@@ -94,7 +94,7 @@ function cerca_ed_elimina(id_da_eliminare) {
 
             for (h = 0; h < azioni_globali.length; h++) {
 
-                if (azioni_globali[h].nome.replace(/\s+/g, '') === azioni_totali[a].nome.replace(/\s+/g, '')) {
+                if (azioni_globali[h].nome.replace(/\s+/g, '') === azioni[a].nome.replace(/\s+/g, '')) {
 
                     let elimin_act = { act_da_eliminar: azioni_globali[h].nome};
                     $.ajax({
