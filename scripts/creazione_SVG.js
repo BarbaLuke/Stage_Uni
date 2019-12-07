@@ -25,7 +25,7 @@ function crea_oggetto(idd, posizione_x, posizione_y) {
             if (idd === azioni[c].id) {
                 if (azioni[c].condizione !== "") {
 
-                    varae = '<rect id="' + azioni[c].id + '" x=' + (posizione_x - 25) + ' y=' + (posizione_y - 25) + ' width="50"; height="50"; class="oggetto"; fill="#972323"; data-toggle="popover"; data-trigget="hover"; title="Id : <strong>' + azioni[c].id + '</strong>" data-placement="top"; data-html="true" data-content="Nome : <strong>' + azioni[c].nome + '</strong> <br> Durata : <strong>' + azioni[c].durata + '</strong> <br> Condzione : <strong>' + azioni[c].condizione + '</strong>"/>';
+                    varae = '<rect id="' + azioni[c].id + '" x=' + (posizione_x - 25) + ' y=' + (posizione_y - 25) + ' width="50"; height="50"; class="oggetto"; fill="#ce7400"; data-toggle="popover"; data-trigget="hover"; title="Id : <strong>' + azioni[c].id + '</strong>" data-placement="top"; data-html="true" data-content="Nome : <strong>' + azioni[c].nome + '</strong> <br> Durata : <strong>' + azioni[c].durata + '</strong> <br> Condzione : <strong>' + azioni[c].condizione + '</strong>"/>';
                     document.getElementById("vedo2").innerHTML += varae;
 
                 }else {

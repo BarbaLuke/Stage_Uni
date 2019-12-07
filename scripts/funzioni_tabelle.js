@@ -14,7 +14,7 @@ var quantcosa = [];
 var ingredienti_globali =
     JSON.parse(sessionStorage.getItem("ingredienti_global"));
 
-    var azioni_globali =
+var azioni_globali =
     JSON.parse(sessionStorage.getItem("azioni_global"));
 
 // link da aggiungere dopo
@@ -693,6 +693,7 @@ function calcolo_liste(xml) {
                         $.ajax({
                             url: 'aggiungi_ingrediente_globale.php',
                             type: 'POST',
+                            async: false,
                             data: vara_glob
                         });
 
