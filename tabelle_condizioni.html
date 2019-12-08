@@ -48,7 +48,7 @@
             <li class="nav-item active">
                 <a class="nav-link" href="#">
                     <i class="fas fa-fw fa-list-ol"></i>
-                    <span>Lista Azioni Global</span></a>
+                    <span>Tabella Link</span></a>
             </li>
 
             <!-- Divider -->
@@ -64,30 +64,31 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-list-ol"></i>
-                    <span>Tabelle Locali</span>
+                    <span>Tabelle</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
+
                         <a class="collapse-item" href="tabelle.html">Ingredienti</a>
                         <a class="collapse-item" href="tabelle_azioni.html">Azioni</a>
                         <a class="collapse-item" href="tabelle_link.html">Quantità usate</a>
-                        <a class="collapse-item" href="tabelle_condizioni.html">Condizioni</a>
+                        
                     </div>
                 </div>
             </li>
-
             <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTree"
-                        aria-expanded="true" aria-controls="collapseTwo">
-                        <i class="fas fa-fw fa-list-ol"></i>
-                        <span>Liste Globali</span>
-                    </a>
-                    <div id="collapseTree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="lista_ingredienti_global.html">Ingredienti</a>
-                        </div>
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTree"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-list-ol"></i>
+                    <span>Liste Globali</span>
+                </a>
+                <div id="collapseTree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="lista_ingredienti_global.html">Ingredienti</a>
+                        <a class="collapse-item" href="lista_azioni_global.html">Azioni</a>
                     </div>
-                </li>
+                </div>
+            </li>
 
             <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
@@ -118,7 +119,7 @@
 
                         <div class="row mb-4 mt-2" >
                                 <div class="col-md-7">
-                                    <h1 class="h3 mb-0 text-gray-800">Lista Globale Azioni</h1>
+                                    <h1 id="titolo" class="h3 mb-0 text-gray-800">Link di</h1>
                                 </div>
                                 <div class="col-md-3">
                                     <a href="" id="scarico" class="btn btn-sm btn-dark shadow-sm" download><i class="fas fa-download"></i> &nbsp; Download File Updated</a>
@@ -126,54 +127,34 @@
                                 <div class="col-md-2">
                                         <a href="" id="leggo" class="btn btn-sm btn-light shadow-sm" target="_blank"><i class="fas fa-file-code"></i> &nbsp; XML File Updated</a>
                                 </div>
-                        </div>
+                            </div>
 
                     <!-- Content Row -->
-                    <form class="form-inline" style="margin-bottom: 20px;">
-                        <input class="form-control mr-sm-2" id="search_act" onkeyup="ricerca_azione()" type="search"
-                            placeholder="ricerca azione" aria-label="Search">
-                    </form>
+
                     <table class="table table-hover table-bordered">
                         <thead class="thead-dark">
                             <tr>
-                                <th scope="col">Nome</th>
-                                <th class="text-center" scope="col">Elimina Ingrediente</th>
+                                <th scope="col">Azione con condizione</th>
+                                <th scope="col">Azione principale</th>
+                                <th scope="col">Condizione</th>
+                                <th scope="col">Modifica</th>
                             </tr>
                         </thead>
-                        <tbody id="lista-azioni-globali">
+                        <tbody id="link_condizioni">
 
                         </tbody>
                     </table>
+
                 </div>
                 <!-- /.container-fluid -->
             </div>
             <!-- End of Main Content -->
+
         </div>
         <!-- End of Content Wrapper -->
+
     </div>
     <!-- End of Page Wrapper -->
-    <div class="modal fade" id="del_element_act" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Elimina elemento</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    
-                    <div class="modal-footer">
-                        <button type="button" id="annulla_del_element_act" class="btn btn-secondary"
-                            data-dismiss="modal">Annulla</button>
-                        <button type="submit" id="salva_del_element_act" class="btn btn-danger"
-                            data-dismiss="modal">Elimina</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
@@ -185,8 +166,41 @@
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
 
-    <script src="scripts/funzioni_liste.js">
+
+    <div class="modal fade" id="mod_cond" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modifica condizione</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label>Condizione</label>
+                        <input type="text" class="form-control" id="condizione_nodo" name='condizione_nodo'
+                            placeholder="Condizione">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="annulla_mod_cond" class="btn btn-secondary"
+                        data-dismiss="modal">Annulla</button>
+                    <button type="submit" id="salva_mod_cond" class="btn btn-primary"
+                        data-dismiss="modal">Salva</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script>
+        var titolo = document.getElementById("titolo");
+        titolo.innerHTML += sessionStorage.getItem("nome_file").split(".")[0];
     </script>
+    <script type="text/javascript" src="scripts/funzioni_tabelle.js"></script>
 </body>
 
 </html>

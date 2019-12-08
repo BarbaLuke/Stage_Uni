@@ -18,7 +18,6 @@ $elemento = $doc->documentElement;
 $azione = $elemento->getElementsByTagName('AZIONE');
 
 
-// con un ciclo for cerco l'ingrediente giusto per poterlo modificare
 foreach ($azione as $child1) {
     $attributo_ID = $child1->getAttribute("IDazione");
     if ($attributo_ID == $id) {
@@ -30,6 +29,8 @@ foreach ($azione as $child1) {
         }
     }
 }
+
+
 
 
 // salvo tutto nel file
@@ -47,44 +48,45 @@ function simplexml_insert_after(SimpleXMLElement $insert, SimpleXMLElement $targ
         return $target_dom->parentNode->appendChild($insert_dom);
     }
 }
+if ($durata !== "") {
+    $target = current($xmldata->xpath('//AZIONE[@IDazione="' . $id . '"]/DUREVOLE'));
 
-$target = current($xmldata->xpath('//AZIONE[@IDazione="' . $id . '"]/DUREVOLE'));
+    if ($target == false) {
 
-if ($target == false) {
+        $target = current($xmldata->xpath('//AZIONE[@IDazione="' . $id . '"]/NOMEA'));
+        $insert = new SimpleXMLElement('<DUREVOLE>' . $durata . '</DUREVOLE>');
+        // richiamo la funzione per l'inserimento
+        simplexml_insert_after($insert, $target);
+        // salvo tutto nel file
+        $xmldata->asXML("ricette/" . $ricetta);
 
-    $target = current($xmldata->xpath('//AZIONE[@IDazione="' . $id . '"]/NOMEA'));
-    $insert = new SimpleXMLElement('<DUREVOLE>' . $durata . '</DUREVOLE>');
-    // richiamo la funzione per l'inserimento
-    simplexml_insert_after($insert, $target);
-    // salvo tutto nel file
-    $xmldata->asXML("ricette/" . $ricetta);
-
-    // questa serie di funzioni servono a sistemare la formattazione 
-    $dom = dom_import_simplexml($xmldata)->ownerDocument;
-    $dom->formatOutput = true;
-    $dom->preserveWhiteSpace = false;
-    $dom->loadXML($dom->saveXML());
-    $dom->save("ricette/" . $ricetta);
-} else {
-    $doc = new DOMDocument;
-    $doc->load('ricette/' . $ricetta);
-    $elemento = $doc->documentElement;
+        // questa serie di funzioni servono a sistemare la formattazione 
+        $dom = dom_import_simplexml($xmldata)->ownerDocument;
+        $dom->formatOutput = true;
+        $dom->preserveWhiteSpace = false;
+        $dom->loadXML($dom->saveXML());
+        $dom->save("ricette/" . $ricetta);
+    } else {
+        $doc = new DOMDocument;
+        $doc->load('ricette/' . $ricetta);
+        $elemento = $doc->documentElement;
 
 
 
-    $azione = $elemento->getElementsByTagName('AZIONE');
+        $azione = $elemento->getElementsByTagName('AZIONE');
 
-    // con un ciclo for cerco l'ingrediente giusto per poterlo modificare
-    foreach ($azione as $child1) {
-        $attributo_ID = $child1->getAttribute("IDazione");
-        if ($attributo_ID == $id) {
+        // con un ciclo for cerco l'ingrediente giusto per poterlo modificare
+        foreach ($azione as $child1) {
+            $attributo_ID = $child1->getAttribute("IDazione");
+            if ($attributo_ID == $id) {
 
-            $child1->getElementsByTagName('DUREVOLE')->item(0)->nodeValue = $durata;
-            // salvo tutto nel file
+                $child1->getElementsByTagName('DUREVOLE')->item(0)->nodeValue = $durata;
+                // salvo tutto nel file
 
+            }
         }
+        // salvo tutto nel file
+        $doc->save("ricette/" . $ricetta);
     }
-    // salvo tutto nel file
-    $doc->save("ricette/" . $ricetta);
 }
 exit;

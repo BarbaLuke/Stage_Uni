@@ -98,7 +98,7 @@ function calcolo_liste(xml) {
             };
 
             link.push(vara2);
-            link.push(vara);
+            link_dopo.push(vara);
         }
 
         // con questo riempio l'array degli ingredienti
@@ -292,6 +292,7 @@ function calcolo_liste(xml) {
         return post;
     }
 
+    // questa serie di istruzioni vanno a riempire la tabella degli ingredienti
     for (i = 0; i < ingredienti_totali.length; i++) {
         text = "<tr>";
         text += '<th scope="row">' + ingredienti_totali[i].id + "</th>";
@@ -318,6 +319,7 @@ function calcolo_liste(xml) {
         }
     }
 
+    // questa serie di funzioni va a riempire la tabella delle azioni
     for (i = 0; i < azioni.length; i++) {
         let pre_cond = trovapre(azioni[i].id);
         let post_cond = trovapost(azioni[i].id);
@@ -355,6 +357,9 @@ function calcolo_liste(xml) {
             az.innerHTML += text3;
         }
     }
+
+
+    // questa serie di funzioni va a riempire la tabella delle quantità usate
     for (i = 0; i < link.length; i++) {
         let tipo_rel = relazio(link[i].source, link[i].target);
         let nome_source = trovanome(link[i].source);
@@ -389,6 +394,36 @@ function calcolo_liste(xml) {
         }
     }
 
+    // questa serie di funzioni va a riempire la tabella delle condizioni
+    for (i = 0; i < link_dopo.length; i++) {
+        
+        let nome_azione = trovanome(link_dopo[i].source);
+        let nome_azione_condizione = trovanome(link_dopo[i].target);
+        let cond = "";
+        for(v = 0; v < azioni.length; v++){
+            if(azioni[v].id === link_dopo[i].target){
+                cond = azioni[v].condizione;
+
+            }
+        }
+
+            text4 = "<tr>";
+            text4 += '<td>' + link_dopo[i].target + ". <strong>" + nome_azione_condizione +
+                "</strong></td>";
+            text4 += "<td>" + link_dopo[i].source + ". <strong>" + nome_azione +
+                "</strong></td>";
+            text4 += "<td>" + cond + "</td>";
+            text4 += '<td><button id="' + link_dopo[i].source + "_" + link_dopo[i].target +
+                '" class="btn-outline-warning btn btn-sm shadow-sm modifica_condi">\n\
+<i class="fas fa-edit"></i></button></td>';
+            text4 += "</tr>";
+            let li = document.getElementById("link_condizioni");
+            if (li !== null) {
+                li.innerHTML += text4;
+            }
+        
+    }
+
     function trova_quan(iddiii) {
         for (i = 0; i < ingredienti_totali.length; i++) {
             if (ingredienti_totali[i].id === iddiii) {
@@ -412,6 +447,7 @@ function calcolo_liste(xml) {
             }
         }
     }
+
     function trova_condizione(id_azi) {
         for (i = 0; i < azioni.length; i++) {
             if (azioni[i].id === id_azi) {
@@ -792,9 +828,7 @@ function calcolo_liste(xml) {
                 }
 
                 moda = false;
-
             }
-
         });
 
         $("#annulla_insertnodo_azione").click(function () {
@@ -1055,7 +1089,62 @@ function calcolo_liste(xml) {
         });
     });
 
-    var lista = document.getElementById("globali"); globali_act
+    // Funzione che modifica la condizione di un azione
+    $(".modifica_condi").click(function (evt) {
+        let mod_condi = true;
+
+        $('#mod_cond').modal({
+            show: true
+        });
+
+        let id_condizione = $(this).attr("id").split("_")[1];
+        
+        let conditio = "";
+        for (q = 0; q < azioni.length; q++) {
+            if(azioni[q].id === id_condizione){
+                conditio = azioni[q].condizione;
+
+            }
+        }
+
+        $("#condizione_nodo").val(conditio);
+
+        $("#salva_mod_cond").click(function (ev) {
+            if (mod_condi) {
+
+                let modifica_conditio = {
+                    ricetta: sessionStorage.getItem("nome_file"),
+                    id_az : id_condizione,
+                    condizione: $("#condizione_nodo").val()
+                    
+                };
+
+                if (modifica_conditio.condizione !== "") {
+                    $.ajax({
+                        url: 'modifica_condizione.php',
+                        type: 'POST',
+                        data: modifica_conditio,
+                        success: function () {
+                            location.reload();
+                        },
+                        error: function () {
+                            alert("qualcosa è andato storto");
+                        }
+                    });
+                }
+                mod_condi = false;
+            }
+        });
+
+        $("#annulla_mod_cond").click(function () {
+            mod_condi = false;
+        });
+        $(".close").click(function (evw) {
+            mod_condi = false;
+        });
+    });
+
+    var lista = document.getElementById("globali");
     var lista2 = document.getElementById("globali_act");
 
     if (lista) {

@@ -804,12 +804,26 @@ $("#vedo").mouseup(function (e) {
                         if (tipologia_nodo_source === "azione") {
                             esiste_contrario = esiste(nodo_target, nodo_source);
                             if (esiste_contrario) {
-                                let linki = { ricetta: sessionStorage.getItem("nome_file"), source: nodo_source, target: nodo_target };
+                                let da_condizione = false;
+                                for(y = 0; y < azioni.length; y++){
+
+                                    if(azioni[y].id === nodo_source){
+
+                                        if(azioni[y].condizione !== ""){
+
+                                            da_condizione = true;
+
+                                        }
+                                    }
+                                }
+                                if(da_condizione){
+                                    console.log("parto da una condizione");
+
                                 $.ajax({
                                     url: 'inserimento_relazione_simul.php',
                                     type: 'POST',
                                     async: false,
-                                    data: linki
+                                    data: { ricetta: sessionStorage.getItem("nome_file"), source: nodo_source, target: nodo_target }
                                 });
                                 $.ajax({
                                     url: 'cancella_relazione_ordine.php',
@@ -817,12 +831,37 @@ $("#vedo").mouseup(function (e) {
                                     async: false,
                                     data: { ricetta: sessionStorage.getItem("nome_file"), source: nodo_target, target: nodo_source },
                                     success: function () {
-                                        location.reload();
+                                        //location.reload();
                                     },
                                     error: function () {
                                         alert("qualcosa è andato storto");
                                     }
                                 });
+
+                                }else{
+                                    console.log("parto senza condizione");
+
+
+                                $.ajax({
+                                    url: 'inserimento_relazione_simul.php',
+                                    type: 'POST',
+                                    async: false,
+                                    data: { ricetta: sessionStorage.getItem("nome_file"), source: nodo_target, target: nodo_source }
+                                });
+                                $.ajax({
+                                    url: 'cancella_relazione_ordine.php',
+                                    type: 'POST',
+                                    async: false,
+                                    data: { ricetta: sessionStorage.getItem("nome_file"), source: nodo_source, target: nodo_target },
+                                    success: function () {
+                                        //location.reload();
+                                    },
+                                    error: function () {
+                                        alert("qualcosa è andato storto");
+                                    }
+                                });
+
+                                }
                             } else {
                                 let linki = { ricetta: sessionStorage.getItem("nome_file"), source: nodo_source, target: nodo_target };
                                 $.ajax({
