@@ -153,66 +153,67 @@ document.getElementById("leggo").href = "ricette/" +
 var lista = document.getElementById("lista-globali");
 var lista2 = document.getElementById("lista-azioni-globali");
 
-if(lista){
+if (lista) {
 
 
-for (a = 0; a < ingredienti_globali.length; a++) {
-    let inni = "";
-    let inserisco = true;
-    
-    for(e = 0; e < ingredienti_totali.length; e++){
+    for (a = 0; a < ingredienti_globali.length; a++) {
+        let inni = "";
+        let inserisco = true;
 
-        
+        for (e = 0; e < ingredienti_totali.length; e++) {
 
-        if(ingredienti_globali[a].nome.replace(/\s+/g, '') === ingredienti_totali[e].nome.replace(/\s+/g, '')){
 
-            inserisco = false;
-            console.log(ingredienti_globali[a].nome);
 
+            if (ingredienti_globali[a].nome.replace(/\s+/g, '') === ingredienti_totali[e].nome.replace(/\s+/g, '')) {
+
+                inserisco = false;
+                console.log(ingredienti_globali[a].nome);
+
+            }
         }
-    }
 
-    if (inserisco) {
+        if (inserisco) {
 
-        if (ingredienti_globali[a].immagine !== "") {
+            if (ingredienti_globali[a].immagine !== "") {
 
-            inni += '<tr> <td>' + ingredienti_globali[a].nome + '</td> <td><div class="text-center"> <a href="' + ingredienti_globali[a].immagine + '" target="_blank"> visualizza immagine </a></div></td> <td><div class="text-center"><button id="' + ingredienti_globali[a].nome +
-                '" class="btn-outline-warning btn btn-sm shadow-sm moda_imm mr-3">\n\
+                inni += '<tr> <td>' + ingredienti_globali[a].nome + '</td> <td><div class="text-center"> <a href="' + ingredienti_globali[a].immagine + '" target="_blank"> visualizza immagine </a></div></td> <td><div class="text-center"><button id="' + ingredienti_globali[a].nome +
+                    '" class="btn-outline-warning btn btn-sm shadow-sm moda_imm mr-3">\n\
 <i class="fas fa-edit"></i></button> <button id="' + ingredienti_globali[a].nome + '_DEL" class="btn-outline-danger shadow-sm btn btn-sm delet_ing">\n\
 <i class="fas fa-trash"></i></button></div></td></tr>';
 
-        } else {
+            } else {
 
-            inni += '<tr> <td>' + ingredienti_globali[a].nome + '</td> <td></td> <td><div class="text-center"><button id="' + ingredienti_globali[a].nome +
-                '_" class="btn-outline-primary shadow-sm btn btn-sm insert_imm mr-3">\n\
+                inni += '<tr> <td>' + ingredienti_globali[a].nome + '</td> <td></td> <td><div class="text-center"><button id="' + ingredienti_globali[a].nome +
+                    '_" class="btn-outline-primary shadow-sm btn btn-sm insert_imm mr-3">\n\
 <i class="fas fa-plus"></i></button><button id="' + ingredienti_globali[a].nome + '_DEL" class="btn-outline-danger shadow-sm btn btn-sm delet_ing"><i class="fas fa-trash">\n\
 </i></button></div></td></tr>';
 
-        }
-        lista.innerHTML += inni;
-    }
-}
-}
-
-
-for (a = 0; a < azioni_globali.length; a++) {
-    let inni2 = "";
-    let inserisco2 = true;
-
-    for (e = 0; e < azioni.length; e++) {
-
-        if (azioni_globali[a].nome.replace(/\s+/g, '') === azioni[e].nome.replace(/\s+/g, '')) {
-            console.log(azioni[e].nome.replace(/\s+/g, ''));
-
-            inserisco2 = false;
+            }
+            lista.innerHTML += inni;
         }
     }
+}
 
-    if (inserisco2) {
+if (lista2) {
+    for (a = 0; a < azioni_globali.length; a++) {
+        let inni2 = "";
+        let inserisco2 = true;
 
-        inni2 += '<tr> <td>' + azioni_globali[a].nome + '</td> <td><div class="text-center"></button><button id="' + azioni_globali[a].nome + '_DEL" class="btn-outline-danger shadow-sm btn btn-sm delet_act"><i class="fas fa-trash"></i></button></div></td></tr>';
+        for (e = 0; e < azioni.length; e++) {
 
-        lista2.innerHTML += inni2;
+            if (azioni_globali[a].nome.replace(/\s+/g, '') === azioni[e].nome.replace(/\s+/g, '')) {
+                console.log(azioni[e].nome.replace(/\s+/g, ''));
+
+                inserisco2 = false;
+            }
+        }
+
+        if (inserisco2) {
+
+            inni2 += '<tr> <td>' + azioni_globali[a].nome + '</td> <td><div class="text-center"></button><button id="' + azioni_globali[a].nome + '_DEL" class="btn-outline-danger shadow-sm btn btn-sm delet_act"><i class="fas fa-trash"></i></button></div></td></tr>';
+
+            lista2.innerHTML += inni2;
+        }
     }
 }
 
@@ -370,7 +371,7 @@ $(".delet_act").click(function (evt) {
 
                 if (nome_glob.replace(/\s+/g, '') === azioni_globali[d].nome.replace(/\s+/g, '')) {
 
-                    let elimin_act = { act_da_eliminar: azioni_globali[d].nome};
+                    let elimin_act = { act_da_eliminar: azioni_globali[d].nome };
                     $.ajax({
                         url: 'elimina_azione_globale.php',
                         type: 'POST',

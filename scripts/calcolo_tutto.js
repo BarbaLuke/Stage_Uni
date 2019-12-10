@@ -2,6 +2,8 @@ function calcolo_nodi_e_link(xml, callback) {
 
     var dove = document.getElementById("formo");
 
+    var lis = document.getElementById("globali_nuovi");
+
 
     var puoi_aprire = false;
 
@@ -192,6 +194,24 @@ function calcolo_nodi_e_link(xml, callback) {
         }
     }
 
+    for (a = 0; a < ingredienti_globali.length; a++) {
+        let pu = true;
+        for (x = 0; x < ingredienti_totali.length; x++) {
+
+            if (pu && ingredienti_globali[a].nome === ingredienti_totali[x].nome) {
+
+                pu = false;
+
+            }
+        }
+        if (pu) {
+
+            let inni1 = "<option value='" + ingredienti_globali[a].nome + "'>" + ingredienti_globali[a].nome + "</option>";
+            lis.innerHTML += inni1;
+
+        }
+    }
+
     // questa serie di funzioni mi serve per inserire in modo asincrono i nodi degli ingredienti 
     // che potrebbero avere nomi sbagliati e quindi do la possibilità all'utente di cambiare nome a tutto
     for (h = 0; h < ingredienti_totali.length; h++) {
@@ -199,6 +219,7 @@ function calcolo_nodi_e_link(xml, callback) {
         for (b = 0; b < ingredienti_globali.length; b++) {
             if (ingredienti_totali[h].nome.replace(/\s+/g, '') === ingredienti_globali[b].nome.replace(/\s+/g, '')) {
                 esistegia = true;
+                ingredienti_totali[h].immagine = ingredienti_globali[b].immagine;
 
             }
         }
@@ -223,6 +244,7 @@ function calcolo_nodi_e_link(xml, callback) {
 
         }
     }
+
     if (puoi_aprire) {
 
         $('#insert_ingrediente_globale').modal({
@@ -233,7 +255,7 @@ function calcolo_nodi_e_link(xml, callback) {
 
         $('#salva_inserimento_globalissimo').click(function (evt) {
             var posso_procedere = true;
-            $('#insert_ingrediente_globale').modal('hide');
+            
             for (t = 0; t < da_in.length; t++) {
                 let controllo = $("#" + da_in[t].id + "_mode").val();
                 if (controllo === "") {
@@ -246,7 +268,7 @@ function calcolo_nodi_e_link(xml, callback) {
                 alert("nessun campo deve essere vuoto");
 
             } else {
-
+                
                 for (w = 0; w < ingredienti_totali.length; w++) {
                     for (q = 0; q < da_in.length; q++) {
                         if (da_in[q].id === ingredienti_totali[w].id) {
@@ -300,6 +322,8 @@ function calcolo_nodi_e_link(xml, callback) {
                         }
                     }
                 }
+
+                $('#insert_ingrediente_globale').modal('hide');
 
                 // creo una lista di adiacenza per ogni nodo per
                 //  vedere quanti controlli devo fare
