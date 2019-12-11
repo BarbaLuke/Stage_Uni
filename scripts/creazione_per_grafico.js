@@ -65,6 +65,39 @@ function svgPoint(element, x, y) {
     return pt.matrixTransform(g.getScreenCTM().inverse());
 }
 
+
+
+// questo evento cattura il tenere premuto un tasto
+$('body').on('keydown', function (e) {
+
+
+    let tasto = e.which;
+
+    if (tasto === 73) {
+
+        puoi_aggiungere = true;
+
+    }
+    if (tasto === 76) {
+
+        puoi_linkare = true;
+
+    }
+    if (tasto === 68) {
+
+        puoi_eliminare = true;
+
+    }
+
+});
+$('body').on('keyup', function (e) {
+
+    puoi_aggiungere = false;
+    puoi_linkare = false;
+    puoi_eliminare = false;
+
+});
+
 // questa funzione mi permette di creare oggetti cioè cerchi o rettangoli
 // cioè ingredienti o azioni nel mio grafico SVG
 $("#vedo").click(function (evt) {
@@ -81,7 +114,9 @@ $("#vedo").click(function (evt) {
 
         //attivo il modal che conterrà il form con le info per inserire l'ingrediente
         $('#insert_ingrediente').modal({
-            show: true
+            show: true,
+            backdrop: 'static',
+            keyboard: false
         });
 
         // queste variabili servono per identificare le classi degli elementi del form

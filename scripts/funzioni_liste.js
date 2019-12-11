@@ -220,7 +220,9 @@ if (lista2) {
 $(".insert_imm").click(function (evt) {
     let ins_imm = true;
     $('#insert_immagine').modal({
-        show: true
+        show: true,
+        backdrop: 'static',
+        keyboard: false
     });
     var nome_glob = $(this).attr("id").split("_")[0];
 
@@ -274,7 +276,9 @@ $(".moda_imm").click(function (evt) {
     }
 
     $('#moda_immagine').modal({
-        show: true
+        show: true,
+        backdrop: 'static',
+        keyboard: false
     });
 
     $("#link_immagine_mod").val(imma);
@@ -319,7 +323,9 @@ $(".moda_imm").click(function (evt) {
 $(".delet_ing").click(function (evt) {
     let del_imm = true;
     $('#del_element').modal({
-        show: true
+        show: true,
+        backdrop: 'static',
+        keyboard: false
     });
     var nome_glob = $(this).attr("id").split("_")[0];
 
@@ -361,7 +367,9 @@ $(".delet_ing").click(function (evt) {
 $(".delet_act").click(function (evt) {
     let del_act = true;
     $('#del_element_act').modal({
-        show: true
+        show: true,
+        backdrop: 'static',
+        keyboard: false
     });
     var nome_glob = $(this).attr("id").split("_")[0];
 

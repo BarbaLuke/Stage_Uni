@@ -165,7 +165,9 @@ $("#vedo").click(function (evt) {
             let idddi = document.getElementById("ingre_elim");
             idddi.innerHTML = "Elimina " + idi;
             $('#elimina_ingrediente').modal({
-                show: true
+                show: true,
+                backdrop: 'static',
+                keyboard: false
             });
             $("#elimina_inserimento").click(function (ev) {
                 ev.preventDefault();

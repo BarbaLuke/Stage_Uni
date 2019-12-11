@@ -484,7 +484,9 @@ function calcolo_liste(xml) {
     $(".modifica_ingre").click(function (evt) {
         let modda = true;
         $('#modda_ingrediente').modal({
-            show: true
+            show: true,
+            backdrop: 'static',
+            keyboard: false
         });
         let idi = $(this).attr("id");
         nome_ingr = trovanome($(this).attr("id"));
@@ -601,7 +603,9 @@ function calcolo_liste(xml) {
     $(".cancella_ingre").click(function (evt) {
         let canc = true;
         $('#elimina_ingrediente').modal({
-            show: true
+            show: true,
+            backdrop: 'static',
+            keyboard: false
         });
         let idi = $(this).attr("id").split("del")[0];
         let idddi = document.getElementById("ingre_elim");
@@ -666,7 +670,9 @@ function calcolo_liste(xml) {
         let inn = true;
 
         $('#insert_ingrediente').modal({
-            show: true
+            show: true,
+            backdrop: 'static',
+            keyboard: false
         });
 
         $("#salva_inserimento2").click(function (ev) {
@@ -783,7 +789,9 @@ function calcolo_liste(xml) {
         let moda = true;
 
         $('#modda_azione').modal({
-            show: true
+            show: true,
+            backdrop: 'static',
+            keyboard: false
         });
 
         $("#non_indispensabile").hide();
@@ -846,7 +854,9 @@ function calcolo_liste(xml) {
     $(".cancella_azio").click(function (evt) {
         let canc2 = true;
         $('#elimina_azione').modal({
-            show: true
+            show: true,
+            backdrop: 'static',
+            keyboard: false
         });
         let idi = $(this).attr("id").split("del")[0];
         let idddi = document.getElementById("azione_elim");
@@ -911,7 +921,9 @@ function calcolo_liste(xml) {
         let inn_act = true;
 
         $('#insert_azione').modal({
-            show: true
+            show: true,
+            backdrop: 'static',
+            keyboard: false
         });
 
         $("#salva_inserimento_azione2").click(function (ev) {
@@ -1007,7 +1019,9 @@ function calcolo_liste(xml) {
         let mod_quant = true;
 
         $('#mod_quant').modal({
-            show: true
+            show: true,
+            backdrop: 'static',
+            keyboard: false
         });
 
         let id1 = $(this).attr("id").split("_")[0];
@@ -1094,7 +1108,9 @@ function calcolo_liste(xml) {
         let mod_condi = true;
 
         $('#mod_cond').modal({
-            show: true
+            show: true,
+            backdrop: 'static',
+            keyboard: false
         });
 
         let id_condizione = $(this).attr("id").split("_")[1];
