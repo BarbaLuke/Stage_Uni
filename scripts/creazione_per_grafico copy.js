@@ -181,7 +181,6 @@ $("#vedo").click(function (evt) {
         // quando devo inserire un azione con condizione allora nascondo le parti del form per l'ingrediente
         if(azio_cond.checked == true){
             $(".solo_ingrediente").hide();
-            $(".solo_azione").hide();
         }
 
         // se cambio idea allora devo catturare l'evento al click del check e nascondere l'opposto
