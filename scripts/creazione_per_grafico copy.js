@@ -225,7 +225,8 @@ $("#vedo").click(function (evt) {
                     ye = Math.round(svgP.y);
 
                 // faccio un controllo sull'unico elemento indispensabile per l'inserimento, cioè il nome    
-                if (nome !== "" && ingredi.checked == true) {
+                if (ingredi.checked == true) {
+                    if(nome.value !== ""){
 
                     // questa varibile mi serve per capire se ho già questo ingredinte tra quelli globali
                     let non = true;
@@ -329,6 +330,13 @@ $("#vedo").click(function (evt) {
                     // alla fine dell'inserimento chiudo l'evento mettendo scrivi a false e impedendo la scrittura futura
                     // ho il problema che non inserendo questa variabile mi esegua una scrittuare nel caso in cui non concluda la procedura
                     scrivi = false;
+                }else{
+
+                    // nel caso in cui l'utente non abbia inserito il nome dell'azione o dell'ingrediente
+                    alert("serve il nome");
+                    scrivi = false;
+
+                }
 
                 } else if (azio.checked == true) {
                     if (nome_azione.value !== "") {

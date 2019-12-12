@@ -100,7 +100,7 @@ Il file XML caricato, ed eventualmente modificato, può in qualunque momento ess
 
 ![Visualizzazione XML](image/catture/vis_XML.jpg)
 
-### Modifica
+### Modifica Principale
 
 La modifica del file XML caricato nell'applicazione può avvenire in due modi distinti, ognuno di questi non può modificare tutti gli elementi del file.
 Le modalità sono:
@@ -165,7 +165,41 @@ In questa pagina è possibile visualizzare le seguenti informazioni:
 in particolare il campo *nome* offre dei suggerimenti durante l'inserimento e questi sono nomi di azioni della lista di azioni globali.
 La modifica e l'eliminazione hanno gli stessi identici tasti rispetto alla modifica dell'ingrediente e quindi le stesse funzionalità.
 
-> ##### Modifica Azione
+#### Da Grafico
+
+>##### Inserimento nuovo nodo
+
+Clickando mentre si tiene premuto il tasto **i**, è possibile inserire un nuovo nodo direttamente nella posizione del mouse (non è possible inserire se si esegue un click su un nodo già esistente o un link), i nodi da poter inserire sono 3:  
+1. **Ingrediente**, inserendo questo tipo di nodo è possibile stabilire le seguenti info:
+    * nome
+    * quantità (totale)
+    * immagine
+2. **Azione**, inserendo questo tipo di nodo è possibile stabilire le seguenti info:
+    * nome
+    * durata
+3. **Azione Condizione**, inserendo questo tipo di nodo è possibile stabilire le seguenti info:
+    * nome
+    * durata
+    * condizione
+  >###### Nota
+  >###### L'unico campo obbligatorio è il nome, tutti gli altri è possibile ometterli.
+
+>##### Edit Link
+Una delle modifiche più importanti è l'aggiunta di nuovi link o la modifica di quelli già esistenti.
+Per poterlo fare basta il click prolungato su di un nodo per inserire un link nuovo oppure click prolungato su di un link già esistente per modificarne la direzione e ,tenendo premuto, infine trascinare il link nuovo o esistente fino al nodo a cui si vuole collegare l'altro capo.  
+Se viene portata a termine la modifica di un link esistente allora verrà eliminato il collegamento precedente e inserito quello nuovo. Sia per la modifica che per l'inserimento da nuovo avvengono le seguenti elaborazioni in base al tipo di collegamento portato a termine:
+
+| Nodo Source | Nodo Target |  < tag > Inserito |
+|-------------|---------|--------------------------------|
+| Ingrediente | Azione  | INGREDIENTE in PRE-CONDIZIONE |
+| Azione  | Ingrediente | INGREDIENTE in POST-CONDIZIONE |
+| Azione | Azione | RELAZIONE D'ORDINE |
+
+Infine è possibile inserire una tipologia particolare di link che è il link condizionato (quello tratteggiato), per poterlo inserire si deve creare un loop (due link sugli stessi nodi con direzioni opposte) tra due azioni di cui una possiede il campo condizione.
+
+>##### Cancellazione
+Clickando mentre si tiene premuto il tasto **d** puntanto il muose sopra l'elemento da cancellare, apparirà un form che chiederà conferma della cancellazione dell'elemento specifico, clickando sula conferma l'elemento e, se un nodo, i collegamenti verranno cancellati. 
+
 
 ## Sviluppato con
 
