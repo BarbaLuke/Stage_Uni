@@ -131,7 +131,7 @@
                     <div class=" mb-4" style="margin-top:15px;"></div>
 
                     <!-- Content Row -->
-                    
+
 
                     <svg id="vedo" width="100%" height="80vh" overflow="scroll" xmlns="http://www.w3.org/2000/svg"
                         style="border-top:1px solid black; border-bottom:1px solid black;">
@@ -154,6 +154,14 @@
 
         </div>
         <!-- End of Content Wrapper -->
+        <div class="dropdown-menu dropdown-menu-sm" id="context-menu-inserisci" href="#">
+            <a class="dropdown-item inse" id="inse_in" href="#">Inserimento Ingrediente</a>
+            <a class="dropdown-item inse" id="inse_az" href="#">Inserimento Azione</a>
+            <a class="dropdown-item inse" id="inse_az_con" href="#">Inserimento Azione Condizione</a>
+        </div>
+        <div class="dropdown-menu dropdown-menu-sm" id="context-menu-cancella">
+            <a class="dropdown-item can" id="ca" href="#">Cancella</a>
+        </div>
 
     </div>
     <!-- End of Page Wrapper -->
@@ -168,35 +176,20 @@
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
     <script type="text/javascript" src='scripts/totale.js'></script>
-    <script type="text/javascript" src='scripts//edit_grafico copy.js'></script>
-    <script type="text/javascript" src='scripts/creazione_per_grafico copy.js'></script>
+    
+    <script type="text/javascript" src='scripts/creazione_per_grafico copy 2.js'></script>
 
     <div class="modal fade" id="insert_ingrediente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Inserimento nuovo ingrediente</h5>
+                    <h5 class="modal-title">Inserimento nuovo nodo</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="ingred" name="customRadio" class="custom-control-input" checked>
-                            <label class="custom-control-label" for="ingred">Ingrediente</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="azion" name="customRadio" class="custom-control-input">
-                            <label class="custom-control-label" for="azion">Azione</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="azion_cond" name="customRadio" class="custom-control-input">
-                                <label class="custom-control-label" for="azion_cond">Azione Condizione</label>
-                            </div>
-                    </div>
-
                     <div class="form-group solo_ingrediente">
                         <label>Nome dell' ingrediente</label>
                         <input list="globali" id="nome_nodo" name='nome'
@@ -223,9 +216,9 @@
                             placeholder="Durata azione">
                     </div>
                     <div class="form-group solo_condizione">
-                            <label>Condizione dell'azione</label>
-                            <input type="text" class="form-control" id="condizione_nodo" name='condizione'
-                                placeholder="Condizione azione">
+                        <label>Condizione dell'azione</label>
+                        <input type="text" class="form-control" id="condizione_nodo" name='condizione'
+                            placeholder="Condizione azione">
                     </div>
                     <div class="form-group solo_ingrediente">
                         <label>Immagine dell'ingrediente</label>
@@ -268,7 +261,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="insert_ingrediente_globale" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="insert_ingrediente_globale" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -281,7 +275,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" id="salva_inserimento_globalissimo" class="btn btn-primary">Salva in globali</button>
+                    <button type="submit" id="salva_inserimento_globalissimo" class="btn btn-primary">Salva in
+                        globali</button>
                 </div>
             </div>
         </div>

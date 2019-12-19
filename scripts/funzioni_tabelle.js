@@ -893,7 +893,7 @@ function calcolo_liste(xml) {
                     type: 'POST',
                     data: cancell,
                     success: function () {
-                        location.reload();
+                        //location.reload();
                     },
                     error: function () {
                         alert("qualcosa è andato storto");

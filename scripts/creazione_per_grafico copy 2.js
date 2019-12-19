@@ -1,12 +1,22 @@
-// varibili di supporto
+// *** inizio istanziamento varibili di supporto //
 var
     svg = document.getElementById('vedo'),
     g = document.getElementById("vedo2"),
     muovilo,
     crealo,
-    puoi_aggiungere = false,
-    puoi_linkare = false,
-    puoi_eliminare = false;
+    toppe,
+    lefte,
+    inn,
+    nodo_source = "",
+    tipologia_nodo_source = "",
+    tipologia_nodo_target = "",
+    nodo_target = "",
+    muovo,
+    eliminabile;
+// fine variabili di supporto *** //  
+
+
+// *** inizio creazione funzioni di supporto //
 
 // funzioni per cercare l'id da inserire nei nuovi ingredienti o azioni
 function cerca_ultimo_id_ingredienti() {
@@ -58,60 +68,192 @@ function info_ingrediente(idingrediente) {
 // in cui il mio mouse è puntato
 function svgPoint(element, x, y) {
     var
-        pt = element.createSVGPoint();
+    pt = element.createSVGPoint();
     pt.x = x;
     pt.y = y;
     return pt.matrixTransform(g.getScreenCTM().inverse());
 }
 
+function cerca_link_source(id_eliminato) {
+    let ids_source = [];
+    for (i = 0; i < link.length; i++) {
+        if (link[i].source === id_eliminato) {
+            ids_source[ids_source.length] = (link[i].source + "_" + link[i].target);
+        }
+    }
+    for (a = 0; a < link_dopo.length; a++) {
+        if (link_dopo[a].source === id_eliminato) {
+            ids_source[ids_source.length] = (link_dopo[a].source + "_" + link_dopo[a].target);
+        }
+    }
+    return ids_source;
+}
+
+function cerca_link_target(id_eliminato) {
+    let ids_target = [];
+    for (i = 0; i < link.length; i++) {
+        if (link[i].target === id_eliminato) {
+            ids_target[ids_target.length] = (link[i].source + "_" + link[i].target);
+        }
+    }
+    for (a = 0; a < link_dopo.length; a++) {
+        if (link_dopo[a].target === id_eliminato) {
+            ids_target[ids_target.length] = (link_dopo[a].source + "_" + link_dopo[a].target);
+        }
+    }
+    return ids_target;
+}
+
+function cerca_ed_elimina(id_da_eliminare) {
+    for (a = 0; a < ingredienti_totali.length; a++) {
+        if (id_da_eliminare === ingredienti_totali[a].id) {
+
+            for (h = 0; h < ingredienti_globali.length; h++) {
+
+                if (ingredienti_globali[h].nome.replace(/\s+/g, '') === ingredienti_totali[a].nome.replace(/\s+/g, '')) {
+
+                    let elimin_ing = { ing_da_eliminar: ingredienti_globali[h].nome, imma_da_eliminar: ingredienti_globali[h].immagine };
+                    $.ajax({
+                        url: 'elimina_ingrediente_globale.php',
+                        type: 'POST',
+                        async: false,
+                        data: elimin_ing
+                    });
+                    ingredienti_globali.splice(h, 1);
+                }
+            }
+            sessionStorage.setItem("ingredienti_global", JSON.stringify(ingredienti_globali));
+            ingredienti_totali.splice(a, 1);
+            return;
+
+        }
+    }
+    for (a = 0; a < azioni.length; a++) {
+
+        if (id_da_eliminare === azioni[a].id) {
+
+            for (h = 0; h < azioni_globali.length; h++) {
+
+                if (azioni_globali[h].nome.replace(/\s+/g, '') === azioni[a].nome.replace(/\s+/g, '')) {
+
+                    let elimin_act = { act_da_eliminar: azioni_globali[h].nome };
+                    $.ajax({
+                        url: 'elimina_azione_globale.php',
+                        type: 'POST',
+                        async: false,
+                        data: elimin_act
+                    });
+                    azioni_globali.splice(h, 1);
+                }
+            }
+            sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
+
+            azioni.splice(a, 1);
+            return;
+
+        }
+    }
+
+    for (a = 0; a < link.length; a++) {
+
+        if (id_da_eliminare.split("_")[0] === link[a].source && id_da_eliminare.split("_")[1] === link[a].target) {
+
+            link.splice(a, 1);
+            return;
+
+        }
+    }
+    for (a = 0; a < lista_inseriti.length; a++) {
+
+        if (id_da_eliminare === lista_inseriti[a].id) {
+
+            lista_inseriti.splice(a, 1);
+            return;
+
+        }
+    }
+}
+// fine funzioni di suporto *** //
+
+
+$("#vedo").on('contextmenu', function (e) {
+     
+    toppe = e.pageY;
+    lefte = e.pageX;
+
+    var target = $(e.target);
+
+    if (target.is("circle") || target.is("rect") || target.is("line")) {
+
+        eliminabile = target[0];
+
+        if ($("#context-menu-inserisci").hasClass("show")) {
+
+            $("#context-menu-inserisci").removeClass("show").hide();
+            inn = false;
+
+        }
+
+        $("#context-menu-cancella").css({
+            display: "block",
+            top: toppe,
+            left: lefte
+        }).addClass("show");
+
+    }
+    else {
+
+        inn = true;
+
+        if ($("#context-menu-cancella").hasClass("show")) {
+
+            $("#context-menu-cancella").removeClass("show").hide();
+
+        }
+
+        $("#context-menu-inserisci").css({
+            display: "block",
+            top: toppe,
+            left: lefte
+        }).addClass("show");
+
+    }
+    return false; //blocks default Webbrowser right click menu
+}).on("click", function () {
+    if (inn) {
+
+        $("#context-menu-inserisci").removeClass("show").hide();
+        inn = false;
+
+    } else {
+
+        $("#context-menu-cancella").removeClass("show").hide();
+
+    }
+});
+
+$("#context-menu-cancella a").on("click", function () {
+    $(this).parent().removeClass("show").hide();
+});
+
+$("#context-menu-inserisci a").on("click", function () {
+    $(this).parent().removeClass("show").hide();
+    inn = false;
+});
+
+
 // questa funzione mi permette di creare oggetti cioè cerchi o rettangoli
 // cioè ingredienti o azioni nel mio grafico SVG
+$(".inse").click(function (evt) {
 
-$('body').on('keydown', function (e) {
-
-
-    let tasto = e.which;
-
-    if (tasto === 73) {
-
-        puoi_aggiungere = true;
-
-    }
-    if (tasto === 76) {
-
-        puoi_linkare = true;
-
-    }
-    if (tasto === 68) {
-
-        puoi_eliminare = true;
-
-    }
-
-});
-$('body').on('keyup', function (e) {
-
-    puoi_aggiungere = false;
-    puoi_linkare = false;
-    puoi_eliminare = false;
-
-});
-
-// questa funzione mi permette di creare oggetti cioè cerchi o rettangoli
-// cioè ingredienti o azioni nel mio grafico SVG
-$("#vedo").click(function (evt) {
 
     // questa variabile mi permette di identificare il target dell'evento
     var target = $(evt.target);
-
-    // devo controllare il check è true per l'inserimento e
-    // che io non abbia cliccato per sbaglio su di un link, ingrediente o azione esistente
-    if (puoi_aggiungere && !(target.is("circle")) && !(target.is("rect")) && !(target.is("line"))) {
+    
+    let cosas = target[0].getAttribute("id");
 
         // questa variabile mi permette di non avere problemi quando non arrivo a terminare la sequenza di inserimento
         let scrivi = true;
-
-        
 
         //attivo il modal che conterrà il form con le info per inserire l'ingrediente
         $('#insert_ingrediente').modal({
@@ -167,38 +309,25 @@ $("#vedo").click(function (evt) {
         }
 
         // quando devo inserire un azione allora nascondo le parti del form per l'ingrediente
-        if (azio.checked == true) {
+        if (cosas === "inse_az") {
             $(".solo_ingrediente").hide();
             $(".solo_condizione").hide();
+            $(".solo_azione").show();
         }
 
         // quando devo inserire un ingrediente allora nascondo le parti del form per l'azione
-        if (ing.checked == true) {
+        if (cosas === "inse_in") {
             $(".solo_azione").hide();
             $(".solo_condizione").hide();
+            $(".solo_ingrediente").show();
         }
 
         // quando devo inserire un azione con condizione allora nascondo le parti del form per l'ingrediente
-        if(azio_cond.checked == true){
-            $(".solo_ingrediente").hide();
-        }
-
-        // se cambio idea allora devo catturare l'evento al click del check e nascondere l'opposto
-        $("#azion").click(function (e) {
-            $(".solo_ingrediente").hide();
-            $(".solo_azione").show();
-            $(".solo_condizione").hide();
-        });
-        $("#azion_cond").click(function (e) {
+        if(cosas === "inse_az_con"){
             $(".solo_ingrediente").hide();
             $(".solo_azione").show();
             $(".solo_condizione").show();
-        });
-        $("#ingred").click(function (e) {
-            $(".solo_ingrediente").show();
-            $(".solo_azione").hide();
-            $(".solo_condizione").hide();
-        });
+        }
 
         // questo evento mi cattura il clik sul bottone per l'inserimento
         $("#salva_inserimento").click(function (ev) {
@@ -218,8 +347,8 @@ $("#vedo").click(function (evt) {
                 // questa e varibili mi servono per identificare il punto cliccato, 
                 // così da poter trovare il punto esatto dove inserire la figura
                 var
-                    x = evt.clientX,
-                    y = evt.clientY,
+                    x = lefte,
+                    y = toppe,
                     svgP = svgPoint(svg, x, y),
                     xe = Math.round(svgP.x),
                     ye = Math.round(svgP.y);
@@ -341,8 +470,6 @@ $("#vedo").click(function (evt) {
                 } else if (azio.checked == true) {
                     if (nome_azione.value !== "") {
 
-
-
                         // questa varibile mi serve per capire se ho già questo ingredinte tra quelli globali
                         let non = true;
 
@@ -424,8 +551,6 @@ $("#vedo").click(function (evt) {
                 } else if(azio_cond.checked == true){
 
                     if (nome_azione.value !== "" && condizione.value !== "") {
-
-
 
                         // questa varibile mi serve per capire se ho già questo ingredinte tra quelli globali
                         let non = true;
@@ -528,20 +653,12 @@ $("#vedo").click(function (evt) {
             scrivi = false;
 
         });
-    }
 });
 
 
-var
-    nodo_source = "",
-    tipologia_nodo_source = "",
-    tipologia_nodo_target = "",
-    nodo_target = "";
-
 // questa funzione mi permette di creare link
 $("#vedo").mousedown(function (evt) {
-
-    if (!puoi_aggiungere && !puoi_eliminare) {
+    if(evt.which === 1){
 
         // a questo punto devo controllare quale elemento del mio grafico sia stato selezionato
         var target = $(evt.target);
@@ -634,12 +751,16 @@ $("#vedo").mousedown(function (evt) {
             kids.removeClass("oggetto");
             kids.addClass("oggetto2");
         }
+
+        muovo = true;
+    
+
     }
 });
 
 // questa funzione mi permette di muovere il link create con lp'azione precedente
 $("#vedo").mousemove(function (er) {
-    if (!puoi_aggiungere && !puoi_eliminare) {
+    if(muovo){
         // se mi trovo nello stato in cui ho la certezza che posso procedere
         if (muovilo) {
 
@@ -699,7 +820,9 @@ $("#vedo").mousemove(function (er) {
 
 // questa azione invece mi permette di stabilire quale sia il target del mio link
 $("#vedo").mouseup(function (e) {
-    if (!puoi_aggiungere && !puoi_eliminare) {
+    if(muovo){
+
+    
         grafico.enablePan();
 
         $('rect').popover({
@@ -771,6 +894,7 @@ $("#vedo").mouseup(function (e) {
                                     $.ajax({
                                         url: 'cancella_relazione_ordine.php',
                                         type: 'POST',
+                                        async: false,
                                         data: dati
                                     });
 
@@ -779,6 +903,7 @@ $("#vedo").mouseup(function (e) {
                                     $.ajax({
                                         url: 'cancella_post.php',
                                         type: 'POST',
+                                        async: false,
                                         data: dati
                                     });
 
@@ -787,6 +912,7 @@ $("#vedo").mouseup(function (e) {
                                     $.ajax({
                                         url: 'cancella_pre.php',
                                         type: 'POST',
+                                        async: false,
                                         data: dati
                                     });
                                 }
@@ -797,6 +923,7 @@ $("#vedo").mouseup(function (e) {
                             $.ajax({
                                 url: 'inserimento_post.php',
                                 type: 'POST',
+                                async: false,
                                 data: dati
                             });
                         } else {
@@ -819,6 +946,7 @@ $("#vedo").mouseup(function (e) {
                                 $.ajax({
                                     url: 'cancella_relazione_ordine.php',
                                     type: 'POST',
+                                    async: false,
                                     data: dati
                                 });
 
@@ -827,6 +955,7 @@ $("#vedo").mouseup(function (e) {
                                 $.ajax({
                                     url: 'cancella_post.php',
                                     type: 'POST',
+                                    async: false,
                                     data: dati
                                 });
 
@@ -835,6 +964,7 @@ $("#vedo").mouseup(function (e) {
                                 $.ajax({
                                     url: 'cancella_pre.php',
                                     type: 'POST',
+                                    async: false,
                                     data: dati
                                 });
                             }
@@ -907,6 +1037,7 @@ $("#vedo").mouseup(function (e) {
                                 $.ajax({
                                     url: 'inserimento_relazione_ordine.php',
                                     type: 'POST',
+                                    async: false,
                                     data: linki
                                 });
                             }
@@ -917,6 +1048,7 @@ $("#vedo").mouseup(function (e) {
                             $.ajax({
                                 url: 'inserimento_pre.php',
                                 type: 'POST',
+                                async: false,
                                 data: dati
                             });
                         }
@@ -1033,4 +1165,124 @@ $("#vedo").mouseup(function (e) {
             kidse.addClass("oggetto");
         }
     }
+    muovo = false;
+    
+});
+
+// questa funzione mi permette di eliminare un elemento del mio grafico SVG
+$("#ca").click(function (evt) {
+    let cance = true;
+    grafico = svgPanZoom(svgElement);
+    var target = eliminabile;
+    console.log(target.getAttribute("id"));
+        
+            let idi = target.getAttribute("id");
+            let idddi = document.getElementById("ingre_elim");
+            idddi.innerHTML = "Elimina " + idi;
+            $('#elimina_ingrediente').modal({
+                show: true,
+                backdrop: 'static',
+                keyboard: false
+            });
+            $("#elimina_inserimento").click(function (ev) {
+                ev.preventDefault();
+                if (cance === true) {
+                    cerca_ed_elimina(target.getAttribute("id"));
+
+                    if (target.getAttribute("id").includes("i") && !target.getAttribute("id").includes("_")) {
+
+                        let target_del = cerca_link_target(target.getAttribute("id"));
+                        let source_del = cerca_link_source(target.getAttribute("id"));
+                        let lin;
+
+                        for (i = 0; i < target_del.length; i++) {
+                            lin = $("#" + target_del[i]);
+                            lin.hide();
+                        }
+                        for (i = 0; i < source_del.length; i++) {
+                            lin = $("#" + source_del[i]);
+                            lin.hide();
+                        }
+                        let dati = { ricetta: sessionStorage.getItem("nome_file"), id2: idi };
+                        $.ajax({
+                            url: 'cancella_ingrediente.php',
+                            type: 'POST',
+                            async: false,
+                            data: dati
+                        });
+                        target.style.display = "none";
+                        cance = false;
+                    }
+
+                    if (target.getAttribute("id").includes("a") && !target.getAttribute("id").includes("_")) {
+
+                        let target_del = cerca_link_target(target.getAttribute("id"));
+                        let source_del = cerca_link_source(target.getAttribute("id"));
+                        let lin;
+
+                        for (i = 0; i < target_del.length; i++) {
+                            lin = $("#" + target_del[i]);
+                            lin.hide();
+                        }
+                        for (i = 0; i < source_del.length; i++) {
+                            lin = $("#" + source_del[i]);
+                            lin.hide();
+                        }
+                        let datie = { ricetta: sessionStorage.getItem("nome_file"), id2: idi.toString()};
+                        console.log(typeof(idi));
+                        $.ajax({
+                            url: 'cancella_azione.php',
+                            type: 'POST',
+                            async: false,
+                            data: datie
+                        });
+                        target.style.display = "none";
+                        cance = false;
+
+                    }
+                    if (target.getAttribute("id").includes("_")) {
+                        let splitto = target.getAttribute("id").split("_");
+                        let id1 = splitto[0];
+                        let id2 = splitto[1];
+
+                        if (id1.includes("a", 1) && id2.includes("a", 1)) {
+                            let dati = { ricetta: sessionStorage.getItem("nome_file"), source: id1, target: id2 };
+                            $.ajax({
+                                url: 'cancella_relazione_ordine.php',
+                                type: 'POST',
+                                async: false,
+                                data: dati
+                            });
+                            target.style.display = "none";
+
+                        } else if (id1.includes("a", 1) && id2.includes("i", 1)) {
+                            let dati = { ricetta: sessionStorage.getItem("nome_file"), source: id2, target: id1 };
+                            $.ajax({
+                                url: 'cancella_post.php',
+                                async: false,
+                                type: 'POST',
+                                data: dati
+                            });
+                            target.style.display = "none";
+
+                        } else if (id1.includes("i", 1) && id2.includes("a", 1)) {
+                            let dati = { ricetta: sessionStorage.getItem("nome_file"), source: id1, target: id2 };
+                            $.ajax({
+                                url: 'cancella_pre.php',
+                                type: 'POST',
+                                async: false,
+                                data: dati
+                            });
+                            target.style.display = "none";
+                        }
+                        cance = false;
+                    }
+                }
+            });
+            $("#annulla_eliminazione").click(function (ev) {
+                cance = false;
+            });
+            $(".close").click(function (evw) {
+                cance = false;
+            });
 });

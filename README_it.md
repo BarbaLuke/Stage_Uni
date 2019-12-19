@@ -19,7 +19,7 @@ L'applicazione non ha bisogno di installazione ma va eseguita esattamente come l
 
 ## Utilizzo
 
-### Iniziamo
+### Index
 
 Una volta raggiunto l'indirizzo in cui si trovano i file dell'applicazione, in particolare l'index, troviamo la seguente schermata:
 

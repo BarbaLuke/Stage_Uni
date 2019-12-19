@@ -132,7 +132,7 @@ function cerca_ed_elimina(id_da_eliminare) {
     }
 }
 
-// questa funzione servrà per restituirmi il punto del mio SVG 
+// questa funzione servirà per restituirmi il punto del mio SVG 
 // in cui il mio mouse è puntato
 function svgPoint(element, x, y) {
     var
@@ -145,7 +145,6 @@ function svgPoint(element, x, y) {
 var puoi_eliminare = false;
 
 $('body').on('keydown', function (e) {
-
 
     let tasto = e.which;
 
@@ -283,4 +282,61 @@ $("#vedo").click(function (evt) {
     }
 });
 
+var inserisci = false;
 
+$("#vedo").on('contextmenu', function (e) {
+    var top = e.pageY;
+    var left = e.pageX;
+    var target = $(e.target);
+    if (target.is("circle") || target.is("rect") || target.is("line")) {
+
+        if($("#context-menu-inserisci").hasClass("show")){
+
+            $("#context-menu-inserisci").removeClass("show").hide();
+
+        }
+
+        $("#context-menu-cancella").css({
+            display: "block",
+            top: top,
+            left: left
+        }).addClass("show");
+
+    }
+    else{
+
+        inserisci = true;
+
+        if($("#context-menu-cancella").hasClass("show")){
+
+            $("#context-menu-cancella").removeClass("show").hide();
+
+        }
+
+        $("#context-menu-inserisci").css({
+            display: "block",
+            top: top,
+            left: left
+        }).addClass("show");
+
+    }
+    return false; //blocks default Webbrowser right click menu
+}).on("click", function () {
+    if(inserisci){
+
+        $("#context-menu-inserisci").removeClass("show").hide();
+
+    }else{
+
+        $("#context-menu-cancella").removeClass("show").hide();
+
+    }
+
+});
+
+$("#context-menu-cancella a").on("click", function () {
+    $(this).parent().removeClass("show").hide();
+});
+$("#context-menu-inserisci a").on("click", function () {
+    $(this).parent().removeClass("show").hide();
+});

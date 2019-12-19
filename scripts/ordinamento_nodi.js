@@ -188,7 +188,6 @@ function disposizione_nodi_ingredienti_precondizioni_noTarget() {
     }
 
     // ora devo spostare i nodi di intermezzo nelle posizioni giuste
-
     for (a = 0; a < lista_inseriti.length; a++) {
 
         // questa variabile viene inizializzata ad ogni visita ad un nodo 
@@ -284,7 +283,6 @@ function disposizione_nodi_ingredienti_precondizioni_noTarget() {
         }
     }
 }
-
 
 // per trovare i nodi di intermezzo cerco in mezzo a tutti
 function nodi_noTarget() {
@@ -718,61 +716,3 @@ function elimina_spazi_vuoti() {
         }
     }
 }
-
-/*
-// ora devo effettuare gli spostamenti di ogni elemento
-// per far risaltare bene i collegamenti e gli elementi
-// probabilmente questa funzione è inutile
-function spostamenti_risaltare_colegamenti(){
-for(a=0;a<lista_inseriti.length;a++){
-    // inizializzo questo elemento per ogni nodo per verificare se
-    // il nodo che sto esplorando sia il target di un nodo di intermezzo
-    bah=0;
-    for(b=0;b<link.length;b++){
-        // mi assicuro che sia un target
-        if(lista_inseriti[a].id === link[b].target){
-            for(c=0;c<lista_inseriti.length;c++){
-                // cerco la source
-                if(link[b].source === lista_inseriti[c].id){
-                    if(nodi_intermezzo.includes(lista_inseriti[c].id)){
-                        // se la source del nodo che stiamo esplorando è
-                        // un nodo di intermezzo setto a uno la variabile
-                        bah=1;
-                    }
-                }
-            }
-        }
-    }
-    // verifico che il nodo abbia una source che sia nei nodi di intermezzo
-    if(bah===1){
-        // devo effettuare degli spostamenti di posizione per ogni nodo coinvolto
-        for(d=0;d<lista_inseriti.length;d++){
-            if(lista_inseriti[a].posy >1){
-                // se il nodo si trova alla stessa posizione x ma con posizione y maggiore
-                if(lista_inseriti[d].posx === lista_inseriti[a].posx && lista_inseriti[d].posy > lista_inseriti[a].posy){
-                    // sposto il nodo di 0.5 in y
-                    lista_inseriti[d].posy+=0;
-                }
-            }
-            // se invece il nodo si trova ad una posizione x maggiore rispetto al nodo che sto visitando
-            //  e abbiano id differenti
-            if(lista_inseriti[d].posx > lista_inseriti[a].posx && lista_inseriti[d].id !== lista_inseriti[a].id){
-                // sposto il nodo di 0.5 in x
-                lista_inseriti[d].posx+=0;
-            }
-        }
-        // infine eseguo gli spostamenti del nodo che stavo visitando
-        // lo sposto 0.5 in x
-        lista_inseriti[a].posx+=0;
-        // e se non si trova in prima posizione
-        if(lista_inseriti[a].posy >1){
-            // lo sposto di 0.5 in y
-            lista_inseriti[a].posy+=0;
-        }
-    }
-}
-}
-
- */
-
-
