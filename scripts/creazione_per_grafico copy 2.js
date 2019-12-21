@@ -262,11 +262,7 @@ $(".inse").click(function (evt) {
             keyboard: false
         });
 
-        // queste variabili servono per identificare le classi degli elementi del form
-        // permettendomi all'occasione di poterli nascondere in base alle esigenze
-        let azio = document.getElementById("azion");
-        let azio_cond = document.getElementById("azion_cond");
-        let ing = document.getElementById("ingred");
+        // queste variabili servono per identificare le liste degli ingredienti globali
         var lista = document.getElementById("globali");
         var lista2 = document.getElementById("act_globali");
 
@@ -337,7 +333,6 @@ $(".inse").click(function (evt) {
 
                 // questa serie  di variabili mi identificano gli elementi del form
                 let nome = document.getElementById("nome_nodo");
-                let ingredi = document.getElementById("ingred");
                 let quant = document.getElementById("quantita_nodo");
                 let imma = document.getElementById("immagine_nodo");
                 let nome_azione = document.getElementById("nome_nodo2");
@@ -354,7 +349,7 @@ $(".inse").click(function (evt) {
                     ye = Math.round(svgP.y);
 
                 // faccio un controllo sull'unico elemento indispensabile per l'inserimento, cioè il nome    
-                if (ingredi.checked == true) {
+                if (cosas === "inse_in") {
                     if(nome.value !== ""){
 
                     // questa varibile mi serve per capire se ho già questo ingredinte tra quelli globali
@@ -467,7 +462,7 @@ $(".inse").click(function (evt) {
 
                 }
 
-                } else if (azio.checked == true) {
+                } else if (cosas === "inse_az") {
                     if (nome_azione.value !== "") {
 
                         // questa varibile mi serve per capire se ho già questo ingredinte tra quelli globali
@@ -548,7 +543,7 @@ $(".inse").click(function (evt) {
                         alert("serve il nome");
                         scrivi = false;
                     }
-                } else if(azio_cond.checked == true){
+                } else if(cosas === "inse_az_con"){
 
                     if (nome_azione.value !== "" && condizione.value !== "") {
 
