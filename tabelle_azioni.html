@@ -64,7 +64,7 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-list-ol"></i>
-                    <span>Tabelle</span>
+                    <span>Tabelle Locali</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
@@ -118,7 +118,7 @@
 
                         <div class="row mb-4 mt-2" >
                                 <div class="col-md-7">
-                                    <h1 id="titolo" class="h3 mb-0 text-gray-800">Tabella azioni di</h1>
+                                    <h1 id="titolo" class="h3 mb-0 text-gray-800">Azioni di </h1>
                                 </div>
                                 <div class="col-md-3">
                                     <a href="" id="scarico" class="btn btn-sm btn-dark shadow-sm" download><i class="fas fa-download"></i> &nbsp; Download File Updated</a>
@@ -141,6 +141,7 @@
                                 <th scope="col">Durata</th>
                                 <th scope="col">Pre-Condizioni</th>
                                 <th scope="col">Post-Condizioni</th>
+                                <th scope="col">Immagine</th>
                                 <th scope="col">Modifica / Elimina</th>
                             </tr>
                         </thead>
@@ -194,6 +195,10 @@
                         <div class="form-group" id="non_indispensabile">
                             <label>Condizione di svolgimento azione</label>
                             <input type="text" class="form-control" id="condizione_nodo" name='condizione'>
+                        </div>
+                        <div class="form-group" id="non_indispensabile">
+                            <label>Immagine azione</label>
+                            <input type="text" class="form-control" id="immagine_nodo" name='immagine'>
                         </div>
 
                     </div>
@@ -254,6 +259,11 @@
                             <label>Durata azione</label>
                             <input type="text" class="form-control" id="durata_nodo2" name='durata'
                                 placeholder="Durata azione">
+                        </div>
+                        <div class="form-group">
+                            <label>Immagine azione</label>
+                            <input type="text" class="form-control" id="immagine_nodo2" name='immagine'
+                                placeholder="Immagine azione">
                         </div>
                     </div>
                     <div class="modal-footer">

@@ -1,6 +1,7 @@
 // questo mi serve per il controllo del grafico, in particolare lo zoom
 var svgElement = document.getElementById("vedo");
 var grafico = 0;
+var testo="";
     
 // array che conterranno in ordine: INGREDIENTI, POST delle AZIONI e
 //  la differenza dei primi due
@@ -17,7 +18,7 @@ var azioni = [];
 var quantcosa = [];
 
 // variabile per le azioni globali
-var azioni_gloali = 
+var azioni_globali = 
 JSON.parse(sessionStorage.getItem("azioni_global"));;
 
 // array che contiene i link

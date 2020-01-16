@@ -208,7 +208,8 @@ function calcolo_liste(xml) {
                 id: x[i].getAttribute('IDazione'),
                 nome: x[i].childNodes[1].childNodes[0].nodeValue,
                 durata: durat,
-                condizione: cond
+                condizione: cond,
+                immagine: ""
             };
             azioni.push(vara);
         }
@@ -225,6 +226,22 @@ function calcolo_liste(xml) {
                 if (ingredienti_globali[b].immagine !== "") {
 
                     ingredienti_totali[d].immagine = ingredienti_globali[b].immagine;
+
+                }
+            }
+        }
+    }
+    // queste vanno ad aggiornare la lista delle componenti 
+    // globali in base al nome vado ad aggiornare il tutto
+    for (d = 0; d < azioni.length; d++) {
+
+        for (b = 0; b < azioni_globali.length; b++) {
+
+            if (azioni_globali[b].nome.replace(/\s+/g, '') === azioni[d].nome.replace(/\s+/g, '')) {
+
+                if (azioni_globali[b].immagine !== "") {
+
+                    azioni[d].immagine = azioni_globali[b].immagine;
 
                 }
             }
@@ -327,6 +344,7 @@ function calcolo_liste(xml) {
         text3 += '<th scope="row">' + azioni[i].id + "</th>";
         text3 += "<td>" + azioni[i].nome + "</td>";
         text3 += "<td>" + azioni[i].durata + "</td>";
+        
 
         if (pre_cond !== []) {
             text3 += "<td> <ul>";
@@ -346,6 +364,16 @@ function calcolo_liste(xml) {
         } else if (pre_cond === []) {
             text3 += "<td></td>";
         }
+        if(azioni[i].immagine !== ""){
+
+            text3 += "<td> <a href='" + azioni[i].immagine + "' target='_blank'> visualizza immagine </a></td>";
+
+        }else{
+
+            text3 += "<td></td>";
+
+        }
+        
         text3 += '<td><button id="' + azioni[i].id +
             '" class="btn-outline-warning btn btn-sm shadow-sm modifica_azio">\n\
 <i class="fas fa-edit"></i></button> <button id="' + azioni[i].id + "del" +
@@ -436,6 +464,14 @@ function calcolo_liste(xml) {
         for (i = 0; i < ingredienti_totali.length; i++) {
             if (ingredienti_totali[i].id === idda) {
                 return ingredienti_totali[i].immagine;
+            }
+        }
+    }
+
+    function trova_imma_az(idda2) {
+        for (i = 0; i < azioni.length; i++) {
+            if (azioni[i].id === idda2) {
+                return azioni[i].immagine;
             }
         }
     }
@@ -546,7 +582,7 @@ function calcolo_liste(xml) {
 
                                 if (imma_ingr !== $("#immagine_nodo").val()) {
                                     ingredienti_globali[n].immagine = $("#immagine_nodo").val();
-                                    let insero = { nome: $("#nome_nodo").val(), immagine: $("#immagine_nodo").val() };
+                                    let insero = {cosa:"ingrediente", nome: $("#nome_nodo").val(), immagine: $("#immagine_nodo").val() };
                                     $.ajax({
                                         url: 'aggiungi_modifica_immagine.php',
                                         type: 'POST',
@@ -559,10 +595,11 @@ function calcolo_liste(xml) {
 
                                 if (imma_ingr !== $("#immagine_nodo").val()) {
                                     ingredienti_globali[n].immagine = $("#immagine_nodo").val();
-                                    let insero = { nome: nome_ingr, immagine: $("#immagine_nodo").val() };
+                                    let insero = {cosa:"ingrediente", nome: nome_ingr, immagine: $("#immagine_nodo").val() };
 
                                     $.ajax({
                                         url: 'aggiungi_modifica_immagine.php',
+                                        async: false,
                                         type: 'POST',
                                         data: insero
                                     });
@@ -575,6 +612,7 @@ function calcolo_liste(xml) {
                     $.ajax({
                         url: 'modifica_ingrediente.php',
                         type: 'POST',
+                        async: false,
                         data: modifica,
                         success: function () {
                             location.reload();
@@ -640,6 +678,7 @@ function calcolo_liste(xml) {
                 $.ajax({
                     url: 'cancella_ingrediente.php',
                     type: 'POST',
+                    async: false,
                     data: cancell,
                     success: function () {
                         location.reload();
@@ -703,7 +742,7 @@ function calcolo_liste(xml) {
 
                             if (imma.value !== "") {
 
-                                let insero = { nome: ingredienti_globali[n].nome, immagine: imma }
+                                let insero = {cosa:"ingrediente", nome: ingredienti_globali[n].nome, immagine: imma }
                                 $.ajax({
                                     url: 'aggiungi_modifica_immagine.php',
                                     type: 'POST',
@@ -804,6 +843,8 @@ function calcolo_liste(xml) {
         $("#nome_nodo").val(nome_azio);
         $("#durata_nodo").val(dur_azio);
         $("#condizione_nodo").val(cond_azio);
+        imma_ingr = trova_imma_az($(this).attr("id"));
+        $("#immagine_nodo").val(imma_ingr);
         if (cond_azio !== "") {
             $("#non_indispensabile").show();
         }
@@ -820,6 +861,71 @@ function calcolo_liste(xml) {
                     condizione: $("#condizione_nodo").val()
                 };
                 if (modifica_azionee.nome !== "") {
+                    
+                    for (n = 0; n < azioni_globali.length; n++) {
+
+                        if (azioni_globali[n].nome.replace(/\s+/g, '') === nome_azio.replace(/\s+/g, '')) {
+
+                            var non_esis = true;
+                            for (u = 0; u < azioni_globali.length; u++) {
+
+                                if ($("#nome_nodo").val().replace(/\s+/g, '') === azioni_globali[u].nome.replace(/\s+/g, '') && azioni_globali[u].nome.replace(/\s+/g, '') !== azioni_globali[n].nome.replace(/\s+/g, '')) {
+                                    non_esis = false;
+                                    let eliminazione_azi = { act_da_eliminar: azioni_globali[n].nome };
+                                    $.ajax({
+                                        url: 'elimina_azione_globale.php',
+                                        type: 'POST',
+                                        async: false,
+                                        data: eliminazione_azi
+                                    });
+                                    azioni_globali.splice(n, 1);
+                                }
+                            }
+
+                            if (nome_azio !== $("#nome_nodo").val()) {
+
+                                if (non_esis) {
+
+                                    azioni_globali[n].nome = $("#nome_nodo").val();
+                                    let modifica_nome = { nome_vecchio: nome_azio, nome_nuovo: $("#nome_nodo").val() }
+                                    $.ajax({
+                                        url: 'modifica_nome_azione.php',
+                                        type: 'POST',
+                                        async: false,
+                                        data: modifica_nome
+                                    });
+                                }
+
+
+                                if (imma_ingr !== $("#immagine_nodo").val()) {
+                                    azioni_globali[n].immagine = $("#immagine_nodo").val();
+                                    let insero = {cosa:"azione", nome: $("#nome_nodo").val(), immagine: $("#immagine_nodo").val() };
+                                    $.ajax({
+                                        url: 'aggiungi_modifica_immagine.php',
+                                        type: 'POST',
+                                        async: false,
+                                        data: insero
+                                    });
+                                }
+
+                            } else {
+
+                                if (imma_ingr !== $("#immagine_nodo").val()) {
+                                    azioni_globali[n].immagine = $("#immagine_nodo").val();
+                                    let insero = {cosa:"azione", nome: nome_azio, immagine: $("#immagine_nodo").val() };
+
+                                    $.ajax({
+                                        url: 'aggiungi_modifica_immagine.php',
+                                        type: 'POST',
+                                        async: false,
+                                        data: insero
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
+
                     $.ajax({
                         url: 'modifica_azione.php',
                         type: 'POST',
@@ -893,7 +999,7 @@ function calcolo_liste(xml) {
                     type: 'POST',
                     data: cancell,
                     success: function () {
-                        //location.reload();
+                        location.reload();
                     },
                     error: function () {
                         alert("qualcosa è andato storto");
@@ -942,6 +1048,7 @@ function calcolo_liste(xml) {
                 }
 
                 let dur = $("#durata_nodo2").val();
+                let imma = $("#immagine_nodo2").val();
 
                 if (nome !== "" && non_esiste) {
 
@@ -950,14 +1057,29 @@ function calcolo_liste(xml) {
                     for (n = 0; n < azioni_globali.length; n++) {
 
                         if (azioni_globali[n].nome.replace(/\s+/g, '') === nome.replace(/\s+/g, '')) {
-
                             non = false;
+
+                            if (imma.value !== "") {
+
+                                let insero = {cosa:"azione", nome: azioni_globali[n].nome, immagine: imma }
+                                $.ajax({
+                                    url: 'aggiungi_modifica_immagine.php',
+                                    type: 'POST',
+                                    async: false,
+                                    data: insero
+                                });
+                                azioni_globali[n].immagine = imma;
+                                sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
+
+                            } else {
+                                imma = azioni_globali[n].nome
+                            }
                         }
                     }
                     if (non) {
 
 
-                        vara_glob = { nome: $("#nome_nodo3").val() };
+                        vara_glob = { nome: $("#nome_nodo3").val(), immagine: imma };
 
                         azioni_globali.push(vara_glob);
 
@@ -966,6 +1088,7 @@ function calcolo_liste(xml) {
                         $.ajax({
                             url: 'aggiungi_azione_globale.php',
                             type: 'POST',
+                            async: false,
                             data: vara_glob
                         });
 
@@ -989,8 +1112,9 @@ function calcolo_liste(xml) {
                         url: 'inserimento_azione.php',
                         type: 'POST',
                         data: inse2,
+                        async: false,
                         success: function () {
-                            //location.reload();
+                            location.reload();
                         },
                         error: function () {
                             alert("qualcosa è andato storto");

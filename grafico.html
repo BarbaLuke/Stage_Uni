@@ -128,30 +128,32 @@
                     </div>
 
                     <!-- Page Heading -->
-                    <div class=" mb-4" style="margin-top:15px;"></div>
-                    <div class="row">
+                    <div class=" mb-4" style="margin-top:5px;"></div>
+                    <div class="row" style="border-top:1px solid black; padding-top: 5px;">
                         <div class="col-md-4">
                             <ul style="list-style: none;">
-                                <li>ingrediente</li>
-                                <li>azione</li>
-                                <li>azione con condizione</li>
+                                <li><img src="image/legenda/ingrediente.png"> :ingrediente
+                                <li>
+                                <li><img src="image/legenda/azione.png"> :azione</li>
+                                <li><img src="image/legenda/azione_condizione.png"> :azione con condizione</li>
                             </ul>
                         </div>
                         <div class="col-md-2"></div>
                         <div class="col-md-6">
                             <ul style="list-style: none;">
-                                <li>ingrediente -> azione</li>
-                                <li>azione -> ingrediente</li>
-                                <li>azione -> azione</li>
-                                <li>azione -> azione con condizione</li>
+                                <li><img src="image/legenda/ingrediente_azione.png"> :ingrediente -> azione</li>
+                                <li><img src="image/legenda/azione_ingrediente.png"> :azione -> ingrediente</li>
+                                <li><img src="image/legenda/azione_azione.png"> :azione -> azione</li>
+                                <li><img src="image/legenda/azione_azione_condizione.png"> :azione -> azione con
+                                    condizione</li>
                             </ul>
                         </div>
                     </div>
 
                     <!-- Content Row -->
 
-                    <svg id="vedo" width="100%" height="70vh" overflow="scroll" xmlns="http://www.w3.org/2000/svg"
-                        style="border-top:1px solid black; border-bottom:1px solid black;">
+                    <svg id="vedo" width="100%" height="42vh" overflow="scroll" xmlns="http://www.w3.org/2000/svg"
+                        style="border-bottom:1px solid black;">
 
                         <defs>
                             <marker id="arrow" markerWidth="40" markerHeight="40" refX="0" refY="20" orient="auto"
@@ -164,8 +166,21 @@
                         </g>
                     </svg>
 
+
+
                 </div>
                 <!-- /.container-fluid -->
+                <div class="container">
+
+                    <div class="form-group">
+                        <label for="testo_ri">Testo della ricetta</label>
+                        <textarea style="resize:none;" class="form-control" id="testo_ri" rows="2"></textarea>
+                    </div>
+                    <button id="modifica_testo" class="btn btn-primary btn-sm mo_ri">Modifica Testo</button>
+
+                </div>
+
+                
             </div>
             <!-- End of Main Content -->
 
@@ -193,8 +208,9 @@
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
     <script type="text/javascript" src='scripts/totale.js'></script>
-    
+
     <script type="text/javascript" src='scripts/creazione_per_grafico copy 2.js'></script>
+    <script type="text/javascript" src='scripts/testo_ricetta.js'></script>
 
     <div class="modal fade" id="insert_ingrediente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -242,7 +258,11 @@
                         <input type="text" class="form-control" id="immagine_nodo" name='immagine'
                             placeholder="Immagine ingrediente">
                     </div>
-
+                    <div class="form-group solo_azione">
+                        <label>Immagine dell'azione</label>
+                        <input type="text" class="form-control" id="immagine_nodo_azione" name='immagine azione'
+                            placeholder="Immagine azione">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="annulla_insertnodo" class="btn btn-secondary"

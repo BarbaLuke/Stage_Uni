@@ -10,7 +10,7 @@ if(isset($_FILES['xml'])){
    $extensions= array("xml");
 
    if(in_array($file_ext,$extensions)=== false){
-      $errors[]="extension not allowed, please choose a JPEG or PNG file.";
+      $errors[]="extension not allowed, please choose a XML file.";
    }
 
    if(empty($errors)==true){

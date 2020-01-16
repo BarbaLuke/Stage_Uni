@@ -26,3 +26,4 @@ foreach ($ingrediente as $child1) {
 $doc->save("ricette/" . $ricetta);
 
 exit;
+?>

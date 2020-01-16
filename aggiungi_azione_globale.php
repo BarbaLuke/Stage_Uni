@@ -1,5 +1,6 @@
 <?php
 $nome = $_POST['nome'];
+$immagine = $_POST['immagine'];
 
 //con questo leggo dentro il json per controllare i valori, al massimo 4    
 $myfile = fopen("azioni_global.json", "r") or die("Unable to open file!");
@@ -9,6 +10,8 @@ fclose($myfile);
 $azioni_array = json_decode($txt, true);
 
 $nuovo['nome'] = $nome;
+
+$nuovo['immagine'] = $immagine;
 
 array_push($azioni_array, $nuovo);
 

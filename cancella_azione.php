@@ -17,8 +17,10 @@ for ($i=$length-1;$i>=0;$i--)
     $p = $featuredde1->item($i);    
     $pid = $p->getAttribute("IDazione");
     
+    
     if ($pid == $id)
     {
+        echo "azione".$pid;
         $parent = $p->parentNode;
         $parent->removeChild($p);  
     }
@@ -35,12 +37,14 @@ for ($i=$length-1;$i>=0;$i--)
     $pid = $p->getAttribute("IDazionePrec");
     if ($pid == $id)
     {
+        echo "relazione_prece".$pid;
         $parent = $p->parentNode;
         $parent->removeChild($p);  
     }
     $pid2 = $p->getAttribute("IDazioneSucc");
     if ($pid2 == $id)
     {
+        echo "relazione_succe".$pid;
         $parent = $p->parentNode;
         $parent->removeChild($p);  
     }
@@ -57,12 +61,14 @@ for ($i=$length-1;$i>=0;$i--)
     $pid = $p->getAttribute("IDazioneDurevole");
     if ($pid == $id)
     {
+        echo $pid;
         $parent = $p->parentNode;
         $parent->removeChild($p);  
     }
     $pid2 = $p->getAttribute("IDazioneCondizione");
     if ($pid2 == $id)
     {
+        echo $pid;
         $parent = $p->parentNode;
         $parent->removeChild($p);  
     }

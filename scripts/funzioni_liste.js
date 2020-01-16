@@ -96,7 +96,8 @@ function calcolo_liste(xml) {
                 id: x[i].getAttribute('IDazione'),
                 nome: x[i].childNodes[1].childNodes[0].nodeValue,
                 durata: durat,
-                condizione: cond
+                condizione: cond,
+                immagine:""
             };
             azioni.push(vara);
         }
@@ -167,7 +168,6 @@ if (lista) {
             if (ingredienti_globali[a].nome.replace(/\s+/g, '') === ingredienti_totali[e].nome.replace(/\s+/g, '')) {
 
                 inserisco = false;
-                console.log(ingredienti_globali[a].nome);
 
             }
         }
@@ -202,15 +202,26 @@ if (lista2) {
         for (e = 0; e < azioni.length; e++) {
 
             if (azioni_globali[a].nome.replace(/\s+/g, '') === azioni[e].nome.replace(/\s+/g, '')) {
-                console.log(azioni[e].nome.replace(/\s+/g, ''));
 
                 inserisco2 = false;
             }
         }
 
         if (inserisco2) {
+            if(azioni_globali[a].immagine !== ""){
 
-            inni2 += '<tr> <td>' + azioni_globali[a].nome + '</td> <td><div class="text-center"></button><button id="' + azioni_globali[a].nome + '_DEL" class="btn-outline-danger shadow-sm btn btn-sm delet_act"><i class="fas fa-trash"></i></button></div></td></tr>';
+                inni2 += '<tr> <td>' + azioni_globali[a].nome + '</td> <td><div class="text-center"> <a href="' + azioni_globali[a].immagine + '" target="_blank"> visualizza immagine </a></div></td> <td><div class="text-center"><button id="' + azioni_globali[a].nome +
+                '" class="btn-outline-warning btn btn-sm shadow-sm moda_imm_az mr-3">\n\
+<i class="fas fa-edit"></i></button> <button id="' + azioni_globali[a].nome + '_DEL" class="btn-outline-danger shadow-sm btn btn-sm delet_act">\n\
+<i class="fas fa-trash"></i></button></div></td></tr>';
+
+        } else {
+
+            inni2 += '<tr> <td>' + azioni_globali[a].nome + '</td> <td></td> <td><div class="text-center"><button id="' + azioni_globali[a].nome +
+                '_" class="btn-outline-primary shadow-sm btn btn-sm insert_imm_az mr-3">\n\
+<i class="fas fa-plus"></i></button><button id="' + azioni_globali[a].nome + '_DEL" class="btn-outline-danger shadow-sm btn btn-sm delet_act"><i class="fas fa-trash">\n\
+</i></button></div></td></tr>';
+            }
 
             lista2.innerHTML += inni2;
         }
@@ -228,7 +239,7 @@ $(".insert_imm").click(function (evt) {
 
     $("#salva_insert_link_imm").click(function (ev) {
         if (ins_imm === true) {
-            let insero = { nome: nome_glob, immagine: $("#link_immagine").val() };
+            let insero = {cosa:"ingrediente", nome: nome_glob, immagine: $("#link_immagine").val() };
             for (b = 0; b < ingredienti_globali.length; b++) {
 
                 if (ingredienti_globali[b].nome === nome_glob) {
@@ -285,7 +296,7 @@ $(".moda_imm").click(function (evt) {
 
     $("#salva_moda_link_imm").click(function (ev) {
         if (ins_imm === true) {
-            let insero = { nome: nome_glob, immagine: $("#link_immagine_mod").val() };
+            let insero = {cosa:"ingrediente", nome: nome_glob, immagine: $("#link_immagine_mod").val() };
             for (b = 0; b < ingredienti_globali.length; b++) {
 
                 if (ingredienti_globali[b].nome === nome_glob) {
@@ -405,5 +416,108 @@ $(".delet_act").click(function (evt) {
     });
     $(".close").click(function (evw) {
         del_act = false;
+    });
+});
+
+$(".insert_imm_az").click(function (evt) {
+    let ins_imm2 = true;
+    $('#insert_immagine_azione').modal({
+        show: true,
+        backdrop: 'static',
+        keyboard: false
+    });
+    var nome_glob = $(this).attr("id").split("_")[0];
+
+    $("#salva_insert_link_imm_azione").click(function (ev) {
+        if (ins_imm2 === true) {
+            let insero = {cosa:"azione", nome: nome_glob, immagine: $("#link_immagine_azione").val() };
+            for (b = 0; b < azioni_globali.length; b++) {
+
+                if (azioni_globali[b].nome === nome_glob) {
+
+                    azioni_globali[b].immagine = $("#link_immagine_azione").val();
+                }
+            }
+            sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
+            $.ajax({
+                url: 'aggiungi_modifica_immagine.php',
+                type: 'POST',
+                data: insero,
+                success: function () {
+                    location.reload();
+                },
+                error: function () {
+                    alert("qualcosa è andato storto");
+                }
+            });
+            ins_imm2 = false;
+            $("#link_immagine_azione").val("");
+        }
+    });
+
+    $("#annulla_insert_link_imm_azione").click(function (ev) {
+        ins_imm2 = false;
+        $("#link_immagine_azione").val("");
+    });
+    $(".close").click(function (evw) {
+        ins_imm2 = false;
+        $("#link_immagine_azione").val("");
+    });
+});
+
+$(".moda_imm_az").click(function (evt) {
+    let ins_imm2 = true;
+    let imma2;
+    var nome_glob = $(this).attr("id");
+    for (b = 0; b < azioni_globali.length; b++) {
+
+        if (azioni_globali[b].nome === nome_glob) {
+
+            imma2 = azioni_globali[b].immagine;
+        }
+    }
+
+    $('#moda_immagine_azione').modal({
+        show: true,
+        backdrop: 'static',
+        keyboard: false
+    });
+
+    $("#link_immagine_mod_azione").val(imma2);
+
+    $("#salva_moda_link_imm_azione").click(function (ev) {
+        if (ins_imm2 === true) {
+            let insero = {cosa:"azione", nome: nome_glob, immagine: $("#link_immagine_mod_azione").val() };
+            for (b = 0; b < azioni_globali.length; b++) {
+
+                if (azioni_globali[b].nome === nome_glob) {
+
+                    azioni_globali[b].immagine = $("#link_immagine_mod_azione").val();
+                }
+            }
+            sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
+            $.ajax({
+                url: 'aggiungi_modifica_immagine.php',
+                type: 'POST',
+                data: insero,
+                success: function () {
+                    location.reload();
+                },
+                error: function () {
+                    alert("qualcosa è andato storto");
+                }
+            });
+            ins_imm2 = false;
+            $("#link_immagine_mod_azione").val("");
+        }
+    });
+
+    $("#annulla_moda_link_imm_azione").click(function (ev) {
+        ins_imm2 = false;
+        $("#link_immagine_mod_azione").val("");
+    });
+    $(".close").click(function (evw) {
+        ins_imm2 = false;
+        $("#link_immagine_mod_azione").val("");
     });
 });

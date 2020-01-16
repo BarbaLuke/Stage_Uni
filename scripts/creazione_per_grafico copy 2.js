@@ -335,6 +335,7 @@ $(".inse").click(function (evt) {
                 let nome = document.getElementById("nome_nodo");
                 let quant = document.getElementById("quantita_nodo");
                 let imma = document.getElementById("immagine_nodo");
+                let imma_az = document.getElementById("immagine_nodo_azione");
                 let nome_azione = document.getElementById("nome_nodo2");
                 let durata = document.getElementById("durata_nodo");
                 let condizione = document.getElementById("condizione_nodo");
@@ -370,18 +371,12 @@ $(".inse").click(function (evt) {
                             if (imma.value !== "") {
 
                                 // questa è la chiamata per la modifica
-                                let insero = { nome: ingredienti_globali[n].nome, immagine: imma.value }
+                                let insero = {cosa: "ingrediente", nome: ingredienti_globali[n].nome, immagine: imma.value }
                                 $.ajax({
                                     url: 'aggiungi_modifica_immagine.php',
                                     async: false,
                                     type: 'POST',
-                                    data: insero,
-                                    success: function () {
-                                        location.reload();
-                                    },
-                                    error: function () {
-                                        alert("qualcosa è andato storto");
-                                    }
+                                    data: insero
                                 });
 
                                 // aggiorno quindi anche la lista degli ingredienti globali nel caso in cui abbia cambiato l'immagine
@@ -477,6 +472,29 @@ $(".inse").click(function (evt) {
 
                                 // la variabile per l'inserimento la setto a false
                                 non = false;
+
+                                // tengo però presente il fatto di poter modificare l'immagine all'ingrediente globale
+                                // anche nel caso in cui l'immagine sia già presente
+                                if (imma_az.value !== "") {
+
+                                    // questa è la chiamata per la modifica
+                                    let insero = {cosa:"azione", nome: azioni_globali[n].nome, immagine: imma_az.value }
+                                    $.ajax({
+                                        url: 'aggiungi_modifica_immagine.php',
+                                        async: false,
+                                        type: 'POST',
+                                        data: insero
+                                    });
+
+                                    // aggiorno quindi anche la lista degli ingredienti globali nel caso in cui abbia cambiato l'immagine
+                                    azioni_globali[n].immagine = imma_az.value;
+                                    sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
+
+                                } else {
+
+                                    // nel caso in cui invece io non abbia inserito l'immagine allora prendo quella dalla lista globale
+                                    imma_az.value = azioni_globali[n].immagine
+                                }
                             }
                         }
 
@@ -484,7 +502,7 @@ $(".inse").click(function (evt) {
                         if (non) {
 
                             // mi serve il solito json-format dell'azione globale da inserire
-                            vara_glob = { nome: nome_azione.value };
+                            vara_glob = { nome: nome_azione.value, immagine: imma_az.value };
 
                             //lo inserisco dentro la lista globale
                             azioni_globali.push(vara_glob);
@@ -508,7 +526,8 @@ $(".inse").click(function (evt) {
                             id: idi,
                             nome: nome_azione.value,
                             durata: durata.value,
-                            condizione: ""
+                            condizione: "",
+                            immagine: imma_az.value
                         };
 
                         // inserisco infine nella lista
@@ -557,8 +576,31 @@ $(".inse").click(function (evt) {
                             // ad un'azione già inserita nella lista globale
                             if (azioni_globali[n].nome.replace(/\s+/g, '') === nome_azione.value.replace(/\s+/g, '')) {
 
-                                // la variabile per l'inserimento la setto a false
-                                non = false;
+                               // la variabile per l'inserimento la setto a false
+                               non = false;
+
+                               // tengo però presente il fatto di poter modificare l'immagine all'ingrediente globale
+                               // anche nel caso in cui l'immagine sia già presente
+                               if (imma_az.value !== "") {
+
+                                   // questa è la chiamata per la modifica
+                                   let insero = {cosa:"azione", nome: azioni_globali[n].nome, immagine: imma_az.value }
+                                   $.ajax({
+                                       url: 'aggiungi_modifica_immagine.php',
+                                       async: false,
+                                       type: 'POST',
+                                       data: insero
+                                   });
+
+                                   // aggiorno quindi anche la lista degli ingredienti globali nel caso in cui abbia cambiato l'immagine
+                                   azioni_globali[n].immagine = imma_az.value;
+                                   sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
+
+                               } else {
+
+                                   // nel caso in cui invece io non abbia inserito l'immagine allora prendo quella dalla lista globale
+                                   imma_az.value = azioni_globali[n].immagine
+                               }
                             }
                         }
 
@@ -566,7 +608,7 @@ $(".inse").click(function (evt) {
                         if (non) {
 
                             // mi serve il solito json-format dell'azione globale da inserire
-                            vara_glob = { nome: nome_azione.value };
+                            vara_glob = { nome: nome_azione.value, immagine: imma_az.value };
 
                             //lo inserisco dentro la lista globale
                             azioni_globali.push(vara_glob);
@@ -590,7 +632,8 @@ $(".inse").click(function (evt) {
                             id: idi,
                             nome: nome_azione.value,
                             durata: durata.value,
-                            condizione: condizione.value
+                            condizione: condizione.value,
+                            immagine: imma_az.value
                         };
 
                         // inserisco infine nella lista

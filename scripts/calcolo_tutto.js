@@ -20,7 +20,7 @@ function calcolo_nodi_e_link(xml, callback) {
     // sviluppare il grafico
     for (i = 0; i < x.length; i++) {
 
-        // con questo rimpio l' array con i link diretti tra le azioni
+        // con questo riempio l' array con i link diretti tra le azioni
         if (x[i].nodeType == 1 && x[i].nodeName === "RELAZIONEdORDINE") {
 
             vara = {
@@ -29,6 +29,16 @@ function calcolo_nodi_e_link(xml, callback) {
             };
 
             link.push(vara);
+        }
+
+        // con questo riempio la text area per la ricetta testuale
+        if (x[i].nodeType == 1 && x[i].nodeName === "TESTO") {
+
+            if(typeof  x[i].childNodes[0] !== "undefined"){
+                $("#testo_ri").val(x[i].childNodes[0].nodeValue);
+                testo = x[i].childNodes[0].nodeValue;
+            }
+            
         }
 
         // con questo invece riempio l'array con i link in loop tra le azioni
@@ -107,7 +117,6 @@ function calcolo_nodi_e_link(xml, callback) {
 
                     z = y[j].childNodes;
 
-
                     // trovati i PRE e i POST vado a cercare di capire com'è 
                     // strutturato il link
                     for (k = 0; k < z.length; k++) {
@@ -156,7 +165,8 @@ function calcolo_nodi_e_link(xml, callback) {
                 id: x[i].getAttribute('IDazione'),
                 nome: x[i].childNodes[1].childNodes[0].nodeValue,
                 durata: durat,
-                condizione: cond
+                condizione: cond,
+                immagine : ""
             };
             azioni.push(vara);
         }
@@ -174,12 +184,14 @@ function calcolo_nodi_e_link(xml, callback) {
             if (azioni_globali[b].nome.replace(/\s+/g, '') === azioni[d].nome.replace(/\s+/g, '')) {
 
                 inserisci_global_act = false;
+
+                azioni[d].immagine = azioni_globali[b].immagine;
             }
         }
 
         if (inserisci_global_act) {
 
-            vara_glob_act = { nome: azioni[d].nome};
+            vara_glob_act = { nome: azioni[d].nome, immagine: ""};
 
             azioni_globali.push(vara_glob_act);
 
@@ -583,6 +595,7 @@ function calcolo_nodi_e_link(xml, callback) {
                 });
 
                 grafico = svgPanZoom(svgElement);
+                grafico.zoomAtPoint(1.5, {x: 0, y: 0})
 
             }
         });
@@ -848,6 +861,7 @@ function calcolo_nodi_e_link(xml, callback) {
         });
 
         grafico = svgPanZoom(svgElement);
+        grafico.zoomAtPoint(1.5, {x: 0, y:0})
 
     }
 
