@@ -1,14 +1,19 @@
 <?php
+// variabile che mi serve per individuare la ricetta da modificare
 $ricetta = $_POST['ricetta'];
-// questo è l'id che ho nascosto all'utente che servirà per trovare 
+
+// questo è il testo da modificare
 $testo = $_POST['testone'];
+
+// creo l'oggetto che mi permette di manipolare l'XML più facilmente
 $doc = new DOMDocument;
 $doc->load('ricette/' . $ricetta);
 $elemento = $doc->documentElement;
 
+// prendo tutti gli elementi che hanno come tag TESTO
 $nodo= $elemento->getElementsByTagName('TESTO');
 
-// con un ciclo for cerco l'ingrediente giusto per poterlo modificare
+// ricerco l'elemento che voglio modificare
 foreach ($nodo as $child1) {
     $child1->nodeValue = $testo;
 }

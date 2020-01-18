@@ -1,7 +1,7 @@
 // questo mi serve per il controllo del grafico, in particolare lo zoom
 var svgElement = document.getElementById("vedo");
 var grafico = 0;
-var testo="";
+var testo="nulla";
     
 // array che conterranno in ordine: INGREDIENTI, POST delle AZIONI e
 //  la differenza dei primi due

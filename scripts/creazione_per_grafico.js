@@ -68,7 +68,7 @@ function info_ingrediente(idingrediente) {
 // in cui il mio mouse è puntato
 function svgPoint(element, x, y) {
     var
-    pt = element.createSVGPoint();
+        pt = element.createSVGPoint();
     pt.x = x;
     pt.y = y;
     return pt.matrixTransform(g.getScreenCTM().inverse());
@@ -173,11 +173,11 @@ function cerca_ed_elimina(id_da_eliminare) {
         }
     }
 }
+
 // fine funzioni di suporto *** //
 
-
 $("#vedo").on('contextmenu', function (e) {
-     
+
     toppe = e.pageY;
     lefte = e.pageX;
 
@@ -218,7 +218,7 @@ $("#vedo").on('contextmenu', function (e) {
         }).addClass("show");
 
     }
-    return false; //blocks default Webbrowser right click menu
+    return false;
 }).on("click", function () {
     if (inn) {
 
@@ -249,109 +249,109 @@ $(".inse").click(function (evt) {
 
     // questa variabile mi permette di identificare il target dell'evento
     var target = $(evt.target);
-    
+
     let cosas = target[0].getAttribute("id");
 
-        // questa variabile mi permette di non avere problemi quando non arrivo a terminare la sequenza di inserimento
-        let scrivi = true;
+    // questa variabile mi permette di non avere problemi quando non arrivo a terminare la sequenza di inserimento
+    let scrivi = true;
 
-        //attivo il modal che conterrà il form con le info per inserire l'ingrediente
-        $('#insert_ingrediente').modal({
-            show: true,
-            backdrop: 'static',
-            keyboard: false
-        });
+    //attivo il modal che conterrà il form con le info per inserire l'ingrediente
+    $('#insert_ingrediente').modal({
+        show: true,
+        backdrop: 'static',
+        keyboard: false
+    });
 
-        // queste variabili servono per identificare le liste degli ingredienti globali
-        var lista = document.getElementById("globali");
-        var lista2 = document.getElementById("act_globali");
+    // queste variabili servono per identificare le liste degli ingredienti globali
+    var lista = document.getElementById("globali");
+    var lista2 = document.getElementById("act_globali");
 
-        // questo ciclo serve ad inserire le opzioni per l'inserimento del nome dell'ingrediente
-        for (a = 0; a < ingredienti_globali.length; a++) {
-            let puoi = true;
-            for (x = 0; x < ingredienti_totali.length; x++) {
+    // questo ciclo serve ad inserire le opzioni per l'inserimento del nome dell'ingrediente
+    for (a = 0; a < ingredienti_globali.length; a++) {
+        let puoi = true;
+        for (x = 0; x < ingredienti_totali.length; x++) {
 
-                if (puoi && ingredienti_globali[a].nome.replace(/\s+/g, '') === ingredienti_totali[x].nome.replace(/\s+/g, '')) {
+            if (puoi && ingredienti_globali[a].nome.replace(/\s+/g, '') === ingredienti_totali[x].nome.replace(/\s+/g, '')) {
 
-                    puoi = false;
-
-                }
-            }
-            if (puoi) {
-
-                let inni = "<option value='" + ingredienti_globali[a].nome + "'>" + ingredienti_globali[a].nome + "</option>";
-                lista.innerHTML += inni;
+                puoi = false;
 
             }
         }
+        if (puoi) {
 
-        // questo ciclo serve ad inserire le opzioni per l'inserimento del nome delle azioni
-        for (a = 0; a < azioni_globali.length; a++) {
-            let puoi = true;
-            for (x = 0; x < azioni.length; x++) {
+            let inni = "<option value='" + ingredienti_globali[a].nome + "'>" + ingredienti_globali[a].nome + "</option>";
+            lista.innerHTML += inni;
 
-                if (puoi && azioni_globali[a].nome.replace(/\s+/g, '') === azioni[x].nome.replace(/\s+/g, '')) {
+        }
+    }
 
-                    puoi = false;
+    // questo ciclo serve ad inserire le opzioni per l'inserimento del nome delle azioni
+    for (a = 0; a < azioni_globali.length; a++) {
+        let puoi = true;
+        for (x = 0; x < azioni.length; x++) {
 
-                }
+            if (puoi && azioni_globali[a].nome.replace(/\s+/g, '') === azioni[x].nome.replace(/\s+/g, '')) {
+
+                puoi = false;
+
             }
-            if (puoi) {
-
-                let inni2 = "<option value='" + azioni_globali[a].nome + "'>" + azioni_globali[a].nome + "</option>";
-                lista2.innerHTML += inni2;
-
-            }
         }
+        if (puoi) {
 
-        // quando devo inserire un azione allora nascondo le parti del form per l'ingrediente
-        if (cosas === "inse_az") {
-            $(".solo_ingrediente").hide();
-            $(".solo_condizione").hide();
-            $(".solo_azione").show();
+            let inni2 = "<option value='" + azioni_globali[a].nome + "'>" + azioni_globali[a].nome + "</option>";
+            lista2.innerHTML += inni2;
+
         }
+    }
 
-        // quando devo inserire un ingrediente allora nascondo le parti del form per l'azione
-        if (cosas === "inse_in") {
-            $(".solo_azione").hide();
-            $(".solo_condizione").hide();
-            $(".solo_ingrediente").show();
-        }
+    // quando devo inserire un azione allora nascondo le parti del form per l'ingrediente
+    if (cosas === "inse_az") {
+        $(".solo_ingrediente").hide();
+        $(".solo_condizione").hide();
+        $(".solo_azione").show();
+    }
 
-        // quando devo inserire un azione con condizione allora nascondo le parti del form per l'ingrediente
-        if(cosas === "inse_az_con"){
-            $(".solo_ingrediente").hide();
-            $(".solo_azione").show();
-            $(".solo_condizione").show();
-        }
+    // quando devo inserire un ingrediente allora nascondo le parti del form per l'azione
+    if (cosas === "inse_in") {
+        $(".solo_azione").hide();
+        $(".solo_condizione").hide();
+        $(".solo_ingrediente").show();
+    }
 
-        // questo evento mi cattura il clik sul bottone per l'inserimento
-        $("#salva_inserimento").click(function (ev) {
+    // quando devo inserire un azione con condizione allora nascondo le parti del form per l'ingrediente
+    if (cosas === "inse_az_con") {
+        $(".solo_ingrediente").hide();
+        $(".solo_azione").show();
+        $(".solo_condizione").show();
+    }
 
-            // richiamo la variabile iniziale per essere sicuro di essere sempre durante la cattura dello stesso evento
-            if (scrivi === true) {
+    // questo evento mi cattura il clik sul bottone per l'inserimento
+    $("#salva_inserimento").click(function (ev) {
 
-                // questa serie  di variabili mi identificano gli elementi del form
-                let nome = document.getElementById("nome_nodo");
-                let quant = document.getElementById("quantita_nodo");
-                let imma = document.getElementById("immagine_nodo");
-                let imma_az = document.getElementById("immagine_nodo_azione");
-                let nome_azione = document.getElementById("nome_nodo2");
-                let durata = document.getElementById("durata_nodo");
-                let condizione = document.getElementById("condizione_nodo");
+        // richiamo la variabile iniziale per essere sicuro di essere sempre durante la cattura dello stesso evento
+        if (scrivi === true) {
 
-                // questa e varibili mi servono per identificare il punto cliccato, 
-                // così da poter trovare il punto esatto dove inserire la figura
-                var
-                    x = lefte,
-                    y = toppe,
-                    svgP = svgPoint(svg, x, y),
-                    xe = Math.round(svgP.x),
-                    ye = Math.round(svgP.y);
+            // questa serie  di variabili mi identificano gli elementi del form
+            let nome = document.getElementById("nome_nodo");
+            let quant = document.getElementById("quantita_nodo");
+            let imma = document.getElementById("immagine_nodo");
+            let imma_az = document.getElementById("immagine_nodo_azione");
+            let nome_azione = document.getElementById("nome_nodo2");
+            let durata = document.getElementById("durata_nodo");
+            let condizione = document.getElementById("condizione_nodo");
 
-                // faccio un controllo sull'unico elemento indispensabile per l'inserimento, cioè il nome    
-                if (cosas === "inse_in") {
-                    if(nome.value !== ""){
+            // questa e varibili mi servono per identificare il punto cliccato, 
+            // così da poter trovare il punto esatto dove inserire la figura
+            var
+                x = lefte,
+                y = toppe,
+                svgP = svgPoint(svg, x, y),
+                xe = Math.round(svgP.x),
+                ye = Math.round(svgP.y);
+
+            // faccio un controllo sull'unico elemento indispensabile per l'inserimento, cioè il nome    
+            if (cosas === "inse_in") {
+                if (nome.value !== "") {
 
                     // questa varibile mi serve per capire se ho già questo ingredinte tra quelli globali
                     let non = true;
@@ -371,7 +371,7 @@ $(".inse").click(function (evt) {
                             if (imma.value !== "") {
 
                                 // questa è la chiamata per la modifica
-                                let insero = {cosa: "ingrediente", nome: ingredienti_globali[n].nome, immagine: imma.value }
+                                let insero = { cosa: "ingrediente", nome: ingredienti_globali[n].nome, immagine: imma.value }
                                 $.ajax({
                                     url: 'aggiungi_modifica_immagine.php',
                                     async: false,
@@ -449,7 +449,7 @@ $(".inse").click(function (evt) {
                     // alla fine dell'inserimento chiudo l'evento mettendo scrivi a false e impedendo la scrittura futura
                     // ho il problema che non inserendo questa variabile mi esegua una scrittuare nel caso in cui non concluda la procedura
                     scrivi = false;
-                }else{
+                } else {
 
                     // nel caso in cui l'utente non abbia inserito il nome dell'azione o dell'ingrediente
                     alert("serve il nome");
@@ -457,246 +457,246 @@ $(".inse").click(function (evt) {
 
                 }
 
-                } else if (cosas === "inse_az") {
-                    if (nome_azione.value !== "") {
+            } else if (cosas === "inse_az") {
+                if (nome_azione.value !== "") {
 
-                        // questa varibile mi serve per capire se ho già questo ingredinte tra quelli globali
-                        let non = true;
+                    // questa varibile mi serve per capire se ho già questo ingredinte tra quelli globali
+                    let non = true;
 
-                        // con questo ciclo controllo tra gli ingredienti globali se l'ingrediente è già inserito o meno
-                        for (n = 0; n < azioni_globali.length; n++) {
+                    // con questo ciclo controllo tra gli ingredienti globali se l'ingrediente è già inserito o meno
+                    for (n = 0; n < azioni_globali.length; n++) {
 
-                            // in caso il nome dell'azione locale da inserire sia uguale(senza spazi superflui) 
-                            // ad un'azione già inserita nella lista globale
-                            if (azioni_globali[n].nome.replace(/\s+/g, '') === nome_azione.value.replace(/\s+/g, '')) {
+                        // in caso il nome dell'azione locale da inserire sia uguale(senza spazi superflui) 
+                        // ad un'azione già inserita nella lista globale
+                        if (azioni_globali[n].nome.replace(/\s+/g, '') === nome_azione.value.replace(/\s+/g, '')) {
 
-                                // la variabile per l'inserimento la setto a false
-                                non = false;
+                            // la variabile per l'inserimento la setto a false
+                            non = false;
 
-                                // tengo però presente il fatto di poter modificare l'immagine all'ingrediente globale
-                                // anche nel caso in cui l'immagine sia già presente
-                                if (imma_az.value !== "") {
+                            // tengo però presente il fatto di poter modificare l'immagine all'ingrediente globale
+                            // anche nel caso in cui l'immagine sia già presente
+                            if (imma_az.value !== "") {
 
-                                    // questa è la chiamata per la modifica
-                                    let insero = {cosa:"azione", nome: azioni_globali[n].nome, immagine: imma_az.value }
-                                    $.ajax({
-                                        url: 'aggiungi_modifica_immagine.php',
-                                        async: false,
-                                        type: 'POST',
-                                        data: insero
-                                    });
+                                // questa è la chiamata per la modifica
+                                let insero = { cosa: "azione", nome: azioni_globali[n].nome, immagine: imma_az.value }
+                                $.ajax({
+                                    url: 'aggiungi_modifica_immagine.php',
+                                    async: false,
+                                    type: 'POST',
+                                    data: insero
+                                });
 
-                                    // aggiorno quindi anche la lista degli ingredienti globali nel caso in cui abbia cambiato l'immagine
-                                    azioni_globali[n].immagine = imma_az.value;
-                                    sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
+                                // aggiorno quindi anche la lista degli ingredienti globali nel caso in cui abbia cambiato l'immagine
+                                azioni_globali[n].immagine = imma_az.value;
+                                sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
 
-                                } else {
+                            } else {
 
-                                    // nel caso in cui invece io non abbia inserito l'immagine allora prendo quella dalla lista globale
-                                    imma_az.value = azioni_globali[n].immagine
-                                }
+                                // nel caso in cui invece io non abbia inserito l'immagine allora prendo quella dalla lista globale
+                                imma_az.value = azioni_globali[n].immagine
                             }
                         }
+                    }
 
-                        // nel caso in cui invece l'azione locale inserito non sia presente nella lista globale allora devo inserirla
-                        if (non) {
+                    // nel caso in cui invece l'azione locale inserito non sia presente nella lista globale allora devo inserirla
+                    if (non) {
 
-                            // mi serve il solito json-format dell'azione globale da inserire
-                            vara_glob = { nome: nome_azione.value, immagine: imma_az.value };
+                        // mi serve il solito json-format dell'azione globale da inserire
+                        vara_glob = { nome: nome_azione.value, immagine: imma_az.value };
 
-                            //lo inserisco dentro la lista globale
-                            azioni_globali.push(vara_glob);
+                        //lo inserisco dentro la lista globale
+                        azioni_globali.push(vara_glob);
 
-                            // infine aggiorno anche la variabile nella cache che è quella che mi interessa veramente
-                            sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
+                        // infine aggiorno anche la variabile nella cache che è quella che mi interessa veramente
+                        sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
 
-                            // chiamata per l'inserimento nel file json
-                            $.ajax({
-                                url: 'aggiungi_azione_globale.php',
-                                async: false,
-                                type: 'POST',
-                                data: vara_glob
-                            });
-                        }
-                        // prendo in esame infine il caso dell'inserimento dell'azione
-                        // come prime devo cercare l'id più uno rispetto all'ultimo id delle azioni
-                        let idi = cerca_ultimo_id_azioni();
-
-                        let inse = {
-                            id: idi,
-                            nome: nome_azione.value,
-                            durata: durata.value,
-                            condizione: "",
-                            immagine: imma_az.value
-                        };
-
-                        // inserisco infine nella lista
-                        azioni.push(inse);
-
-                        // questo json- format mi serve per inserire l'azione nel fil xml
-                        let inse2 = {
-                            ricetta: sessionStorage.getItem("nome_file"),
-                            id: idi,
-                            nome: nome_azione.value,
-                            durata: durata.value,
-                            condizione: ""
-                        };
-
-                        // creo l'oggetto da inserire nel grafico
-                        crea_oggetto(idi, xe, ye);
-
-                        // eseguo la chiamata per l'inserimento dell'azione nel file xml
+                        // chiamata per l'inserimento nel file json
                         $.ajax({
-                            url: 'inserimento_azione.php',
+                            url: 'aggiungi_azione_globale.php',
                             async: false,
                             type: 'POST',
-                            data: inse2
+                            data: vara_glob
                         });
-
-                        // alla fine dell'inserimento chiudo l'evento mettendo scrivi a false e impedendo la scrittura futura
-                        // ho il problema che non inserendo questa variabile mi esegua una scrittuare nel caso in cui non concluda la procedura
-                        scrivi = false;
-                    } else {
-
-                        // nel caso in cui l'utente non abbia inserito il nome dell'azione o dell'ingrediente
-                        alert("serve il nome");
-                        scrivi = false;
                     }
-                } else if(cosas === "inse_az_con"){
+                    // prendo in esame infine il caso dell'inserimento dell'azione
+                    // come prime devo cercare l'id più uno rispetto all'ultimo id delle azioni
+                    let idi = cerca_ultimo_id_azioni();
 
-                    if (nome_azione.value !== "" && condizione.value !== "") {
+                    let inse = {
+                        id: idi,
+                        nome: nome_azione.value,
+                        durata: durata.value,
+                        condizione: "",
+                        immagine: imma_az.value
+                    };
 
-                        // questa varibile mi serve per capire se ho già questo ingredinte tra quelli globali
-                        let non = true;
+                    // inserisco infine nella lista
+                    azioni.push(inse);
 
-                        // con questo ciclo controllo tra gli ingredienti globali se l'ingrediente è già inserito o meno
-                        for (n = 0; n < azioni_globali.length; n++) {
+                    // questo json- format mi serve per inserire l'azione nel fil xml
+                    let inse2 = {
+                        ricetta: sessionStorage.getItem("nome_file"),
+                        id: idi,
+                        nome: nome_azione.value,
+                        durata: durata.value,
+                        condizione: ""
+                    };
 
-                            // in caso il nome dell'azione locale da inserire sia uguale(senza spazi superflui) 
-                            // ad un'azione già inserita nella lista globale
-                            if (azioni_globali[n].nome.replace(/\s+/g, '') === nome_azione.value.replace(/\s+/g, '')) {
+                    // creo l'oggetto da inserire nel grafico
+                    crea_oggetto(idi, xe, ye);
 
-                               // la variabile per l'inserimento la setto a false
-                               non = false;
+                    // eseguo la chiamata per l'inserimento dell'azione nel file xml
+                    $.ajax({
+                        url: 'inserimento_azione.php',
+                        async: false,
+                        type: 'POST',
+                        data: inse2
+                    });
 
-                               // tengo però presente il fatto di poter modificare l'immagine all'ingrediente globale
-                               // anche nel caso in cui l'immagine sia già presente
-                               if (imma_az.value !== "") {
+                    // alla fine dell'inserimento chiudo l'evento mettendo scrivi a false e impedendo la scrittura futura
+                    // ho il problema che non inserendo questa variabile mi esegua una scrittuare nel caso in cui non concluda la procedura
+                    scrivi = false;
+                } else {
 
-                                   // questa è la chiamata per la modifica
-                                   let insero = {cosa:"azione", nome: azioni_globali[n].nome, immagine: imma_az.value }
-                                   $.ajax({
-                                       url: 'aggiungi_modifica_immagine.php',
-                                       async: false,
-                                       type: 'POST',
-                                       data: insero
-                                   });
+                    // nel caso in cui l'utente non abbia inserito il nome dell'azione o dell'ingrediente
+                    alert("serve il nome");
+                    scrivi = false;
+                }
+            } else if (cosas === "inse_az_con") {
 
-                                   // aggiorno quindi anche la lista degli ingredienti globali nel caso in cui abbia cambiato l'immagine
-                                   azioni_globali[n].immagine = imma_az.value;
-                                   sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
+                if (nome_azione.value !== "" && condizione.value !== "") {
 
-                               } else {
+                    // questa varibile mi serve per capire se ho già questo ingredinte tra quelli globali
+                    let non = true;
 
-                                   // nel caso in cui invece io non abbia inserito l'immagine allora prendo quella dalla lista globale
-                                   imma_az.value = azioni_globali[n].immagine
-                               }
+                    // con questo ciclo controllo tra gli ingredienti globali se l'ingrediente è già inserito o meno
+                    for (n = 0; n < azioni_globali.length; n++) {
+
+                        // in caso il nome dell'azione locale da inserire sia uguale(senza spazi superflui) 
+                        // ad un'azione già inserita nella lista globale
+                        if (azioni_globali[n].nome.replace(/\s+/g, '') === nome_azione.value.replace(/\s+/g, '')) {
+
+                            // la variabile per l'inserimento la setto a false
+                            non = false;
+
+                            // tengo però presente il fatto di poter modificare l'immagine all'ingrediente globale
+                            // anche nel caso in cui l'immagine sia già presente
+                            if (imma_az.value !== "") {
+
+                                // questa è la chiamata per la modifica
+                                let insero = { cosa: "azione", nome: azioni_globali[n].nome, immagine: imma_az.value }
+                                $.ajax({
+                                    url: 'aggiungi_modifica_immagine.php',
+                                    async: false,
+                                    type: 'POST',
+                                    data: insero
+                                });
+
+                                // aggiorno quindi anche la lista degli ingredienti globali nel caso in cui abbia cambiato l'immagine
+                                azioni_globali[n].immagine = imma_az.value;
+                                sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
+
+                            } else {
+
+                                // nel caso in cui invece io non abbia inserito l'immagine allora prendo quella dalla lista globale
+                                imma_az.value = azioni_globali[n].immagine
                             }
                         }
+                    }
 
-                        // nel caso in cui invece l'azione locale inserito non sia presente nella lista globale allora devo inserirla
-                        if (non) {
+                    // nel caso in cui invece l'azione locale inserito non sia presente nella lista globale allora devo inserirla
+                    if (non) {
 
-                            // mi serve il solito json-format dell'azione globale da inserire
-                            vara_glob = { nome: nome_azione.value, immagine: imma_az.value };
+                        // mi serve il solito json-format dell'azione globale da inserire
+                        vara_glob = { nome: nome_azione.value, immagine: imma_az.value };
 
-                            //lo inserisco dentro la lista globale
-                            azioni_globali.push(vara_glob);
+                        //lo inserisco dentro la lista globale
+                        azioni_globali.push(vara_glob);
 
-                            // infine aggiorno anche la variabile nella cache che è quella che mi interessa veramente
-                            sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
+                        // infine aggiorno anche la variabile nella cache che è quella che mi interessa veramente
+                        sessionStorage.setItem("azioni_global", JSON.stringify(azioni_globali));
 
-                            // chiamata per l'inserimento nel file json
-                            $.ajax({
-                                url: 'aggiungi_azione_globale.php',
-                                async: false,
-                                type: 'POST',
-                                data: vara_glob
-                            });
-                        }
-                        // prendo in esame infine il caso dell'inserimento dell'azione
-                        // come prime devo cercare l'id più uno rispetto all'ultimo id delle azioni
-                        let idi = cerca_ultimo_id_azioni();
-
-                        let inse = {
-                            id: idi,
-                            nome: nome_azione.value,
-                            durata: durata.value,
-                            condizione: condizione.value,
-                            immagine: imma_az.value
-                        };
-
-                        // inserisco infine nella lista
-                        azioni.push(inse);
-
-                        // questo json- format mi serve per inserire l'azione nel fil xml
-                        let inse2 = {
-                            ricetta: sessionStorage.getItem("nome_file"),
-                            id: idi,
-                            nome: nome_azione.value,
-                            durata: durata.value,
-                            condizione: condizione.value
-                        };
-
-                        // creo l'oggetto da inserire nel grafico
-                        crea_oggetto(idi, xe, ye);
-
-                        // eseguo la chiamata per l'inserimento dell'azione nel file xml
+                        // chiamata per l'inserimento nel file json
                         $.ajax({
-                            url: 'inserimento_azione_condizione.php',
+                            url: 'aggiungi_azione_globale.php',
                             async: false,
                             type: 'POST',
-                            data: inse2
+                            data: vara_glob
                         });
-
-                        // alla fine dell'inserimento chiudo l'evento mettendo scrivi a false e impedendo la scrittura futura
-                        // ho il problema che non inserendo questa variabile mi esegua una scrittuare nel caso in cui non concluda la procedura
-                        scrivi = false;
-                    } else {
-
-                        // nel caso in cui l'utente non abbia inserito il nome dell'azione o dell'ingrediente
-                        alert("serve il nome");
-                        scrivi = false;
                     }
+                    // prendo in esame infine il caso dell'inserimento dell'azione
+                    // come prime devo cercare l'id più uno rispetto all'ultimo id delle azioni
+                    let idi = cerca_ultimo_id_azioni();
+
+                    let inse = {
+                        id: idi,
+                        nome: nome_azione.value,
+                        durata: durata.value,
+                        condizione: condizione.value,
+                        immagine: imma_az.value
+                    };
+
+                    // inserisco infine nella lista
+                    azioni.push(inse);
+
+                    // questo json- format mi serve per inserire l'azione nel fil xml
+                    let inse2 = {
+                        ricetta: sessionStorage.getItem("nome_file"),
+                        id: idi,
+                        nome: nome_azione.value,
+                        durata: durata.value,
+                        condizione: condizione.value
+                    };
+
+                    // creo l'oggetto da inserire nel grafico
+                    crea_oggetto(idi, xe, ye);
+
+                    // eseguo la chiamata per l'inserimento dell'azione nel file xml
+                    $.ajax({
+                        url: 'inserimento_azione_condizione.php',
+                        async: false,
+                        type: 'POST',
+                        data: inse2
+                    });
+
+                    // alla fine dell'inserimento chiudo l'evento mettendo scrivi a false e impedendo la scrittura futura
+                    // ho il problema che non inserendo questa variabile mi esegua una scrittuare nel caso in cui non concluda la procedura
+                    scrivi = false;
+                } else {
+
+                    // nel caso in cui l'utente non abbia inserito il nome dell'azione o dell'ingrediente
+                    alert("serve il nome");
+                    scrivi = false;
                 }
             }
+        }
 
-            // questo mi serve perchè andava in conflitto il popover di bootstrap
-            $('circle').popover({
-                trigger: 'hover'
-            });
-            $('rect').popover({
-                trigger: 'hover'
-            });
+        // questo mi serve perchè andava in conflitto il popover di bootstrap
+        $('circle').popover({
+            trigger: 'hover'
         });
-
-        // se annullo l'inserimento devo settare la variabile dell'evento a false
-        $("#annulla_insertnodo").click(function (ev) {
-            scrivi = false;
-
+        $('rect').popover({
+            trigger: 'hover'
         });
+    });
 
-        // stessa cosa di prima
-        $(".close").click(function (evw) {
-            scrivi = false;
+    // se annullo l'inserimento devo settare la variabile dell'evento a false
+    $("#annulla_insertnodo").click(function (ev) {
+        scrivi = false;
 
-        });
+    });
+
+    // stessa cosa di prima
+    $(".close").click(function (evw) {
+        scrivi = false;
+
+    });
 });
 
 
 // questa funzione mi permette di creare link
 $("#vedo").mousedown(function (evt) {
-    if(evt.which === 1){
+    if (evt.which === 1) {
 
         // a questo punto devo controllare quale elemento del mio grafico sia stato selezionato
         var target = $(evt.target);
@@ -715,8 +715,8 @@ $("#vedo").mousedown(function (evt) {
 
             // queste invece sono le mie variabili per la posizione da cui far partire la freccia
             var
-            x = 0,
-            y = 0;
+                x = 0,
+                y = 0;
 
             // nascondo le sezioni che compaiono con le info dei nodi
             $(evt.target).popover("hide");
@@ -780,7 +780,7 @@ $("#vedo").mousedown(function (evt) {
 
             // anche qui devo rendere tutti nodi linkabili
             kids = $("#vedo2").children("rect,circle");
-            
+
             // setto le mie variabili per validare la modifica del link successivamente
             muovilo = true;
             crealo = false;
@@ -791,14 +791,14 @@ $("#vedo").mousedown(function (evt) {
         }
 
         muovo = true;
-    
+
 
     }
 });
 
 // questa funzione mi permette di muovere il link create con lp'azione precedente
 $("#vedo").mousemove(function (er) {
-    if(muovo){
+    if (muovo) {
         // se mi trovo nello stato in cui ho la certezza che posso procedere
         if (muovilo) {
 
@@ -807,9 +807,9 @@ $("#vedo").mousemove(function (er) {
             // del mio mouse e infine ricalcolando il tutto rispetto alla matrice 
             // di alterazione del mio svg
             var
-            x = er.clientX,
-            y = er.clientY,
-            svgP = svgPoint(svg, x, y);
+                x = er.clientX,
+                y = er.clientY,
+                svgP = svgPoint(svg, x, y);
 
             //  se devo creare da zero un link allora 
             if (crealo) {
@@ -818,7 +818,7 @@ $("#vedo").mousemove(function (er) {
                 linea = document.getElementById(nodo_source + "_");
 
                 // se invece devo muoverne uno già esistente 
-            } else if(!crealo){
+            } else if (!crealo) {
 
                 // dovrò prendere l id di quello esistente
                 linea = document.getElementById(da_muovere);
@@ -858,9 +858,9 @@ $("#vedo").mousemove(function (er) {
 
 // questa azione invece mi permette di stabilire quale sia il target del mio link
 $("#vedo").mouseup(function (e) {
-    if(muovo){
+    if (muovo) {
 
-    
+
         grafico.enablePan();
 
         $('rect').popover({
@@ -876,10 +876,10 @@ $("#vedo").mouseup(function (e) {
 
             // questa variabile mi serve per riportare la classe oggetto al posto della classe  oggetto2
             var
-            kidse = $("#vedo2").children("rect,circle"),
+                kidse = $("#vedo2").children("rect,circle"),
 
-            // questa invece mi serve per sapere su quale oggetto mi trovo da collegare
-            target2 = $(e.target);
+                // questa invece mi serve per sapere su quale oggetto mi trovo da collegare
+                target2 = $(e.target);
 
             //  se devo creare da zero un link allora 
             if (crealo) {
@@ -888,7 +888,7 @@ $("#vedo").mouseup(function (e) {
                 linea = document.getElementById(nodo_source + "_");
 
                 // se invece devo muoverne uno già esistente 
-            } else if(!crealo){
+            } else if (!crealo) {
 
                 // dovrò prendere l id di quello esistente
                 linea = document.getElementById(da_muovere);
@@ -896,7 +896,7 @@ $("#vedo").mouseup(function (e) {
 
             // queste due variabili conterranno la posizione finale del mio link
             x = 0,
-            y = 0;
+                y = 0;
 
             // questa conterrà l id del mio target
             let nodo_target = target2.attr("id");
@@ -1015,59 +1015,58 @@ $("#vedo").mouseup(function (e) {
                             esiste_contrario = esiste(nodo_target, nodo_source);
                             if (esiste_contrario) {
                                 let da_condizione = false;
-                                for(y = 0; y < azioni.length; y++){
+                                for (y = 0; y < azioni.length; y++) {
 
-                                    if(azioni[y].id === nodo_source){
+                                    if (azioni[y].id === nodo_source) {
 
-                                        if(azioni[y].condizione !== ""){
+                                        if (azioni[y].condizione !== "") {
 
                                             da_condizione = true;
 
                                         }
                                     }
                                 }
-                                if(da_condizione){
-                                    console.log("parto da una condizione");
+                                if (da_condizione) {
 
-                                $.ajax({
-                                    url: 'inserimento_relazione_simul.php',
-                                    type: 'POST',
-                                    async: false,
-                                    data: { ricetta: sessionStorage.getItem("nome_file"), source: nodo_source, target: nodo_target }
-                                });
-                                $.ajax({
-                                    url: 'cancella_relazione_ordine.php',
-                                    type: 'POST',
-                                    async: false,
-                                    data: { ricetta: sessionStorage.getItem("nome_file"), source: nodo_target, target: nodo_source },
-                                    success: function () {
-                                        location.reload();
-                                    },
-                                    error: function () {
-                                        alert("qualcosa è andato storto");
-                                    }
-                                });
+                                    $.ajax({
+                                        url: 'inserimento_relazione_simul.php',
+                                        type: 'POST',
+                                        async: false,
+                                        data: { ricetta: sessionStorage.getItem("nome_file"), source: nodo_source, target: nodo_target }
+                                    });
+                                    $.ajax({
+                                        url: 'cancella_relazione_ordine.php',
+                                        type: 'POST',
+                                        async: false,
+                                        data: { ricetta: sessionStorage.getItem("nome_file"), source: nodo_target, target: nodo_source },
+                                        success: function () {
+                                            location.reload();
+                                        },
+                                        error: function () {
+                                            alert("qualcosa è andato storto");
+                                        }
+                                    });
 
-                                }else{
+                                } else {
 
-                                $.ajax({
-                                    url: 'inserimento_relazione_simul.php',
-                                    type: 'POST',
-                                    async: false,
-                                    data: { ricetta: sessionStorage.getItem("nome_file"), source: nodo_target, target: nodo_source }
-                                });
-                                $.ajax({
-                                    url: 'cancella_relazione_ordine.php',
-                                    type: 'POST',
-                                    async: false,
-                                    data: { ricetta: sessionStorage.getItem("nome_file"), source: nodo_source, target: nodo_target },
-                                    success: function () {
-                                        location.reload();
-                                    },
-                                    error: function () {
-                                        alert("qualcosa è andato storto");
-                                    }
-                                });
+                                    $.ajax({
+                                        url: 'inserimento_relazione_simul.php',
+                                        type: 'POST',
+                                        async: false,
+                                        data: { ricetta: sessionStorage.getItem("nome_file"), source: nodo_target, target: nodo_source }
+                                    });
+                                    $.ajax({
+                                        url: 'cancella_relazione_ordine.php',
+                                        type: 'POST',
+                                        async: false,
+                                        data: { ricetta: sessionStorage.getItem("nome_file"), source: nodo_source, target: nodo_target },
+                                        success: function () {
+                                            location.reload();
+                                        },
+                                        error: function () {
+                                            alert("qualcosa è andato storto");
+                                        }
+                                    });
 
                                 }
                             } else {
@@ -1161,7 +1160,7 @@ $("#vedo").mouseup(function (e) {
                         linea.setAttribute("id", nodo_source + "_" + nodo_target);
                         let inse = { source: nodo_source, target: nodo_target };
                         link.push(inse);
-                        if(!crealo){
+                        if (!crealo) {
 
                             cerca_ed_elimina(da_muovere);
                         }
@@ -1204,7 +1203,7 @@ $("#vedo").mouseup(function (e) {
         }
     }
     muovo = false;
-    
+
 });
 
 // questa funzione mi permette di eliminare un elemento del mio grafico SVG
@@ -1212,115 +1211,113 @@ $("#ca").click(function (evt) {
     let cance = true;
     grafico = svgPanZoom(svgElement);
     var target = eliminabile;
-    console.log(target.getAttribute("id"));
-        
-            let idi = target.getAttribute("id");
-            let idddi = document.getElementById("ingre_elim");
-            idddi.innerHTML = "Elimina " + idi;
-            $('#elimina_ingrediente').modal({
-                show: true,
-                backdrop: 'static',
-                keyboard: false
-            });
-            $("#elimina_inserimento").click(function (ev) {
-                ev.preventDefault();
-                if (cance === true) {
-                    cerca_ed_elimina(target.getAttribute("id"));
 
-                    if (target.getAttribute("id").includes("i") && !target.getAttribute("id").includes("_")) {
+    let idi = target.getAttribute("id");
+    let idddi = document.getElementById("ingre_elim");
+    idddi.innerHTML = "Elimina " + idi;
+    $('#elimina_ingrediente').modal({
+        show: true,
+        backdrop: 'static',
+        keyboard: false
+    });
+    $("#elimina_inserimento").click(function (ev) {
+        ev.preventDefault();
+        if (cance === true) {
+            cerca_ed_elimina(target.getAttribute("id"));
 
-                        let target_del = cerca_link_target(target.getAttribute("id"));
-                        let source_del = cerca_link_source(target.getAttribute("id"));
-                        let lin;
+            if (target.getAttribute("id").includes("i") && !target.getAttribute("id").includes("_")) {
 
-                        for (i = 0; i < target_del.length; i++) {
-                            lin = $("#" + target_del[i]);
-                            lin.hide();
-                        }
-                        for (i = 0; i < source_del.length; i++) {
-                            lin = $("#" + source_del[i]);
-                            lin.hide();
-                        }
-                        let dati = { ricetta: sessionStorage.getItem("nome_file"), id2: idi };
-                        $.ajax({
-                            url: 'cancella_ingrediente.php',
-                            type: 'POST',
-                            async: false,
-                            data: dati
-                        });
-                        target.style.display = "none";
-                        cance = false;
-                    }
+                let target_del = cerca_link_target(target.getAttribute("id"));
+                let source_del = cerca_link_source(target.getAttribute("id"));
+                let lin;
 
-                    if (target.getAttribute("id").includes("a") && !target.getAttribute("id").includes("_")) {
-
-                        let target_del = cerca_link_target(target.getAttribute("id"));
-                        let source_del = cerca_link_source(target.getAttribute("id"));
-                        let lin;
-
-                        for (i = 0; i < target_del.length; i++) {
-                            lin = $("#" + target_del[i]);
-                            lin.hide();
-                        }
-                        for (i = 0; i < source_del.length; i++) {
-                            lin = $("#" + source_del[i]);
-                            lin.hide();
-                        }
-                        let datie = { ricetta: sessionStorage.getItem("nome_file"), id2: idi.toString()};
-                        console.log(typeof(idi));
-                        $.ajax({
-                            url: 'cancella_azione.php',
-                            type: 'POST',
-                            async: false,
-                            data: datie
-                        });
-                        target.style.display = "none";
-                        cance = false;
-
-                    }
-                    if (target.getAttribute("id").includes("_")) {
-                        let splitto = target.getAttribute("id").split("_");
-                        let id1 = splitto[0];
-                        let id2 = splitto[1];
-
-                        if (id1.includes("a", 1) && id2.includes("a", 1)) {
-                            let dati = { ricetta: sessionStorage.getItem("nome_file"), source: id1, target: id2 };
-                            $.ajax({
-                                url: 'cancella_relazione_ordine.php',
-                                type: 'POST',
-                                async: false,
-                                data: dati
-                            });
-                            target.style.display = "none";
-
-                        } else if (id1.includes("a", 1) && id2.includes("i", 1)) {
-                            let dati = { ricetta: sessionStorage.getItem("nome_file"), source: id2, target: id1 };
-                            $.ajax({
-                                url: 'cancella_post.php',
-                                async: false,
-                                type: 'POST',
-                                data: dati
-                            });
-                            target.style.display = "none";
-
-                        } else if (id1.includes("i", 1) && id2.includes("a", 1)) {
-                            let dati = { ricetta: sessionStorage.getItem("nome_file"), source: id1, target: id2 };
-                            $.ajax({
-                                url: 'cancella_pre.php',
-                                type: 'POST',
-                                async: false,
-                                data: dati
-                            });
-                            target.style.display = "none";
-                        }
-                        cance = false;
-                    }
+                for (i = 0; i < target_del.length; i++) {
+                    lin = $("#" + target_del[i]);
+                    lin.hide();
                 }
-            });
-            $("#annulla_eliminazione").click(function (ev) {
+                for (i = 0; i < source_del.length; i++) {
+                    lin = $("#" + source_del[i]);
+                    lin.hide();
+                }
+                let dati = { ricetta: sessionStorage.getItem("nome_file"), id2: idi };
+                $.ajax({
+                    url: 'cancella_ingrediente.php',
+                    type: 'POST',
+                    async: false,
+                    data: dati
+                });
+                target.style.display = "none";
                 cance = false;
-            });
-            $(".close").click(function (evw) {
+            }
+
+            if (target.getAttribute("id").includes("a") && !target.getAttribute("id").includes("_")) {
+
+                let target_del = cerca_link_target(target.getAttribute("id"));
+                let source_del = cerca_link_source(target.getAttribute("id"));
+                let lin;
+
+                for (i = 0; i < target_del.length; i++) {
+                    lin = $("#" + target_del[i]);
+                    lin.hide();
+                }
+                for (i = 0; i < source_del.length; i++) {
+                    lin = $("#" + source_del[i]);
+                    lin.hide();
+                }
+                let datie = { ricetta: sessionStorage.getItem("nome_file"), id2: idi.toString() };
+                $.ajax({
+                    url: 'cancella_azione.php',
+                    type: 'POST',
+                    async: false,
+                    data: datie
+                });
+                target.style.display = "none";
                 cance = false;
-            });
+
+            }
+            if (target.getAttribute("id").includes("_")) {
+                let splitto = target.getAttribute("id").split("_");
+                let id1 = splitto[0];
+                let id2 = splitto[1];
+
+                if (id1.includes("a", 1) && id2.includes("a", 1)) {
+                    let dati = { ricetta: sessionStorage.getItem("nome_file"), source: id1, target: id2 };
+                    $.ajax({
+                        url: 'cancella_relazione_ordine.php',
+                        type: 'POST',
+                        async: false,
+                        data: dati
+                    });
+                    target.style.display = "none";
+
+                } else if (id1.includes("a", 1) && id2.includes("i", 1)) {
+                    let dati = { ricetta: sessionStorage.getItem("nome_file"), source: id2, target: id1 };
+                    $.ajax({
+                        url: 'cancella_post.php',
+                        async: false,
+                        type: 'POST',
+                        data: dati
+                    });
+                    target.style.display = "none";
+
+                } else if (id1.includes("i", 1) && id2.includes("a", 1)) {
+                    let dati = { ricetta: sessionStorage.getItem("nome_file"), source: id1, target: id2 };
+                    $.ajax({
+                        url: 'cancella_pre.php',
+                        type: 'POST',
+                        async: false,
+                        data: dati
+                    });
+                    target.style.display = "none";
+                }
+                cance = false;
+            }
+        }
+    });
+    $("#annulla_eliminazione").click(function (ev) {
+        cance = false;
+    });
+    $(".close").click(function (evw) {
+        cance = false;
+    });
 });

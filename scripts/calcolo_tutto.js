@@ -849,9 +849,6 @@ function calcolo_nodi_e_link(xml, callback) {
         // richiamo la funzione per inserire il testo
         inserimento_testo();
 
-        
-
-
         // questo mi serve per far apparire i modali
         $(document).ready(function () {
             $('[data-toggle="popover"]').popover({
@@ -864,45 +861,6 @@ function calcolo_nodi_e_link(xml, callback) {
         grafico.zoomAtPoint(1.5, {x: 0, y:0})
 
     }
-
-    // queste vanno ad aggiornare la lista delle componenti 
-    // globali in base al nome vado ad aggiornare il tutto
-    /*
-    for (d = 0; d < ingredienti_totali.length; d++) {
-
-        let inserisci_global = true;
-
-        ingredienti_globali = JSON.parse(sessionStorage.getItem("ingredienti_global"));
-
-        for (b = 0; b < ingredienti_globali.length; b++) {
-
-            if (ingredienti_globali[b].nome.replace(/\s+/g, '') === ingredienti_totali[d].nome.replace(/\s+/g, '')) {
-
-                inserisci_global = false;
-                if (ingredienti_globali[b].immagine !== "") {
-
-                    ingredienti_totali[d].immagine = ingredienti_globali[b].immagine;
-
-                }
-            }
-        }
-
-        if (inserisci_global) {
-
-            vara_glob = { nome: ingredienti_totali[d].nome, immagine: ingredienti_totali[d].immagine };
-
-            ingredienti_globali.push(vara_glob);
-
-            sessionStorage.setItem("ingredienti_global", JSON.stringify(ingredienti_globali));
-
-            $.ajax({
-                url: 'aggiungi_ingrediente_globale.php',
-                async: false,
-                type: 'POST',
-                data: vara_glob
-            });
-        }
-    }*/
 }
 
 

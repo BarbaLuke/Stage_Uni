@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="IT">
-
 <head>
 
     <meta charset="utf-8">
@@ -12,15 +11,12 @@
 
     <title>Importa File Ricetta</title>
 
-    <!-- External CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400|Work+Sans:300,400,700" rel="stylesheet">
-    <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/sb-admin-2.min.css">
+
     <script type="text/javascript" src="scripts/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script type="text/javascript" src="scripts/global_list.js"></script>
 </head>
 
@@ -31,8 +27,11 @@
         <div class="container text-center">
 
             <form action="upload.php" method="post" enctype="multipart/form-data">
+
                 <input type="file" name="xml" id="uploadInput">
+
                 <h3>Trascina il file o clicca sull'area</h3>
+
                 <button type="submit"
                     onclick='sessione(document.getElementById("uploadInput").files[0].name)'>Prosegui</button>
                 <button style="margin-top:15px;" type="button" class="btn-info" id="precedenti">Precedenti</button>
@@ -72,7 +71,9 @@
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
+
                 <div class="modal-header">
+
                     <h5 id="ingre_mod" class="modal-title">Ricette processate precedentemente</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -88,13 +89,10 @@
     </div>
 
     <script src="scripts/bootstrap.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="scripts/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {

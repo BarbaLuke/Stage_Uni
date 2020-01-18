@@ -1,4 +1,5 @@
 <?php
+// questa serie di funzioni mi permettono di fare l'upload del file inserito in fase di input
 if(isset($_FILES['xml'])){
    $errors= array();
    $file_name = $_FILES['xml']['name'];

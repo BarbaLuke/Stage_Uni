@@ -1,9 +1,13 @@
 <?php
+// variabile che mi serve per individuare la ricetta da modificare
 $ricetta = $_POST['ricetta'];
-// questo è il nome in input dall'utente
+
+// questo sarà l'id azione condizione
 $idsource = $_POST['source'];
-// questo è il nome in input dall'utente
+
+// questo sarà l'id azione durevole
 $idtarget = $_POST['target'];
+
 // creo l'oggetto simplexml che mi permette di manipolare l'XML più facilmente
 $xmldata = simplexml_load_file("ricette/".$ricetta) or die("Failed to load");
 
@@ -20,13 +24,11 @@ function simplexml_insert_after(SimpleXMLElement $insert, SimpleXMLElement $targ
     }
 }
 
-// l'elemento che devo inserire, in questo caso è solo l'ingrediente, varia in base
-// ai parametri passati in input dall'utente
-    $insert = new SimpleXMLElement('<RELAZIONEdiSIMULT IDazioneDurevole="'.$idtarget.'" IDazioneCondizione="'.$idsource.'">&#xA;</RELAZIONEdiSIMULT>');
+// in base alle info inerite dall'utente creo l'elemento da inserire 
+$insert = new SimpleXMLElement('<RELAZIONEdiSIMULT IDazioneDurevole="'.$idtarget.'" IDazioneCondizione="'.$idsource.'">&#xA;</RELAZIONEdiSIMULT>');
 
-// l'elemento che funge da appendino, in questo caso dovendo aggiungere solo 
-// un ingrediente quindi mi basta trovare l'ultimo elemento degli ingredienti
-// gli ingredienti dentro le azioni non li vede perchè sono nodi figli di nodi figli
+// questo è l'elemento che funge da appendino, l'elemento precedentemente creato andrà a collocarsi subito dopo
+// dovendo inserire una relazione, basta cercare l'ultimo tag delle relazioni di simultaneità
 $target = current($xmldata->xpath('//RELAZIONEdiSIMULT[last()]'));
 
 // richiamo la funzione per l'inserimento
@@ -35,7 +37,7 @@ simplexml_insert_after($insert, $target);
 // salvo tutto nel file
 $xmldata->asXML("ricette/".$ricetta);
 
-// questa serie di funzioni servono a sistemare la formattazione 
+// questa serie di funzioni servono a sistemare la formattazione meglio
 $dom = dom_import_simplexml($xmldata)->ownerDocument;
 $dom->formatOutput = true;
 $dom->preserveWhiteSpace = false;
