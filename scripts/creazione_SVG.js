@@ -8,7 +8,7 @@ function crea_oggetto(idd, posizione_x, posizione_y) {
 
                     immagine = '<pattern patternContentUnits="objectBoundingBox" id="' + idd + '_imm" x="' + posizione_x + '" y="' + posizione_y + '" height="100%" width="100%" viewBox="0 0 70 70" preserveAspectRatio="xMidYMid slice"> <image x="0%" y="0%" height="70" width="70" preserveAspectRatio="xMidYMid slice" xlink:href="' + ingredienti_totali[b].immagine + '"> </image> </pattern>';
                     document.getElementById("definizioni").innerHTML += immagine;
-                    varae = '<circle id="' + idd + '" cx=' + posizione_x + ' cy=' + posizione_y + ' r=35 fill="url(#' + idd + '_imm)" stroke-width="5" stroke="black" class="oggetto" data-toggle="popover" data-trigger="hover" title="Id : <strong>' + ingredienti_totali[b].id + '</strong>" data-placement="top" data-html="true" data-content="Nome : <strong>' + ingredienti_totali[b].nome + '</strong> <br> Quantità : <strong>' + ingredienti_totali[b].quantita + '</strong>"/>';
+                    varae = '<circle id="' + idd + '" cx=' + posizione_x + ' cy=' + posizione_y + ' r=35 fill="url(#' + idd + '_imm)" stroke-width="3" stroke="black" class="oggetto" data-toggle="popover" data-trigger="hover" title="Id : <strong>' + ingredienti_totali[b].id + '</strong>" data-placement="top" data-html="true" data-content="Nome : <strong>' + ingredienti_totali[b].nome + '</strong> <br> Quantità : <strong>' + ingredienti_totali[b].quantita + '</strong>"/>';
                     document.getElementById("vedo2").innerHTML += varae;
 
                 } else {
@@ -32,7 +32,7 @@ function crea_oggetto(idd, posizione_x, posizione_y) {
                     if(azioni[c].immagine !== ""){
                         immagine = '<pattern patternContentUnits="objectBoundingBox" id="' + idd + '_imm" x="' + (posizione_x - 25) + '" y="' + (posizione_y - 25) + '" height="100%" width="100%" viewBox="0 0 50 50" preserveAspectRatio="xMidYMid slice"> <image x="0%" y="0%" height="50" width="50" preserveAspectRatio="xMidYMid slice" xlink:href="' + azioni[c].immagine + '"> </image> </pattern>';
                         document.getElementById("definizioni").innerHTML += immagine;
-                        varae = '<rect id="' + azioni[c].id + '" x=' + (posizione_x - 25) + ' y=' + (posizione_y - 25) + ' width="50"; height="50"; class="oggetto"; fill="url(#' + idd + '_imm)" data-toggle="popover"; data-trigget="hover"; title="Id : <strong>' + azioni[c].id + '</strong>" data-placement="top"; data-html="true" data-content="Nome : <strong>' + azioni[c].nome + '</strong> <br> Durata : <strong>' + azioni[c].durata + '</strong>"/>';
+                        varae = '<rect id="' + azioni[c].id + '" x=' + (posizione_x - 25) + ' y=' + (posizione_y - 25) + ' width="50"; height="50"; class="oggetto"; fill="url(#' + idd + '_imm)" stroke-width="3" stroke="black" data-toggle="popover"; data-trigget="hover"; title="Id : <strong>' + azioni[c].id + '</strong>" data-placement="top"; data-html="true" data-content="Nome : <strong>' + azioni[c].nome + '</strong> <br> Durata : <strong>' + azioni[c].durata + '</strong>"/>';
                         document.getElementById("vedo2").innerHTML += varae;
 
                     }else{
