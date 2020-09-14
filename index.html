@@ -126,8 +126,8 @@
                             files[l] + "' href='javascript:passa(" + edi + ")'>";
                         testo += files[l] + "</a></li>";
                     }
-                    var nuovo = document.getElementById("tab_file");
-                    nuovo.innerHTML = testo;
+                    let nuovo = document.getElementById("tab_file");
+                    nuovo.innerHTML += testo;
                     $('#processate').modal({
                         show: true
                     });
